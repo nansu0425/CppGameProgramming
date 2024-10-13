@@ -1,4 +1,4 @@
-/****************************************************************************************** 
+﻿/****************************************************************************************** 
  *	Chili DirectX Framework Version 16.07.20											  *	
  *	Game.cpp																			  *
  *	Copyright 2016 PlanetChili.net <http://www.planetchili.net>							  *
@@ -42,4 +42,119 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
+	static enum class Crosshair
+	{
+		RETICLE,
+		SCOPE
+	} crosshair = Crosshair::RETICLE;
+
+	static int s_xReticle = 400;
+	static int s_yReticle = 300;
+	static bool s_isRed = false;
+
+	while (!wnd.kbd.KeyIsEmpty())
+	{
+		const Keyboard::Event evt = wnd.kbd.ReadKey();
+
+		if (evt.IsPress())
+		{
+			switch (evt.GetCode())
+			{
+			case VK_LEFT:
+				s_xReticle -= 50;
+				break;
+			case VK_UP:
+				s_yReticle -= 50;
+				break;
+			case VK_RIGHT:
+				s_xReticle += 50;
+				break;
+			case VK_DOWN:
+				s_yReticle += 50;
+				break;
+			case VK_CONTROL:
+				s_isRed = !s_isRed;
+				break;
+			case VK_SHIFT:
+				crosshair = (crosshair == Crosshair::RETICLE) ? Crosshair::SCOPE : Crosshair::RETICLE;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	const int red = 255;
+	const int green = s_isRed ? 0 : 255;
+	const int blue = s_isRed ? 0 : 255;
+
+	switch (crosshair)
+	{
+	case Crosshair::RETICLE:
+		gfx.PutPixel(s_xReticle - 5, s_yReticle, red, green, blue);
+		gfx.PutPixel(s_xReticle - 4, s_yReticle, red, green, blue);
+		gfx.PutPixel(s_xReticle - 3, s_yReticle, red, green, blue);
+		gfx.PutPixel(s_xReticle + 3, s_yReticle, red, green, blue);
+		gfx.PutPixel(s_xReticle + 4, s_yReticle, red, green, blue);
+		gfx.PutPixel(s_xReticle + 5, s_yReticle, red, green, blue);
+		gfx.PutPixel(s_xReticle, s_yReticle - 5, red, green, blue);
+		gfx.PutPixel(s_xReticle, s_yReticle - 4, red, green, blue);
+		gfx.PutPixel(s_xReticle, s_yReticle - 3, red, green, blue);
+		gfx.PutPixel(s_xReticle, s_yReticle + 3, red, green, blue);
+		gfx.PutPixel(s_xReticle, s_yReticle + 4, red, green, blue);
+		gfx.PutPixel(s_xReticle, s_yReticle + 5, red, green, blue);
+		break;
+	case Crosshair::SCOPE:
+		// 십자선
+		gfx.PutPixel(s_xReticle, s_yReticle, red, green, blue);
+		gfx.PutPixel(s_xReticle - 4, s_yReticle, red, green, blue);
+		gfx.PutPixel(s_xReticle - 3, s_yReticle, red, green, blue);
+		gfx.PutPixel(s_xReticle - 2, s_yReticle, red, green, blue);
+		gfx.PutPixel(s_xReticle - 1, s_yReticle, red, green, blue);
+		gfx.PutPixel(s_xReticle + 4, s_yReticle, red, green, blue);
+		gfx.PutPixel(s_xReticle + 3, s_yReticle, red, green, blue);
+		gfx.PutPixel(s_xReticle + 2, s_yReticle, red, green, blue);
+		gfx.PutPixel(s_xReticle + 1, s_yReticle, red, green, blue);
+		gfx.PutPixel(s_xReticle, s_yReticle - 4, red, green, blue);
+		gfx.PutPixel(s_xReticle, s_yReticle - 3, red, green, blue);
+		gfx.PutPixel(s_xReticle, s_yReticle - 2, red, green, blue);
+		gfx.PutPixel(s_xReticle, s_yReticle - 1, red, green, blue);
+		gfx.PutPixel(s_xReticle, s_yReticle + 4, red, green, blue);
+		gfx.PutPixel(s_xReticle, s_yReticle + 3, red, green, blue);
+		gfx.PutPixel(s_xReticle, s_yReticle + 2, red, green, blue);
+		gfx.PutPixel(s_xReticle, s_yReticle + 1, red, green, blue);
+
+		// 원
+		gfx.PutPixel(s_xReticle - 5, s_yReticle, red, green, blue);
+		gfx.PutPixel(s_xReticle - 5, s_yReticle - 1, red, green, blue);
+		gfx.PutPixel(s_xReticle - 4, s_yReticle - 2, red, green, blue);
+		gfx.PutPixel(s_xReticle - 4, s_yReticle - 3, red, green, blue);
+		gfx.PutPixel(s_xReticle - 3, s_yReticle - 4, red, green, blue);
+		gfx.PutPixel(s_xReticle - 2, s_yReticle - 4, red, green, blue);
+		gfx.PutPixel(s_xReticle - 1, s_yReticle - 5, red, green, blue);
+		gfx.PutPixel(s_xReticle, s_yReticle - 5, red, green, blue);
+		gfx.PutPixel(s_xReticle + 5, s_yReticle - 1, red, green, blue);
+		gfx.PutPixel(s_xReticle + 4, s_yReticle - 2, red, green, blue);
+		gfx.PutPixel(s_xReticle + 4, s_yReticle - 3, red, green, blue);
+		gfx.PutPixel(s_xReticle + 3, s_yReticle - 4, red, green, blue);
+		gfx.PutPixel(s_xReticle + 2, s_yReticle - 4, red, green, blue);
+		gfx.PutPixel(s_xReticle + 1, s_yReticle - 5, red, green, blue);
+		gfx.PutPixel(s_xReticle + 5, s_yReticle, red, green, blue);
+		gfx.PutPixel(s_xReticle + 5, s_yReticle + 1, red, green, blue);
+		gfx.PutPixel(s_xReticle + 4, s_yReticle + 2, red, green, blue);
+		gfx.PutPixel(s_xReticle + 4, s_yReticle + 3, red, green, blue);
+		gfx.PutPixel(s_xReticle + 3, s_yReticle + 4, red, green, blue);
+		gfx.PutPixel(s_xReticle + 2, s_yReticle + 4, red, green, blue);
+		gfx.PutPixel(s_xReticle + 1, s_yReticle + 5, red, green, blue);
+		gfx.PutPixel(s_xReticle, s_yReticle + 5, red, green, blue);
+		gfx.PutPixel(s_xReticle - 5, s_yReticle + 1, red, green, blue);
+		gfx.PutPixel(s_xReticle - 4, s_yReticle + 2, red, green, blue);
+		gfx.PutPixel(s_xReticle - 4, s_yReticle + 3, red, green, blue);
+		gfx.PutPixel(s_xReticle - 3, s_yReticle + 4, red, green, blue);
+		gfx.PutPixel(s_xReticle - 2, s_yReticle + 4, red, green, blue);
+		gfx.PutPixel(s_xReticle - 1, s_yReticle + 5, red, green, blue);
+		break;
+	default:
+		break;
+	}
 }
