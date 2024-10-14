@@ -98,6 +98,25 @@ void Game::UpdateModel()
 	xCrosshair += veloX;
 	yCrosshair += veloY;
 
+	// xCrosshair가 스크린 범위를 넘어갔을 때 처리
+	if (xCrosshair - 5 < 0)
+	{
+		xCrosshair = 5;
+	}
+	else if (xCrosshair + 5 >= gfx.ScreenWidth)
+	{
+		xCrosshair = gfx.ScreenWidth - 6;
+	}
+	// yCrosshair가 스크린 범위를 넘어갔을 때 처리
+	if (yCrosshair - 5 < 0)
+	{
+		yCrosshair = 5;
+	}
+	else if (yCrosshair + 5 >= gfx.ScreenHeight)
+	{
+		yCrosshair = gfx.ScreenHeight - 6;
+	}
+
 	// 조준선 색 결정
 	const bool isRed = wnd.kbd.KeyIsPressed(VK_CONTROL);
 	color.SetG(isRed ? 0 : 255);
