@@ -45,4 +45,12 @@ private:
 	/********************************/
 	int xCrosshair = 400;
 	int yCrosshair = 300;
+	Color color = Color(255, 255, 255);
+	bool isShapeChanged = false;
+	int veloX = 0;
+	int veloY = 0;
+	bool isLimitLeftVeloIncrease = false;
+	bool isLimitUpVeloIncrease = false;
+	bool isLimitRightVeloIncrease = false;
+	bool isLimitDownVeloIncrease = false;
 };
