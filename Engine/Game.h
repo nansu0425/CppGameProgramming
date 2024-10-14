@@ -43,14 +43,10 @@ private:
 	/********************************/
 	/*  User Variables              */
 	/********************************/
-	int xCrosshair = 400;
-	int yCrosshair = 300;
-	Color color = Color(255, 255, 255);
-	bool isShapeChanged = false;
-	int veloX = 0;
-	int veloY = 0;
-	bool isLimitLeftVeloIncrease = false;
-	bool isLimitUpVeloIncrease = false;
-	bool isLimitRightVeloIncrease = false;
-	bool isLimitDownVeloIncrease = false;
+	int xMovingCrosshair = 400;
+	int yMovingCrosshair = 300;
+	int xFixedCrosshair = 200;
+	int yFixedCrosshair = 300;
+	Color colorMovingCrosshair = Color(255, 255, 255);
+	Color colorFixedCrosshair = Color(0, 255, 0);
 };

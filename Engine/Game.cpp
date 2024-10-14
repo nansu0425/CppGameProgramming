@@ -20,6 +20,7 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
+#include "math.h"
 
 Game::Game( MainWindow& wnd )
 	:
@@ -38,161 +39,155 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	// 왼쪽 이동 속도 설정
+	// 왼쪽 이동
 	if (wnd.kbd.KeyIsPressed(VK_LEFT))
 	{
-		if (!isLimitLeftVeloIncrease)
-		{
-			isLimitLeftVeloIncrease = true;
-			--veloX;
-		}
+		--xMovingCrosshair;
 	}
-	else
-	{
-		isLimitLeftVeloIncrease = false;
-	}
-
-	// 윗쪽 이동 속도 설정
+	// 윗쪽 이동
 	if (wnd.kbd.KeyIsPressed(VK_UP))
 	{
-		if (!isLimitUpVeloIncrease)
-		{
-			isLimitUpVeloIncrease = true;
-			--veloY;
-		}
+		--yMovingCrosshair;
 	}
-	else
-	{
-		isLimitUpVeloIncrease = false;
-	}
-
-	// 오른쪽 이동 속도 설정
+	// 오른쪽 이동
 	if (wnd.kbd.KeyIsPressed(VK_RIGHT))
 	{
-		if (!isLimitRightVeloIncrease)
-		{
-			isLimitRightVeloIncrease = true;
-			++veloX;
-		}
+		++xMovingCrosshair;
 	}
-	else
-	{
-		isLimitRightVeloIncrease = false;
-	}
-
-	// 아랫쪽 이동 속도 설정
+	// 아랫쪽 이동
 	if (wnd.kbd.KeyIsPressed(VK_DOWN))
 	{
-		if (!isLimitDownVeloIncrease)
-		{
-			isLimitDownVeloIncrease = true;
-			++veloY;
-		}
+		++yMovingCrosshair;
+	}
+
+	// x축 스크린 범위를 못 넘게 처리
+	if (xMovingCrosshair - 5 < 0)
+	{
+		xMovingCrosshair = 5;
+	}
+	else if (xMovingCrosshair + 5 >= gfx.ScreenWidth)
+	{
+		xMovingCrosshair = gfx.ScreenWidth - 6;
+	}
+	// y축 스크린 범위를 못 넘게 처리
+	if (yMovingCrosshair - 5 < 0)
+	{
+		yMovingCrosshair = 5;
+	}
+	else if (yMovingCrosshair + 5 >= gfx.ScreenHeight)
+	{
+		yMovingCrosshair = gfx.ScreenHeight - 6;
+	}
+
+	const float distance = sqrtf(powf(float(xMovingCrosshair - xFixedCrosshair), 2.0f) +
+								 powf(float(yMovingCrosshair - yFixedCrosshair), 2.0f));
+
+	// 움직이는 조준선과 고정된 조준선이 겹치면 움직이는 조준선은 빨간색이 된다
+	if (distance <= 10.0f)
+	{
+		colorMovingCrosshair.SetG(0);
+		colorMovingCrosshair.SetB(0);
 	}
 	else
 	{
-		isLimitDownVeloIncrease = false;
+		colorMovingCrosshair.SetG(255);
+		colorMovingCrosshair.SetB(255);
 	}
-
-	// 이동 속도에 따라 조준선 위치 이동
-	xCrosshair += veloX;
-	yCrosshair += veloY;
-
-	// xCrosshair가 스크린 범위를 넘어갔을 때 처리
-	if (xCrosshair - 5 < 0)
-	{
-		xCrosshair = 5;
-	}
-	else if (xCrosshair + 5 >= gfx.ScreenWidth)
-	{
-		xCrosshair = gfx.ScreenWidth - 6;
-	}
-	// yCrosshair가 스크린 범위를 넘어갔을 때 처리
-	if (yCrosshair - 5 < 0)
-	{
-		yCrosshair = 5;
-	}
-	else if (yCrosshair + 5 >= gfx.ScreenHeight)
-	{
-		yCrosshair = gfx.ScreenHeight - 6;
-	}
-
-	// 조준선 색 결정
-	const bool isRed = wnd.kbd.KeyIsPressed(VK_CONTROL);
-	color.SetG(isRed ? 0 : 255);
-	color.SetB(isRed ? 0 : 255);
-
-	// 조준선 모양 결정
-	isShapeChanged = wnd.kbd.KeyIsPressed(VK_SHIFT);
 }
 
 void Game::ComposeFrame()
 {
-	if (isShapeChanged)
-	{
-		// 십자선
-		gfx.PutPixel(xCrosshair, yCrosshair, color);
-		gfx.PutPixel(xCrosshair - 4, yCrosshair, color);
-		gfx.PutPixel(xCrosshair - 3, yCrosshair, color);
-		gfx.PutPixel(xCrosshair - 2, yCrosshair, color);
-		gfx.PutPixel(xCrosshair - 1, yCrosshair, color);
-		gfx.PutPixel(xCrosshair + 4, yCrosshair, color);
-		gfx.PutPixel(xCrosshair + 3, yCrosshair, color);
-		gfx.PutPixel(xCrosshair + 2, yCrosshair, color);
-		gfx.PutPixel(xCrosshair + 1, yCrosshair, color);
-		gfx.PutPixel(xCrosshair, yCrosshair - 4, color);
-		gfx.PutPixel(xCrosshair, yCrosshair - 3, color);
-		gfx.PutPixel(xCrosshair, yCrosshair - 2, color);
-		gfx.PutPixel(xCrosshair, yCrosshair - 1, color);
-		gfx.PutPixel(xCrosshair, yCrosshair + 4, color);
-		gfx.PutPixel(xCrosshair, yCrosshair + 3, color);
-		gfx.PutPixel(xCrosshair, yCrosshair + 2, color);
-		gfx.PutPixel(xCrosshair, yCrosshair + 1, color);
+	// 움직이는 조준선
+	gfx.PutPixel(xMovingCrosshair, yMovingCrosshair, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair - 4, yMovingCrosshair, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair - 3, yMovingCrosshair, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair - 2, yMovingCrosshair, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair - 1, yMovingCrosshair, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair + 4, yMovingCrosshair, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair + 3, yMovingCrosshair, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair + 2, yMovingCrosshair, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair + 1, yMovingCrosshair, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair, yMovingCrosshair - 4, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair, yMovingCrosshair - 3, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair, yMovingCrosshair - 2, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair, yMovingCrosshair - 1, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair, yMovingCrosshair + 4, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair, yMovingCrosshair + 3, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair, yMovingCrosshair + 2, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair, yMovingCrosshair + 1, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair - 5, yMovingCrosshair, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair - 5, yMovingCrosshair - 1, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair - 4, yMovingCrosshair - 2, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair - 4, yMovingCrosshair - 3, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair - 3, yMovingCrosshair - 4, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair - 2, yMovingCrosshair - 4, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair - 1, yMovingCrosshair - 5, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair, yMovingCrosshair - 5, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair + 5, yMovingCrosshair - 1, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair + 4, yMovingCrosshair - 2, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair + 4, yMovingCrosshair - 3, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair + 3, yMovingCrosshair - 4, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair + 2, yMovingCrosshair - 4, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair + 1, yMovingCrosshair - 5, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair + 5, yMovingCrosshair, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair + 5, yMovingCrosshair + 1, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair + 4, yMovingCrosshair + 2, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair + 4, yMovingCrosshair + 3, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair + 3, yMovingCrosshair + 4, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair + 2, yMovingCrosshair + 4, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair + 1, yMovingCrosshair + 5, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair, yMovingCrosshair + 5, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair - 5, yMovingCrosshair + 1, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair - 4, yMovingCrosshair + 2, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair - 4, yMovingCrosshair + 3, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair - 3, yMovingCrosshair + 4, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair - 2, yMovingCrosshair + 4, colorMovingCrosshair);
+	gfx.PutPixel(xMovingCrosshair - 1, yMovingCrosshair + 5, colorMovingCrosshair);
 
-		// 원
-		gfx.PutPixel(xCrosshair - 5, yCrosshair, color);
-		gfx.PutPixel(xCrosshair - 5, yCrosshair - 1, color);
-		gfx.PutPixel(xCrosshair - 4, yCrosshair - 2, color);
-		gfx.PutPixel(xCrosshair - 4, yCrosshair - 3, color);
-		gfx.PutPixel(xCrosshair - 3, yCrosshair - 4, color);
-		gfx.PutPixel(xCrosshair - 2, yCrosshair - 4, color);
-		gfx.PutPixel(xCrosshair - 1, yCrosshair - 5, color);
-		gfx.PutPixel(xCrosshair, yCrosshair - 5, color);
-		gfx.PutPixel(xCrosshair + 5, yCrosshair - 1, color);
-		gfx.PutPixel(xCrosshair + 4, yCrosshair - 2, color);
-		gfx.PutPixel(xCrosshair + 4, yCrosshair - 3, color);
-		gfx.PutPixel(xCrosshair + 3, yCrosshair - 4, color);
-		gfx.PutPixel(xCrosshair + 2, yCrosshair - 4, color);
-		gfx.PutPixel(xCrosshair + 1, yCrosshair - 5, color);
-		gfx.PutPixel(xCrosshair + 5, yCrosshair, color);
-		gfx.PutPixel(xCrosshair + 5, yCrosshair + 1, color);
-		gfx.PutPixel(xCrosshair + 4, yCrosshair + 2, color);
-		gfx.PutPixel(xCrosshair + 4, yCrosshair + 3, color);
-		gfx.PutPixel(xCrosshair + 3, yCrosshair + 4, color);
-		gfx.PutPixel(xCrosshair + 2, yCrosshair + 4, color);
-		gfx.PutPixel(xCrosshair + 1, yCrosshair + 5, color);
-		gfx.PutPixel(xCrosshair, yCrosshair + 5, color);
-		gfx.PutPixel(xCrosshair - 5, yCrosshair + 1, color);
-		gfx.PutPixel(xCrosshair - 4, yCrosshair + 2, color);
-		gfx.PutPixel(xCrosshair - 4, yCrosshair + 3, color);
-		gfx.PutPixel(xCrosshair - 3, yCrosshair + 4, color);
-		gfx.PutPixel(xCrosshair - 2, yCrosshair + 4, color);
-		gfx.PutPixel(xCrosshair - 1, yCrosshair + 5, color);
-	}
-	else
-	{
-		// 십자선
-		gfx.PutPixel(xCrosshair - 5, yCrosshair, color);
-		gfx.PutPixel(xCrosshair - 4, yCrosshair, color);
-		gfx.PutPixel(xCrosshair - 3, yCrosshair, color);
-		gfx.PutPixel(xCrosshair + 3, yCrosshair, color);
-		gfx.PutPixel(xCrosshair + 4, yCrosshair, color);
-		gfx.PutPixel(xCrosshair + 5, yCrosshair, color);
-		gfx.PutPixel(xCrosshair, yCrosshair - 5, color);
-		gfx.PutPixel(xCrosshair, yCrosshair - 4, color);
-		gfx.PutPixel(xCrosshair, yCrosshair - 3, color);
-		gfx.PutPixel(xCrosshair, yCrosshair + 3, color);
-		gfx.PutPixel(xCrosshair, yCrosshair + 4, color);
-		gfx.PutPixel(xCrosshair, yCrosshair + 5, color);
-	}
+	// 고정된 조준선
+	gfx.PutPixel(xFixedCrosshair, yFixedCrosshair, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair - 4, yFixedCrosshair, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair - 3, yFixedCrosshair, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair - 2, yFixedCrosshair, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair - 1, yFixedCrosshair, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair + 4, yFixedCrosshair, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair + 3, yFixedCrosshair, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair + 2, yFixedCrosshair, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair + 1, yFixedCrosshair, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair, yFixedCrosshair - 4, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair, yFixedCrosshair - 3, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair, yFixedCrosshair - 2, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair, yFixedCrosshair - 1, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair, yFixedCrosshair + 4, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair, yFixedCrosshair + 3, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair, yFixedCrosshair + 2, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair, yFixedCrosshair + 1, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair - 5, yFixedCrosshair, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair - 5, yFixedCrosshair - 1, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair - 4, yFixedCrosshair - 2, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair - 4, yFixedCrosshair - 3, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair - 3, yFixedCrosshair - 4, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair - 2, yFixedCrosshair - 4, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair - 1, yFixedCrosshair - 5, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair, yFixedCrosshair - 5, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair + 5, yFixedCrosshair - 1, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair + 4, yFixedCrosshair - 2, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair + 4, yFixedCrosshair - 3, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair + 3, yFixedCrosshair - 4, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair + 2, yFixedCrosshair - 4, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair + 1, yFixedCrosshair - 5, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair + 5, yFixedCrosshair, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair + 5, yFixedCrosshair + 1, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair + 4, yFixedCrosshair + 2, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair + 4, yFixedCrosshair + 3, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair + 3, yFixedCrosshair + 4, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair + 2, yFixedCrosshair + 4, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair + 1, yFixedCrosshair + 5, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair, yFixedCrosshair + 5, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair - 5, yFixedCrosshair + 1, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair - 4, yFixedCrosshair + 2, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair - 4, yFixedCrosshair + 3, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair - 3, yFixedCrosshair + 4, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair - 2, yFixedCrosshair + 4, colorFixedCrosshair);
+	gfx.PutPixel(xFixedCrosshair - 1, yFixedCrosshair + 5, colorFixedCrosshair);
 }
