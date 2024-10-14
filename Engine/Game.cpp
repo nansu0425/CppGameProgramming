@@ -47,24 +47,26 @@ void Game::ComposeFrame()
 	{
 		xCrosshair -= 3;
 	}
-	else if (wnd.kbd.KeyIsPressed(VK_UP))
+	if (wnd.kbd.KeyIsPressed(VK_UP))
 	{
 		yCrosshair -= 3;
 	}
-	else if (wnd.kbd.KeyIsPressed(VK_RIGHT))
+	if (wnd.kbd.KeyIsPressed(VK_RIGHT))
 	{
 		xCrosshair += 3;
 	}
-	else if (wnd.kbd.KeyIsPressed(VK_DOWN))
+	if (wnd.kbd.KeyIsPressed(VK_DOWN))
 	{
 		yCrosshair += 3;
 	}
 
+	// 컨트롤 키 눌렀는지 확인
 	const bool isRed = wnd.kbd.KeyIsPressed(VK_CONTROL);
 	const int red = 255;
 	const int green = isRed ? 0 : 255;
 	const int blue = isRed ? 0 : 255;
 
+	// shift 키 눌렀는지 확인
 	if (wnd.kbd.KeyIsPressed(VK_SHIFT))
 	{
 		// 십자선
