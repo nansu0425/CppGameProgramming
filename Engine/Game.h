@@ -37,6 +37,11 @@ private:
 	/********************************/
 	/*  User Functions              */
 	/********************************/
+	int ClampCircleWindowX(int x, int r);
+	int ClampCircleWindowY(int y, int r);
+	void MoveCircle(int& x, int& y);
+	bool CheckCollisionCircles(float x1, float y1, float r1, float x2, float y2, float r2);
+	void DrawCrosshair(int x, int y, Color color);
 private:
 	MainWindow& wnd;
 	Graphics gfx;
@@ -45,8 +50,14 @@ private:
 	/********************************/
 	int xMovingCrosshair = 400;
 	int yMovingCrosshair = 300;
-	int xFixedCrosshair = 200;
-	int yFixedCrosshair = 300;
+	int xFixedCrosshair1 = 200;
+	int yFixedCrosshair1 = 300;
+	int xFixedCrosshair2 = 500;
+	int yFixedCrosshair2 = 100;
+	int xFixedCrosshair3 = 300;
+	int yFixedCrosshair3 = 250;
+	int xFixedCrosshair4 = 600;
+	int yFixedCrosshair4 = 500;
 	Color colorMovingCrosshair = Color(255, 255, 255);
 	Color colorFixedCrosshair = Color(0, 255, 0);
 };
