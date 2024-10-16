@@ -20,7 +20,6 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
-#include "Drawings.h"
 
 Game::Game( MainWindow& wnd )
 	:
@@ -39,101 +38,30 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	MoveFace();
-
-	face.x = ClampScreenX(face.x, 19);
-	face.y = ClampScreenY(face.y, 19);
+	face.Move(wnd, gfx);
+	CheckCollisionPoos(face);
 }
 
 void Game::ComposeFrame()
 {
 	DrawPoos();
-	DrawFace();
-}
-
-void Game::DrawFace()
-{
-	Drawings::DrawFace(gfx, face.x, face.y);
-}
-
-void Game::DrawGameOver()
-{
-	Drawings::DrawGameOver(gfx, gameOver.x, gameOver.y);
+	face.Draw(gfx);
 }
 
 void Game::DrawPoos()
 {
-	for (const Position& poo : poos)
+	for (const Poo& poo : poos)
 	{
-		DrawPoo(poo);
+		poo.Draw(gfx);
 	}
 }
 
-void Game::DrawPoo(const Position& poo)
+void Game::CheckCollisionPoos(const GameObject& obj)
 {
-	Drawings::DrawPoo(gfx, poo.x, poo.y);
-}
-
-void Game::DrawTitle()
-{
-	Drawings::DrawTitle(gfx, title.x, title.y);
-}
-
-void Game::MoveFace()
-{
-	if (wnd.kbd.KeyIsPressed(VK_LEFT))
+	for (Poo& poo : poos)
 	{
-		--face.x;
+		poo.SetCollisionFlag(poo.GetCollisionFlag() 
+							 ? true 
+							 : poo.CheckCollision(obj));
 	}
-
-	if (wnd.kbd.KeyIsPressed(VK_UP))
-	{
-		--face.y;
-	}
-
-	if (wnd.kbd.KeyIsPressed(VK_RIGHT))
-	{
-		++face.x;
-	}
-
-	if (wnd.kbd.KeyIsPressed(VK_DOWN))
-	{
-		++face.y;
-	}
-}
-
-int Game::ClampScreenX(int x, int width)
-{
-	const int left = x;
-	const int right = x + width;
-
-	if (left < 0)
-	{
-		return 0;
-	}
-
-	if (right >= gfx.ScreenWidth)
-	{
-		return gfx.ScreenWidth - width - 1;
-	}
-
-	return x;
-}
-
-int Game::ClampScreenY(int y, int height)
-{
-	const int top = y;
-	const int bottom = y + height;
-
-	if (top < 0)
-	{
-		return 0;
-	}
-
-	if (bottom >= gfx.ScreenHeight)
-	{
-		return gfx.ScreenHeight - height - 1;
-	}
-
-	return y;
 }

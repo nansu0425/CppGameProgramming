@@ -23,20 +23,12 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
+#include "GameObject.h"
 
 #include <array>
 
 class Game
 {
-private:
-	/********************************/
-	/*  User Structs                */
-	/********************************/
-	struct Position
-	{
-		int x;
-		int y;
-	};
 public:
 	Game( class MainWindow& wnd );
 	Game( const Game& ) = delete;
@@ -48,26 +40,19 @@ private:
 	/********************************/
 	/*  User Functions              */
 	/********************************/
-	void DrawFace();
-	void DrawGameOver();
 	void DrawPoos();
-	void DrawPoo(const Position& poo);
-	void DrawTitle();
-	void MoveFace();
-	int ClampScreenX(int x, int width);
-	int ClampScreenY(int y, int height);
-
+	void CheckCollisionPoos(const GameObject& obj);
 private:
 	MainWindow& wnd;
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
 	/********************************/
-	Position face = {400, 300};
-	Position gameOver = {400, 300};
-	Position title = {400, 300};
-	std::array<Position, 3> poos = 
+	Face face = {400, 300};
+	GameOver gameOver = {400, 300};
+	Title title = {400, 300};
+	std::array<Poo, 3> poos =
 	{ 
-		Position{100, 200}, Position{500, 500}, Position{600, 400} 
+		Poo{100, 200}, Poo{500, 500}, Poo{600, 400}
 	};
 };
