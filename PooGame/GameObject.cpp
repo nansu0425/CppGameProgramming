@@ -2,7 +2,7 @@
 #include "Graphics.h"
 #include "MainWindow.h"
 
-void GameObject::Move(const MainWindow& wnd, const Graphics& gfx)
+void GameObject::Move()
 {}
 
 int GameObject::GetLeft() const
@@ -25,15 +25,15 @@ int GameObject::GetBottom() const
 	return y + height - 1;
 }
 
-bool GameObject::CheckCollision(const GameObject& other) const
+bool GameObject::CheckCollision(const GameObject* pOther) const
 {
-	return ((GetLeft() <= other.GetRight()) &&
-			(GetRight() >= other.GetLeft()) &&
-			(GetTop() <= other.GetBottom()) &&
-			(GetBottom() >= other.GetTop()));
+	return ((GetLeft() <= pOther->GetRight()) &&
+			(GetRight() >= pOther->GetLeft()) &&
+			(GetTop() <= pOther->GetBottom()) &&
+			(GetBottom() >= pOther->GetTop()));
 }
 
-void GameObject::ClampPositionScreen(const Graphics& gfx)
+void GameObject::ClampPositionScreen()
 {
 	if (GetLeft() < 0)
 	{
@@ -56,7 +56,7 @@ void GameObject::ClampPositionScreen(const Graphics& gfx)
 	}
 }
 
-void Face::Draw(Graphics& gfx) const
+void GameObjectType::Face::Draw() const
 {
 	gfx.PutPixel(7 + x, 0 + y, 0, 0, 0);
 	gfx.PutPixel(8 + x, 0 + y, 0, 0, 0);
@@ -376,7 +376,7 @@ void Face::Draw(Graphics& gfx) const
 	gfx.PutPixel(12 + x, 19 + y, 0, 0, 0);
 }
 
-void Face::Move(const MainWindow& wnd, const Graphics& gfx)
+void GameObjectType::Face::Move()
 {
 	if (wnd.kbd.KeyIsPressed(VK_LEFT))
 	{
@@ -398,10 +398,10 @@ void Face::Move(const MainWindow& wnd, const Graphics& gfx)
 		++y;
 	}
 
-	ClampPositionScreen(gfx);
+	ClampPositionScreen();
 }
 
-void GameOver::Draw(Graphics& gfx) const
+void GameObjectType::GameOver::Draw() const
 {
 	gfx.PutPixel(49 + x, 0 + y, 0, 146, 14);
 	gfx.PutPixel(50 + x, 0 + y, 0, 146, 14);
@@ -2493,7 +2493,7 @@ void GameOver::Draw(Graphics& gfx) const
 	gfx.PutPixel(83 + x, 63 + y, 0, 146, 14);
 }
 
-void Title::Draw(Graphics& gfx) const
+void GameObjectType::Title::Draw() const
 {
 	gfx.PutPixel(0 + x, 0 + y, 208, 34, 34);
 	gfx.PutPixel(1 + x, 0 + y, 208, 34, 34);
@@ -28747,7 +28747,7 @@ void Title::Draw(Graphics& gfx) const
 	gfx.PutPixel(149 + x, 174 + y, 208, 34, 34);
 }
 
-void Poo::Draw(Graphics& gfx) const
+void GameObjectType::Poo::Draw() const
 {
 	if (collisionFlag)
 	{
@@ -28987,12 +28987,12 @@ void Poo::Draw(Graphics& gfx) const
 	gfx.PutPixel(6 + x, 23 + y, 51, 28, 0);
 }
 
-bool Poo::GetCollisionFlag() const
+bool GameObjectType::Poo::GetCollisionFlag() const
 {
 	return collisionFlag;
 }
 
-void Poo::SetCollisionFlag(bool flag)
+void GameObjectType::Poo::SetCollisionFlag(bool flag)
 {
 	collisionFlag = flag;
 }

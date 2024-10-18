@@ -32,6 +32,7 @@ class Game
 public:
 	Game( class MainWindow& wnd );
 	Game( const Game& ) = delete;
+	~Game();
 	Game& operator=( const Game& ) = delete;
 	void Go();
 private:
@@ -41,18 +42,21 @@ private:
 	/*  User Functions              */
 	/********************************/
 	void DrawPoos();
-	void CheckCollisionPoos(const GameObject& obj);
+	void CheckCollisionPoos(const GameObject* pObj);
 private:
 	MainWindow& wnd;
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
 	/********************************/
-	Face face = {400, 300};
-	GameOver gameOver = {400, 300};
-	Title title = {400, 300};
-	std::array<Poo, 3> poos =
+	GameObjectFactory					gameObjFactory = GameObjectFactory(wnd, gfx);
+	GameObjectType::Face*				pFace = gameObjFactory.Create<GameObjectType::Face>(400, 300);
+	GameObjectType::GameOver*			pGameOver = gameObjFactory.Create<GameObjectType::GameOver>(400, 300);
+	GameObjectType::Title*				pTitle = gameObjFactory.Create<GameObjectType::Title>(400, 300);
+	std::array<GameObjectType::Poo*, 3> poos =
 	{ 
-		Poo{100, 200}, Poo{500, 500}, Poo{600, 400}
+		gameObjFactory.Create<GameObjectType::Poo>(100, 200), 
+		gameObjFactory.Create<GameObjectType::Poo>(500, 500),
+		gameObjFactory.Create<GameObjectType::Poo>(600, 400),
 	};
 };

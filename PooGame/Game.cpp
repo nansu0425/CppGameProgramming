@@ -22,10 +22,21 @@
 #include "Game.h"
 
 Game::Game( MainWindow& wnd )
-	:
-	wnd( wnd ),
-	gfx( wnd )
+	: wnd( wnd )
+	, gfx( wnd )
 {
+}
+
+Game::~Game()
+{
+	delete pFace;
+	delete pGameOver;
+	delete pTitle;
+
+	for (GameObjectType::Poo* pPoo : poos)
+	{
+		delete pPoo;
+	}
 }
 
 void Game::Go()
@@ -38,30 +49,30 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	face.Move(wnd, gfx);
-	CheckCollisionPoos(face);
+	pFace->Move();
+	CheckCollisionPoos(pFace);
 }
 
 void Game::ComposeFrame()
 {
 	DrawPoos();
-	face.Draw(gfx);
+	pFace->Draw();
 }
 
 void Game::DrawPoos()
 {
-	for (const Poo& poo : poos)
+	for (const GameObjectType::Poo* pPoo : poos)
 	{
-		poo.Draw(gfx);
+		pPoo->Draw();
 	}
 }
 
-void Game::CheckCollisionPoos(const GameObject& obj)
+void Game::CheckCollisionPoos(const GameObject* pObj)
 {
-	for (Poo& poo : poos)
+	for (GameObjectType::Poo* pPoo : poos)
 	{
-		poo.SetCollisionFlag(poo.GetCollisionFlag() 
-							 ? true 
-							 : poo.CheckCollision(obj));
+		pPoo->SetCollisionFlag(pPoo->GetCollisionFlag()
+							   ? true
+							   : pPoo->CheckCollision(pObj));
 	}
 }
