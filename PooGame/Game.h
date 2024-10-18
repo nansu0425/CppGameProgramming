@@ -26,6 +26,7 @@
 #include "GameObject.h"
 
 #include <array>
+#include <list>
 
 class Game
 {
@@ -42,7 +43,7 @@ private:
 	/*  User Functions              */
 	/********************************/
 	void DrawPoos();
-	void CheckCollisionPoos(const GameObject* pObj);
+	void DeletePoosCollided(const GameObject* pObj);
 private:
 	MainWindow& wnd;
 	Graphics gfx;
@@ -51,9 +52,10 @@ private:
 	/********************************/
 	GameObjectFactory					gameObjFactory = GameObjectFactory(wnd, gfx);
 	GameObjectType::Face*				pFace = gameObjFactory.Create<GameObjectType::Face>(400, 300);
-	GameObjectType::GameOver*			pGameOver = gameObjFactory.Create<GameObjectType::GameOver>(400, 300);
+	GameObjectType::GameOver*			pGameOver = gameObjFactory.Create<GameObjectType::GameOver>(400 - GameObjectType::GameOver::WIDTH / 2, 
+																									300 - GameObjectType::GameOver::HEIGHT / 2);
 	GameObjectType::Title*				pTitle = gameObjFactory.Create<GameObjectType::Title>(400, 300);
-	std::array<GameObjectType::Poo*, 3> poos =
+	std::list<GameObjectType::Poo*>		poos =
 	{ 
 		gameObjFactory.Create<GameObjectType::Poo>(100, 200), 
 		gameObjFactory.Create<GameObjectType::Poo>(500, 500),

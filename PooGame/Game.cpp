@@ -25,17 +25,32 @@ Game::Game( MainWindow& wnd )
 	: wnd( wnd )
 	, gfx( wnd )
 {
+	pGameOver->Move();
 }
 
 Game::~Game()
 {
-	delete pFace;
-	delete pGameOver;
-	delete pTitle;
+	if (pFace != nullptr)
+	{
+		delete pFace;
+	}
+
+	if (pGameOver != nullptr)
+	{
+		delete pGameOver;
+	}
+
+	if (pTitle != nullptr)
+	{
+		delete pTitle;
+	}
 
 	for (GameObjectType::Poo* pPoo : poos)
 	{
-		delete pPoo;
+		if (pPoo != nullptr)
+		{
+			delete pPoo;
+		}
 	}
 }
 
@@ -50,12 +65,20 @@ void Game::Go()
 void Game::UpdateModel()
 {
 	pFace->Move();
-	CheckCollisionPoos(pFace);
+	DeletePoosCollided(pFace);
 }
 
 void Game::ComposeFrame()
 {
-	DrawPoos();
+	if (poos.empty())
+	{
+		pGameOver->Draw();
+	}
+	else
+	{
+		DrawPoos();
+	}
+
 	pFace->Draw();
 }
 
@@ -67,12 +90,23 @@ void Game::DrawPoos()
 	}
 }
 
-void Game::CheckCollisionPoos(const GameObject* pObj)
+void Game::DeletePoosCollided(const GameObject* pObj)
 {
-	for (GameObjectType::Poo* pPoo : poos)
+	auto iterPoo = poos.begin();
+
+	while (iterPoo != poos.end())
 	{
-		pPoo->SetCollisionFlag(pPoo->GetCollisionFlag()
-							   ? true
-							   : pPoo->CheckCollision(pObj));
+		if ((*iterPoo)->CheckCollision(pObj))
+		{
+			auto iterErase = iterPoo;
+			++iterPoo;
+
+			delete *iterErase;
+			poos.erase(iterErase);
+		}
+		else
+		{
+			++iterPoo;
+		}
 	}
 }

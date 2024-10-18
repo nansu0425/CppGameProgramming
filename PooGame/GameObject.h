@@ -70,8 +70,14 @@ namespace GameObjectType
 	class GameOver : public GameObject
 	{
 	public:
+		enum Size
+		{
+			WIDTH = 86,
+			HEIGHT = 64,
+		};
+
 		GameOver(int x, int y, MainWindow& wnd, Graphics& gfx)
-			: GameObject(x, y, 86, 64, wnd, gfx)
+			: GameObject(x, y, WIDTH, HEIGHT, wnd, gfx)
 		{}
 
 		virtual void Draw() const override;
@@ -95,10 +101,5 @@ namespace GameObjectType
 		{}
 
 		virtual void Draw() const override;
-		bool GetCollisionFlag() const;
-		void SetCollisionFlag(bool flag);
-
-	private:
-		bool collisionFlag = false;
 	};
 }

@@ -28749,11 +28749,6 @@ void GameObjectType::Title::Draw() const
 
 void GameObjectType::Poo::Draw() const
 {
-	if (collisionFlag)
-	{
-		return;
-	}
-
 	gfx.PutPixel(14 + x, 0 + y, 138, 77, 0);
 	gfx.PutPixel(7 + x, 1 + y, 138, 77, 0);
 	gfx.PutPixel(13 + x, 1 + y, 138, 77, 0);
@@ -28985,14 +28980,4 @@ void GameObjectType::Poo::Draw() const
 	gfx.PutPixel(4 + x, 23 + y, 51, 28, 0);
 	gfx.PutPixel(5 + x, 23 + y, 51, 28, 0);
 	gfx.PutPixel(6 + x, 23 + y, 51, 28, 0);
-}
-
-bool GameObjectType::Poo::GetCollisionFlag() const
-{
-	return collisionFlag;
-}
-
-void GameObjectType::Poo::SetCollisionFlag(bool flag)
-{
-	collisionFlag = flag;
 }
