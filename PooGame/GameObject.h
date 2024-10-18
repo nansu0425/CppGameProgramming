@@ -1,18 +1,21 @@
 ﻿#pragma once
 
+#include <utility>
+#include <random>
+
 class Graphics;
 class MainWindow;
 
 class GameObject
 {
 public:
-	GameObject(int x, int y, int width, int height, MainWindow& wnd, Graphics& gfx)
-		: x(x)
+	GameObject(MainWindow& wnd, Graphics& gfx, int x, int y, int width, int height)
+		: wnd(wnd)
+		, gfx(gfx)
+		, x(x)
 		, y(y)
 		, width(width)
 		, height(height)
-		, wnd(wnd)
-		, gfx(gfx)
 	{}
 
 	virtual void Draw() const abstract;
@@ -27,12 +30,12 @@ protected:
 	int GetBottom() const;
 
 protected:
+	MainWindow& wnd;
+	Graphics& gfx;
 	int x;
 	int y;
 	int width;
 	int height;
-	MainWindow& wnd;
-	Graphics& gfx;
 };
 
 class GameObjectFactory
@@ -41,17 +44,20 @@ public:
 	GameObjectFactory(MainWindow& wnd, Graphics& gfx)
 		: wnd(wnd)
 		, gfx(gfx)
+		, rng(rd())
 	{}
 
-	template<typename T>
-	T* Create(int x, int y)
+	template<typename T, typename... Args>
+	T* Create(Args&&... args)
 	{
-		return new T(x, y, wnd, gfx);
+		return new T(wnd, gfx, rng, std::forward<Args>(args)...);
 	}
 
 private:
 	MainWindow& wnd;
 	Graphics& gfx;
+	std::random_device rd;
+	std::mt19937 rng;
 };
 
 namespace GameObjectType
@@ -65,8 +71,8 @@ namespace GameObjectType
 			HEIGHT = 20,
 		};
 
-		Face(int x, int y, MainWindow& wnd, Graphics& gfx)
-			: GameObject(x, y, WIDTH, HEIGHT, wnd, gfx)
+		Face(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, int x = 0, int y = 0)
+			: GameObject(wnd, gfx, x, y, WIDTH, HEIGHT)
 		{}
 
 		virtual void Draw() const override;
@@ -82,8 +88,8 @@ namespace GameObjectType
 			HEIGHT = 64,
 		};
 
-		GameOver(int x, int y, MainWindow& wnd, Graphics& gfx)
-			: GameObject(x, y, WIDTH, HEIGHT, wnd, gfx)
+		GameOver(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, int x = 0, int y = 0)
+			: GameObject(wnd, gfx, x, y, WIDTH, HEIGHT)
 		{}
 
 		virtual void Draw() const override;
@@ -98,8 +104,8 @@ namespace GameObjectType
 			HEIGHT = 175,
 		};
 
-		Title(int x, int y, MainWindow& wnd, Graphics& gfx)
-			: GameObject(x, y, WIDTH, HEIGHT, wnd, gfx)
+		Title(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, int x = 0, int y = 0)
+			: GameObject(wnd, gfx, x, y, WIDTH, HEIGHT)
 		{}
 
 		virtual void Draw() const override;
@@ -114,9 +120,7 @@ namespace GameObjectType
 			HEIGHT = 24,
 		};
 
-		Poo(int x, int y, MainWindow& wnd, Graphics& gfx)
-			: GameObject(x, y, WIDTH, HEIGHT, wnd, gfx)
-		{}
+		Poo(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, int x = -1, int y = -1);
 
 		virtual void Draw() const override;
 	};

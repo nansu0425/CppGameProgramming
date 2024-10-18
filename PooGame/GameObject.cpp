@@ -28747,6 +28747,21 @@ void GameObjectType::Title::Draw() const
 	gfx.PutPixel(149 + x, 174 + y, 208, 34, 34);
 }
 
+GameObjectType::Poo::Poo(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, int x, int y)
+	: GameObject(wnd, gfx, x, y, WIDTH, HEIGHT)
+{
+	if ((x >= 0) && (y >= 0))
+	{
+		return;
+	}
+
+	std::uniform_int_distribution<int> distX(0, gfx.ScreenWidth - WIDTH);
+	std::uniform_int_distribution<int> distY(0, gfx.ScreenHeight - HEIGHT);
+
+	this->x = distX(rng);
+	this->y = distY(rng);
+}
+
 void GameObjectType::Poo::Draw() const
 {
 	gfx.PutPixel(14 + x, 0 + y, 138, 77, 0);

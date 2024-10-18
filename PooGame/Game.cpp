@@ -24,9 +24,8 @@
 Game::Game( MainWindow& wnd )
 	: wnd( wnd )
 	, gfx( wnd )
-{
-	pGameOver->Move();
-}
+	, gameObjFactory(wnd, gfx)
+{}
 
 Game::~Game()
 {
@@ -64,7 +63,7 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	if (!isInGame)
+	if (!isStarted)
 	{
 		StartGame();
 		return;
@@ -76,7 +75,7 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-	if (!isInGame)
+	if (!isStarted)
 	{
 		pTitle->Draw();
 		return;
@@ -127,6 +126,6 @@ void Game::StartGame()
 {
 	if (wnd.kbd.KeyIsPressed(VK_RETURN))
 	{
-		isInGame = true;
+		isStarted = true;
 	}
 }

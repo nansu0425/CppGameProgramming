@@ -25,7 +25,6 @@
 #include "Graphics.h"
 #include "GameObject.h"
 
-#include <array>
 #include <list>
 
 class Game
@@ -51,7 +50,7 @@ private:
 	/********************************/
 	/*  User Variables              */
 	/********************************/
-	GameObjectFactory					gameObjFactory = GameObjectFactory(wnd, gfx);
+	GameObjectFactory					gameObjFactory;
 	GameObjectType::Face*				pFace = gameObjFactory.Create<GameObjectType::Face>(400, 300);
 	GameObjectType::GameOver*			pGameOver = gameObjFactory.Create<GameObjectType::GameOver>(400 - GameObjectType::GameOver::WIDTH / 2, 
 																									300 - GameObjectType::GameOver::HEIGHT / 2);
@@ -59,9 +58,9 @@ private:
 																							  300 - GameObjectType::Title::HEIGHT / 2);
 	std::list<GameObjectType::Poo*>		poos =
 	{ 
-		gameObjFactory.Create<GameObjectType::Poo>(100, 200), 
-		gameObjFactory.Create<GameObjectType::Poo>(500, 500),
-		gameObjFactory.Create<GameObjectType::Poo>(600, 400),
+		gameObjFactory.Create<GameObjectType::Poo>(), 
+		gameObjFactory.Create<GameObjectType::Poo>(),
+		gameObjFactory.Create<GameObjectType::Poo>(),
 	};
-	bool isInGame = false;
+	bool isStarted = false;
 };
