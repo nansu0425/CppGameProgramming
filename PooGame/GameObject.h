@@ -59,8 +59,14 @@ namespace GameObjectType
 	class Face : public GameObject
 	{
 	public:
+		enum Size
+		{
+			WIDTH = 20,
+			HEIGHT = 20,
+		};
+
 		Face(int x, int y, MainWindow& wnd, Graphics& gfx)
-			: GameObject(x, y, 20, 20, wnd, gfx)
+			: GameObject(x, y, WIDTH, HEIGHT, wnd, gfx)
 		{}
 
 		virtual void Draw() const override;
@@ -86,8 +92,14 @@ namespace GameObjectType
 	class Title : public GameObject
 	{
 	public:
+		enum Size
+		{
+			WIDTH = 150,
+			HEIGHT = 175,
+		};
+
 		Title(int x, int y, MainWindow& wnd, Graphics& gfx)
-			: GameObject(x, y, 150, 175, wnd, gfx)
+			: GameObject(x, y, WIDTH, HEIGHT, wnd, gfx)
 		{}
 
 		virtual void Draw() const override;
@@ -96,8 +108,14 @@ namespace GameObjectType
 	class Poo : public GameObject
 	{
 	public:
+		enum Size
+		{
+			WIDTH = 24,
+			HEIGHT = 24,
+		};
+
 		Poo(int x, int y, MainWindow& wnd, Graphics& gfx)
-			: GameObject(x, y, 24, 24, wnd, gfx)
+			: GameObject(x, y, WIDTH, HEIGHT, wnd, gfx)
 		{}
 
 		virtual void Draw() const override;

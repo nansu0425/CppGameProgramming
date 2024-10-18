@@ -44,6 +44,7 @@ private:
 	/********************************/
 	void DrawPoos();
 	void DeletePoosCollided(const GameObject* pObj);
+	void StartGame();
 private:
 	MainWindow& wnd;
 	Graphics gfx;
@@ -54,11 +55,13 @@ private:
 	GameObjectType::Face*				pFace = gameObjFactory.Create<GameObjectType::Face>(400, 300);
 	GameObjectType::GameOver*			pGameOver = gameObjFactory.Create<GameObjectType::GameOver>(400 - GameObjectType::GameOver::WIDTH / 2, 
 																									300 - GameObjectType::GameOver::HEIGHT / 2);
-	GameObjectType::Title*				pTitle = gameObjFactory.Create<GameObjectType::Title>(400, 300);
+	GameObjectType::Title*				pTitle = gameObjFactory.Create<GameObjectType::Title>(400 - GameObjectType::Title::WIDTH / 2,
+																							  300 - GameObjectType::Title::HEIGHT / 2);
 	std::list<GameObjectType::Poo*>		poos =
 	{ 
 		gameObjFactory.Create<GameObjectType::Poo>(100, 200), 
 		gameObjFactory.Create<GameObjectType::Poo>(500, 500),
 		gameObjFactory.Create<GameObjectType::Poo>(600, 400),
 	};
+	bool isInGame = false;
 };

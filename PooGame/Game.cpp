@@ -64,12 +64,24 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	if (!isInGame)
+	{
+		StartGame();
+		return;
+	}
+
 	pFace->Move();
 	DeletePoosCollided(pFace);
 }
 
 void Game::ComposeFrame()
 {
+	if (!isInGame)
+	{
+		pTitle->Draw();
+		return;
+	}
+
 	if (poos.empty())
 	{
 		pGameOver->Draw();
@@ -108,5 +120,13 @@ void Game::DeletePoosCollided(const GameObject* pObj)
 		{
 			++iterPoo;
 		}
+	}
+}
+
+void Game::StartGame()
+{
+	if (wnd.kbd.KeyIsPressed(VK_RETURN))
+	{
+		isInGame = true;
 	}
 }
