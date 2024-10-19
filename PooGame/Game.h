@@ -42,6 +42,7 @@ private:
 	/*  User Functions              */
 	/********************************/
 	void DrawPoos();
+	void MovePoos();
 	void DeletePoosCollided(const GameObject* pObj);
 	void StartGame();
 private:

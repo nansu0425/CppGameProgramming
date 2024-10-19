@@ -19,11 +19,15 @@ public:
 	{}
 
 	virtual void Draw() const abstract;
-	virtual void Move();
+	virtual void Move() {}
 	bool CheckCollision(const GameObject* pOther) const;
 
 protected:
-	void ClampPositionScreen();
+	void HandleOutWindow();
+	virtual void HandleLeftOutWindow() {}
+	virtual void HandleRightOutWindow() {}
+	virtual void HandleTopOutWindow() {}
+	virtual void HandleBottomOutWindow() {}
 	int GetLeft() const;
 	int GetRight() const;
 	int GetTop() const;
@@ -77,6 +81,12 @@ namespace GameObjectType
 
 		virtual void Draw() const override;
 		virtual void Move() override;
+
+	protected:
+		virtual void HandleLeftOutWindow() override;
+		virtual void HandleRightOutWindow() override;
+		virtual void HandleTopOutWindow() override;
+		virtual void HandleBottomOutWindow() override;
 	};
 
 	class GameOver : public GameObject
@@ -123,5 +133,16 @@ namespace GameObjectType
 		Poo(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, int x = -1, int y = -1);
 
 		virtual void Draw() const override;
+		virtual void Move() override;
+
+	protected:
+		virtual void HandleLeftOutWindow() override;
+		virtual void HandleRightOutWindow() override;
+		virtual void HandleTopOutWindow() override;
+		virtual void HandleBottomOutWindow() override;
+
+	protected:
+		int veloX = 0;
+		int veloY = 0;
 	};
 }

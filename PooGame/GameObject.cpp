@@ -2,9 +2,6 @@
 #include "Graphics.h"
 #include "MainWindow.h"
 
-void GameObject::Move()
-{}
-
 int GameObject::GetLeft() const
 {
 	return x;
@@ -33,26 +30,26 @@ bool GameObject::CheckCollision(const GameObject* pOther) const
 			(GetBottom() >= pOther->GetTop()));
 }
 
-void GameObject::ClampPositionScreen()
+void GameObject::HandleOutWindow()
 {
 	if (GetLeft() < 0)
 	{
-		x = 0;
+		HandleLeftOutWindow();
 	}
 
 	if (GetRight() >= gfx.ScreenWidth)
 	{
-		x = gfx.ScreenWidth - width;
+		HandleRightOutWindow();
 	}
 
 	if (GetTop() < 0)
 	{
-		y = 0;
+		HandleTopOutWindow();
 	}
 
 	if (GetBottom() >= gfx.ScreenHeight)
 	{
-		y = gfx.ScreenHeight - height;
+		HandleBottomOutWindow();
 	}
 }
 
@@ -398,7 +395,27 @@ void GameObjectType::Face::Move()
 		++y;
 	}
 
-	ClampPositionScreen();
+	HandleOutWindow();
+}
+
+void GameObjectType::Face::HandleLeftOutWindow()
+{
+	x = 0;
+}
+
+void GameObjectType::Face::HandleRightOutWindow()
+{
+	x = gfx.ScreenWidth - width;
+}
+
+void GameObjectType::Face::HandleTopOutWindow()
+{
+	y = 0;
+}
+
+void GameObjectType::Face::HandleBottomOutWindow()
+{
+	y = gfx.ScreenHeight - height;
 }
 
 void GameObjectType::GameOver::Draw() const
@@ -28755,11 +28772,20 @@ GameObjectType::Poo::Poo(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, int 
 		return;
 	}
 
-	std::uniform_int_distribution<int> distX(0, gfx.ScreenWidth - WIDTH);
-	std::uniform_int_distribution<int> distY(0, gfx.ScreenHeight - HEIGHT);
+	std::uniform_int_distribution<> distX(0, gfx.ScreenWidth - WIDTH);
+	std::uniform_int_distribution<> distY(0, gfx.ScreenHeight - HEIGHT);
 
 	this->x = distX(rng);
 	this->y = distY(rng);
+
+	std::uniform_int_distribution<> distVelo(-1, 1);
+
+	while ((veloX == 0) ||
+		   (veloY == 0))
+	{
+		veloX = distVelo(rng);
+		veloY = distVelo(rng);
+	}
 }
 
 void GameObjectType::Poo::Draw() const
@@ -28995,4 +29021,36 @@ void GameObjectType::Poo::Draw() const
 	gfx.PutPixel(4 + x, 23 + y, 51, 28, 0);
 	gfx.PutPixel(5 + x, 23 + y, 51, 28, 0);
 	gfx.PutPixel(6 + x, 23 + y, 51, 28, 0);
+}
+
+void GameObjectType::Poo::Move()
+{
+	x += veloX;
+	y += veloY;
+
+	HandleOutWindow();
+}
+
+void GameObjectType::Poo::HandleLeftOutWindow()
+{
+	x = 0;
+	veloX = 1;
+}
+
+void GameObjectType::Poo::HandleRightOutWindow()
+{
+	x = gfx.ScreenWidth - width;
+	veloX = -1;
+}
+
+void GameObjectType::Poo::HandleTopOutWindow()
+{
+	y = 0;
+	veloY = 1;
+}
+
+void GameObjectType::Poo::HandleBottomOutWindow()
+{
+	y = gfx.ScreenHeight - height;
+	veloY = -1;
 }

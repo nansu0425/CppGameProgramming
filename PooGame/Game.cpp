@@ -70,7 +70,12 @@ void Game::UpdateModel()
 	}
 
 	pFace->Move();
-	DeletePoosCollided(pFace);
+
+	if (!poos.empty())
+	{
+		MovePoos();
+		DeletePoosCollided(pFace);
+	}
 }
 
 void Game::ComposeFrame()
@@ -98,6 +103,14 @@ void Game::DrawPoos()
 	for (const GameObjectType::Poo* pPoo : poos)
 	{
 		pPoo->Draw();
+	}
+}
+
+void Game::MovePoos()
+{
+	for (GameObjectType::Poo* pPoo : poos)
+	{
+		pPoo->Move();
 	}
 }
 
