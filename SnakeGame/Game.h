@@ -1,4 +1,4 @@
-/****************************************************************************************** 
+﻿/****************************************************************************************** 
  *	Chili DirectX Framework Version 16.07.20											  *	
  *	Game.h																				  *
  *	Copyright 2016 PlanetChili.net <http://www.planetchili.net>							  *
@@ -23,6 +23,9 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
+#include "Grid.h"
+
+#include <random>
 
 class Game
 {
@@ -43,4 +46,7 @@ private:
 	/********************************/
 	/*  User Variables              */
 	/********************************/
+	Grid grid;
+	std::random_device rd;
+	std::mt19937 rng;
 };

@@ -1,4 +1,4 @@
-/****************************************************************************************** 
+﻿/****************************************************************************************** 
  *	Chili DirectX Framework Version 16.07.20											  *	
  *	Game.cpp																			  *
  *	Copyright 2016 PlanetChili.net <http://www.planetchili.net>							  *
@@ -22,9 +22,10 @@
 #include "Game.h"
 
 Game::Game( MainWindow& wnd )
-	:
-	wnd( wnd ),
-	gfx( wnd )
+	: wnd( wnd )
+	, gfx( wnd )
+	, grid(gfx)
+	, rng(rd())
 {
 }
 
@@ -38,8 +39,25 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	std::uniform_int_distribution<> distColor(0, 255);
+
+	for (int row = 0; row < grid.m_lenRow; ++row)
+	{
+		for (int col = 0; col < grid.m_lenCol; ++col)
+		{
+			const Color color =
+			{
+				static_cast<unsigned char>(distColor(rng)),
+				static_cast<unsigned char>(distColor(rng)),
+				static_cast<unsigned char>(distColor(rng)),
+			};
+
+			grid.SetColorCell(row, col, color);
+		}
+	}
 }
 
 void Game::ComposeFrame()
 {
+	grid.DrawCells();
 }
