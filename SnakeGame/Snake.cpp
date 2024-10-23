@@ -25,6 +25,7 @@ Snake::Snake(Grid& grid, const PosGrid& pos, int periodMove)
 {
 	m_segments.emplace_front(m_pos, s_head);
 	grid.SetColorCell(m_pos, s_head);
+	grid.SetCellIsOccupied(m_pos, true);
 }
 
 void Snake::Move()
@@ -50,6 +51,14 @@ void Snake::Move()
 	auto cur = next;
 	++next;
 
+	m_grid.SetCellIsOccupied((*cur).GetPos(), false);
+
+	if (IsCollisionBody())
+	{
+		m_isStop = true;
+		return;
+	}
+
 	while (next != m_segments.end())
 	{
 		(*cur).Move(m_grid, *next);
@@ -60,6 +69,7 @@ void Snake::Move()
 
 	(*cur).Move(m_grid, m_delta);
 	m_pos = m_pos + m_delta;
+	m_grid.SetCellIsOccupied(m_pos, true);
 }
 
 void Snake::Draw() const
@@ -128,4 +138,9 @@ bool Snake::IsNextMoveValid() const
 			(next.row < m_grid.m_lenRow) &&
 			(0 <= next.col) &&
 			(next.col < m_grid.m_lenCol));
+}
+
+bool Snake::IsCollisionBody() const
+{
+	return m_grid.IsCellOccupied(m_pos + m_delta);
 }

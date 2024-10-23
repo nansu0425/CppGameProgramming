@@ -2,6 +2,11 @@
 
 #include <cassert>
 
+PosGrid PosGrid::operator+(const PosGrid& other) const
+{
+	return {row + other.row, col + other.col};
+}
+
 void Grid::Cell::Draw(Graphics& gfx) const
 {
 	for (int dx = 0; dx < lenSide; ++dx)
@@ -42,10 +47,20 @@ void Grid::DrawCells() const
 	}
 }
 
-void Grid::SetColorCell(PosGrid pos, Color color)
+void Grid::SetColorCell(const PosGrid& pos, Color color)
 {
 	assert((0 <= pos.row) && (pos.row < m_lenRow));
 	assert((0 <= pos.col) && (pos.col < m_lenCol));
 
 	m_cells[pos.row][pos.col].color = color;
+}
+
+bool Grid::IsCellOccupied(const PosGrid& pos) const
+{
+	return m_cells[pos.row][pos.col].isOccupied;
+}
+
+void Grid::SetCellIsOccupied(const PosGrid& pos, bool isOccupied)
+{
+	m_cells[pos.row][pos.col].isOccupied = isOccupied;
 }

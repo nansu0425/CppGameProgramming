@@ -58,6 +58,7 @@ private:
 	void	IncludeSegmentGrow();
 	void	IncreaseSpeed(int period);
 	bool	IsNextMoveValid() const;
+	bool	IsCollisionBody() const;
 
 private:
 	Grid&			m_grid;
