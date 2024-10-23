@@ -24,9 +24,12 @@
 Game::Game( MainWindow& wnd )
 	: wnd( wnd )
 	, gfx( wnd )
-	, grid(gfx)
 	, rng(rd())
+	, grid(gfx)
+	, snake(grid, {grid.m_lenRow / 2, grid.m_lenCol / 2}, 100)
 {
+	std::uniform_int_distribution<> distDirection(0, 3);
+	snake.SetDirection(static_cast<Snake::Direction>(distDirection(rng)));
 }
 
 void Game::Go()
@@ -39,25 +42,50 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	std::uniform_int_distribution<> distColor(0, 255);
-
-	for (int row = 0; row < grid.m_lenRow; ++row)
-	{
-		for (int col = 0; col < grid.m_lenCol; ++col)
-		{
-			const Color color =
-			{
-				static_cast<unsigned char>(distColor(rng)),
-				static_cast<unsigned char>(distColor(rng)),
-				static_cast<unsigned char>(distColor(rng)),
-			};
-
-			grid.SetColorCell(row, col, color);
-		}
-	}
+	SetDirectionSnake();
+	GrowSnake();
+	snake.Move();
 }
 
 void Game::ComposeFrame()
 {
-	grid.DrawCells();
+	snake.Draw();
+}
+
+void Game::SetDirectionSnake()
+{
+	if (wnd.kbd.KeyIsPressed(VK_LEFT))
+	{
+		snake.SetDirection(Snake::Direction::LEFT);
+	}
+
+	if (wnd.kbd.KeyIsPressed(VK_UP))
+	{
+		snake.SetDirection(Snake::Direction::UP);
+	}
+
+	if (wnd.kbd.KeyIsPressed(VK_RIGHT))
+	{
+		snake.SetDirection(Snake::Direction::RIGHT);
+	}
+
+	if (wnd.kbd.KeyIsPressed(VK_DOWN))
+	{
+		snake.SetDirection(Snake::Direction::DOWN);
+	}
+}
+
+void Game::GrowSnake()
+{
+	static int s_countGrow = 0;
+	static constexpr int s_periodGrow = 300;
+
+	if (s_countGrow < s_periodGrow)
+	{
+		++s_countGrow;
+		return;
+	}
+	s_countGrow = 0;
+
+	snake.Grow();
 }

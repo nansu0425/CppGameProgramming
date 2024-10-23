@@ -24,6 +24,7 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "Grid.h"
+#include "Snake.h"
 
 #include <random>
 
@@ -40,13 +41,16 @@ private:
 	/********************************/
 	/*  User Functions              */
 	/********************************/
+	void SetDirectionSnake();
+	void GrowSnake();
 private:
 	MainWindow& wnd;
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
 	/********************************/
-	Grid grid;
-	std::random_device rd;
-	std::mt19937 rng;
+	std::random_device	rd;
+	std::mt19937		rng;
+	Grid				grid;
+	Snake				snake;
 };

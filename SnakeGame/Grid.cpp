@@ -26,6 +26,11 @@ Grid::Grid(Graphics& gfx)
 	}
 }
 
+void Grid::Draw(const PosGrid& pos) const
+{
+	m_cells[pos.row][pos.col].Draw(m_gfx);
+}
+
 void Grid::DrawCells() const
 {
 	for (const std::vector<Cell>& cellsRow : m_cells)
@@ -37,10 +42,10 @@ void Grid::DrawCells() const
 	}
 }
 
-void Grid::SetColorCell(int row, int col, Color color)
+void Grid::SetColorCell(PosGrid pos, Color color)
 {
-	assert((0 <= row) && (row < m_lenRow));
-	assert((0 <= col) && (col < m_lenCol));
+	assert((0 <= pos.row) && (pos.row < m_lenRow));
+	assert((0 <= pos.col) && (pos.col < m_lenCol));
 
-	m_cells[row][col].color = color;
+	m_cells[pos.row][pos.col].color = color;
 }

@@ -5,6 +5,17 @@
 
 #include <vector>
 
+struct PosGrid
+{
+	int row = 0;
+	int col = 0;
+
+	PosGrid operator+(const PosGrid& other)
+	{
+		return {row + other.row, col + other.col};
+	}
+};
+
 class Grid
 {
 private:
@@ -21,12 +32,13 @@ private:
 public:
 	Grid(Graphics& gfx);
 
+	void Draw(const PosGrid& pos) const;
 	void DrawCells() const;
-	void SetColorCell(int row, int col, Color color);
+	void SetColorCell(PosGrid pos, Color color);
 
 public:
-	static constexpr int			m_lenRow = 10;
-	static constexpr int			m_lenCol = 10;
+	static constexpr int			m_lenRow = 30;
+	static constexpr int			m_lenCol = 40;
 
 private:
 	std::vector<std::vector<Cell>>	m_cells;
