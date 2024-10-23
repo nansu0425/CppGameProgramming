@@ -10,7 +10,7 @@ struct PosGrid
 	int row = 0;
 	int col = 0;
 
-	PosGrid operator+(const PosGrid& other)
+	PosGrid operator+(const PosGrid& other) const
 	{
 		return {row + other.row, col + other.col};
 	}

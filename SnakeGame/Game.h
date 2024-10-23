@@ -25,6 +25,7 @@
 #include "Graphics.h"
 #include "Grid.h"
 #include "Snake.h"
+#include "GameOver.h"
 
 #include <random>
 
@@ -53,4 +54,5 @@ private:
 	std::mt19937		rng;
 	Grid				grid;
 	Snake				snake;
+	GameOver			gameOver;
 };

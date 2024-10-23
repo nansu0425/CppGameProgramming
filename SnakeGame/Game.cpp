@@ -27,6 +27,8 @@ Game::Game( MainWindow& wnd )
 	, rng(rd())
 	, grid(gfx)
 	, snake(grid, {grid.m_lenRow / 2, grid.m_lenCol / 2}, 100)
+	, gameOver((gfx.ScreenWidth - gameOver.s_width) / 2, 
+			   (gfx.ScreenHeight - gameOver.s_height) / 2)
 {
 	std::uniform_int_distribution<> distDirection(0, 3);
 	snake.SetDirection(static_cast<Snake::Direction>(distDirection(rng)));
@@ -42,13 +44,30 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	if (gameOver.IsOver())
+	{
+		return;
+	}
+
 	SetDirectionSnake();
 	GrowSnake();
 	snake.Move();
+
+	if (snake.IsStop())
+	{
+		gameOver.SetOver();
+		return;
+	}
 }
 
 void Game::ComposeFrame()
 {
+	if (gameOver.IsOver())
+	{
+		gameOver.Draw(gfx);
+		return;
+	}
+
 	snake.Draw();
 }
 

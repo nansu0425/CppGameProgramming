@@ -29,8 +29,14 @@ Snake::Snake(Grid& grid, const PosGrid& pos, int periodMove)
 
 void Snake::Move()
 {
-	if (!IsMoveTriggered())
+	if (m_isStop || !IsMoveTriggered())
 	{
+		return;
+	}
+
+	if (!IsNextMoveValid())
+	{
+		m_isStop = true;
 		return;
 	}
 
@@ -53,6 +59,7 @@ void Snake::Move()
 	}
 
 	(*cur).Move(m_grid, m_delta);
+	m_pos = m_pos + m_delta;
 }
 
 void Snake::Draw() const
@@ -111,4 +118,14 @@ void Snake::Grow()
 void Snake::IncreaseSpeed(int period)
 {
 	m_periodMove -= period;
+}
+
+bool Snake::IsNextMoveValid() const
+{
+	PosGrid next = m_pos + m_delta;
+
+	return ((0 <= next.row) && 
+			(next.row < m_grid.m_lenRow) &&
+			(0 <= next.col) &&
+			(next.col < m_grid.m_lenCol));
 }

@@ -51,11 +51,13 @@ public:
 	void	Draw() const;
 	void	SetDirection(Direction direction);
 	void	Grow();
+	bool	IsStop() const { return m_isStop; }
 
 private:
 	bool	IsMoveTriggered();
 	void	IncludeSegmentGrow();
 	void	IncreaseSpeed(int period);
+	bool	IsNextMoveValid() const;
 
 private:
 	Grid&			m_grid;
@@ -65,6 +67,7 @@ private:
 	QueueSegments	m_segmentsGrow;
 	int				m_periodMove;
 	int				m_counterMove = 0;
+	bool			m_isStop = false;
 
 	static constexpr Color		s_head = Colors::Yellow;
 	static constexpr Color		s_body = Colors::Green;
