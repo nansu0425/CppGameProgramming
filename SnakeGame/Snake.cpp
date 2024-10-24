@@ -35,14 +35,17 @@ void Snake::Move()
 		return;
 	}
 
-	if (!IsNextMoveValid())
+	if (!IsOutGrid())
 	{
 		m_isStop = true;
 		return;
 	}
 
+	bool growed = false;
+
 	if (!m_segmentsGrow.empty())
 	{
+		growed = true;
 		IncludeSegmentGrow();
 		IncreaseSpeed(2);
 	}
@@ -51,9 +54,12 @@ void Snake::Move()
 	auto cur = next;
 	++next;
 
-	m_grid.SetCellIsOccupied((*cur).GetPos(), false);
+	if (!growed)
+	{
+		m_grid.SetCellIsOccupied((*cur).GetPos(), false);
+	}
 
-	if (IsCollisionBody())
+	if (IsCollision())
 	{
 		m_isStop = true;
 		return;
@@ -116,7 +122,10 @@ bool Snake::IsMoveTriggered()
 
 void Snake::IncludeSegmentGrow()
 {
-	m_segments.emplace_front(m_segmentsGrow.front());
+	Segment& segIncluded = m_segmentsGrow.front();
+	segIncluded.SetPos(m_segments.front().GetPos());
+
+	m_segments.emplace_front(segIncluded);
 	m_segmentsGrow.pop();
 }
 
@@ -130,7 +139,7 @@ void Snake::IncreaseSpeed(int period)
 	m_periodMove -= period;
 }
 
-bool Snake::IsNextMoveValid() const
+bool Snake::IsOutGrid() const
 {
 	PosGrid next = m_pos + m_delta;
 
@@ -140,7 +149,7 @@ bool Snake::IsNextMoveValid() const
 			(next.col < m_grid.m_lenCol));
 }
 
-bool Snake::IsCollisionBody() const
+bool Snake::IsCollision() const
 {
 	return m_grid.IsCellOccupied(m_pos + m_delta);
 }

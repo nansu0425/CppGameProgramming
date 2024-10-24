@@ -35,6 +35,7 @@ private:
 		void		Draw(const Grid& grid) const;
 
 		PosGrid		GetPos() const { return m_pos; }
+		void		SetPos(const PosGrid& pos) { m_pos = pos; }
 
 	private:
 		PosGrid		m_pos;
@@ -57,8 +58,8 @@ private:
 	bool	IsMoveTriggered();
 	void	IncludeSegmentGrow();
 	void	IncreaseSpeed(int period);
-	bool	IsNextMoveValid() const;
-	bool	IsCollisionBody() const;
+	bool	IsOutGrid() const;
+	bool	IsCollision() const;
 
 private:
 	Grid&			m_grid;
