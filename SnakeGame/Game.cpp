@@ -26,10 +26,11 @@ Game::Game( MainWindow& wnd )
 	, gfx( wnd )
 	, rng(rd())
 	, grid(gfx)
-	, snake(grid, {grid.m_lenRow / 2, grid.m_lenCol / 2}, 100)
+	, snake(grid, {grid.m_lenRow / 2, grid.m_lenCol / 2}, 80)
 	, gameOver((gfx.ScreenWidth - gameOver.s_width) / 2, 
 			   (gfx.ScreenHeight - gameOver.s_height) / 2)
 	, food(grid, rng)
+	, obstacleManager(grid, rng, 500)
 {
 	std::uniform_int_distribution<> distDirection(0, 3);
 	snake.SetDirection(static_cast<Snake::Direction>(distDirection(rng)));
@@ -58,6 +59,8 @@ void Game::UpdateModel()
 		gameOver.SetOver();
 		return;
 	}
+
+	obstacleManager.SpawnObstacle();
 }
 
 void Game::ComposeFrame()
@@ -70,6 +73,7 @@ void Game::ComposeFrame()
 
 	snake.Draw();
 	food.Draw();
+	obstacleManager.DrawObstacles();
 }
 
 void Game::SetDirectionSnake()

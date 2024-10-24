@@ -27,6 +27,7 @@
 #include "Snake.h"
 #include "GameOver.h"
 #include "Food.h"
+#include "Obstacle.h"
 
 #include <random>
 
@@ -56,4 +57,5 @@ private:
 	Snake				snake;
 	GameOver			gameOver;
 	Food				food;
+	ObstacleManager		obstacleManager;
 };

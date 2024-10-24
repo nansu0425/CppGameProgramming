@@ -18,6 +18,7 @@ enum class ObjectType
 	NONE,
 	SNAKE,
 	FOOD,
+	OBSTACLE,
 };
 
 class Grid

@@ -47,7 +47,7 @@ void Snake::Move(Food& food)
 	{
 		growed = true;
 		IncludeSegmentGrow();
-		IncreaseSpeed(2);
+		IncreaseSpeed(4);
 	}
 
 	auto next = m_segments.begin();
@@ -158,5 +158,8 @@ bool Snake::IsOutGrid() const
 
 bool Snake::IsCollision() const
 {
-	return (m_grid.GetTypeOccupied(m_pos + m_delta) == ObjectType::SNAKE);
+	const ObjectType nextPos = m_grid.GetTypeOccupied(m_pos + m_delta);
+
+	return ((nextPos == ObjectType::SNAKE) ||
+			(nextPos == ObjectType::OBSTACLE));
 }
