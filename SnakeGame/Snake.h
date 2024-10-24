@@ -49,7 +49,7 @@ private:
 public:
 	Snake(Grid& grid, const PosGrid& pos, int periodMove);
 
-	void	Move(FoodManager& foodManager);
+	void	Move(Food& food);
 	void	Draw() const;
 	void	SetDirection(Direction direction);
 	void	Grow();

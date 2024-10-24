@@ -2,60 +2,36 @@
 
 #include <cassert>
 
-Food::Food(Grid& grid, const PosGrid& pos)
-	: m_pos(pos)
+Food::Food(Grid& grid, std::mt19937& rng)
+	: m_grid(grid)
+	, m_rng(rng)
+	, m_row(0, grid.m_lenRow - 1)
+	, m_col(0, grid.m_lenCol - 1)
 {
-	grid.SetColorCell(m_pos, s_color);
-	grid.SetTypeOccupied(m_pos, ObjectType::FOOD);
+	Spawn();
 }
 
-void Food::Draw(const Grid& grid) const
+void Food::Draw() const
 {
-	grid.Draw(m_pos);
+	m_grid.Draw(m_pos);
 }
 
-void FoodManager::DrawFoods() const
+void Food::Respawn()
 {
-	for (const auto& pair : m_foods)
-	{
-		pair.second.Draw(m_grid);
-	}
+	m_grid.SetTypeOccupied(m_pos, ObjectType::NONE);
+	Spawn();
 }
 
-void FoodManager::SpawnFood()
+void Food::Spawn()
 {
-	if (!IsCountSpawn())
-	{
-		return;
-	}
+	PosGrid newPos = {m_row(m_rng), m_col(m_rng)};
 
-	PosGrid pos = {m_row(m_rng), m_col(m_rng)};
-
-	while (m_grid.GetTypeOccupied(pos) != ObjectType::NONE)
+	while (m_grid.GetTypeOccupied(newPos) != ObjectType::NONE)
 	{
-		pos = {m_row(m_rng), m_col(m_rng)};
+		newPos = {m_row(m_rng), m_col(m_rng)};
 	}
 
-	m_foods.emplace(ConvertKey(pos), Food(m_grid, pos));
-}
-
-void FoodManager::EatFood(const PosGrid& pos)
-{
-	assert(m_grid.GetTypeOccupied(pos) == ObjectType::FOOD);
-
-	m_foods.erase(ConvertKey(pos));
-	m_grid.SetTypeOccupied(pos, ObjectType::NONE);
-}
-
-bool FoodManager::IsCountSpawn()
-{
-	if (m_counterSpawn < m_periodSpawn)
-	{
-		++m_counterSpawn;
-		return false;
-	}
-
-	m_counterSpawn = 0;
-
-	return true;
+	m_pos = newPos;
+	m_grid.SetColorCell(m_pos, s_color);
+	m_grid.SetTypeOccupied(m_pos, ObjectType::FOOD);
 }

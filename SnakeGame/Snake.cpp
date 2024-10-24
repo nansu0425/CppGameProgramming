@@ -28,7 +28,7 @@ Snake::Snake(Grid& grid, const PosGrid& pos, int periodMove)
 	grid.SetTypeOccupied(m_pos, ObjectType::SNAKE);
 }
 
-void Snake::Move(FoodManager& foodManager)
+void Snake::Move(Food& food)
 {
 	if (m_isStop || !IsMoveTriggered())
 	{
@@ -78,7 +78,7 @@ void Snake::Move(FoodManager& foodManager)
 
 	if (m_grid.GetTypeOccupied(m_pos) == ObjectType::FOOD)
 	{
-		foodManager.EatFood(m_pos);
+		food.Respawn();
 		Grow();
 	}
 

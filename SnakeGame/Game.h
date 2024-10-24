@@ -55,5 +55,5 @@ private:
 	Grid				grid;
 	Snake				snake;
 	GameOver			gameOver;
-	FoodManager			foodManager;
+	Food				food;
 };
