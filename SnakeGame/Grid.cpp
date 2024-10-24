@@ -55,12 +55,12 @@ void Grid::SetColorCell(const PosGrid& pos, Color color)
 	m_cells[pos.row][pos.col].color = color;
 }
 
-bool Grid::IsCellOccupied(const PosGrid& pos) const
+ObjectType Grid::GetTypeOccupied(const PosGrid& pos) const
 {
-	return m_cells[pos.row][pos.col].isOccupied;
+	return m_cells[pos.row][pos.col].occupied;
 }
 
-void Grid::SetCellIsOccupied(const PosGrid& pos, bool isOccupied)
+void Grid::SetTypeOccupied(const PosGrid& pos, ObjectType type)
 {
-	m_cells[pos.row][pos.col].isOccupied = isOccupied;
+	m_cells[pos.row][pos.col].occupied = type;
 }

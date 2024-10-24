@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Grid.h"
+#include "Food.h"
 
 #include <forward_list>
 #include <queue>
@@ -48,7 +49,7 @@ private:
 public:
 	Snake(Grid& grid, const PosGrid& pos, int periodMove);
 
-	void	Move();
+	void	Move(FoodManager& foodManager);
 	void	Draw() const;
 	void	SetDirection(Direction direction);
 	void	Grow();

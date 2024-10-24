@@ -26,6 +26,7 @@
 #include "Grid.h"
 #include "Snake.h"
 #include "GameOver.h"
+#include "Food.h"
 
 #include <random>
 
@@ -43,7 +44,6 @@ private:
 	/*  User Functions              */
 	/********************************/
 	void SetDirectionSnake();
-	void GrowSnake();
 private:
 	MainWindow& wnd;
 	Graphics gfx;
@@ -55,4 +55,5 @@ private:
 	Grid				grid;
 	Snake				snake;
 	GameOver			gameOver;
+	FoodManager			foodManager;
 };

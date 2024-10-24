@@ -25,10 +25,10 @@ Snake::Snake(Grid& grid, const PosGrid& pos, int periodMove)
 {
 	m_segments.emplace_front(m_pos, s_head);
 	grid.SetColorCell(m_pos, s_head);
-	grid.SetCellIsOccupied(m_pos, true);
+	grid.SetTypeOccupied(m_pos, ObjectType::SNAKE);
 }
 
-void Snake::Move()
+void Snake::Move(FoodManager& foodManager)
 {
 	if (m_isStop || !IsMoveTriggered())
 	{
@@ -56,7 +56,7 @@ void Snake::Move()
 
 	if (!growed)
 	{
-		m_grid.SetCellIsOccupied((*cur).GetPos(), false);
+		m_grid.SetTypeOccupied((*cur).GetPos(), ObjectType::NONE);
 	}
 
 	if (IsCollision())
@@ -75,7 +75,14 @@ void Snake::Move()
 
 	(*cur).Move(m_grid, m_delta);
 	m_pos = m_pos + m_delta;
-	m_grid.SetCellIsOccupied(m_pos, true);
+
+	if (m_grid.GetTypeOccupied(m_pos) == ObjectType::FOOD)
+	{
+		foodManager.EatFood(m_pos);
+		Grow();
+	}
+
+	m_grid.SetTypeOccupied(m_pos, ObjectType::SNAKE);
 }
 
 void Snake::Draw() const
@@ -151,5 +158,5 @@ bool Snake::IsOutGrid() const
 
 bool Snake::IsCollision() const
 {
-	return m_grid.IsCellOccupied(m_pos + m_delta);
+	return (m_grid.GetTypeOccupied(m_pos + m_delta) == ObjectType::SNAKE);
 }
