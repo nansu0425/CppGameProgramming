@@ -28,6 +28,7 @@
 #include "GameOver.h"
 #include "Food.h"
 #include "Obstacle.h"
+#include "Wall.h"
 
 #include <random>
 
@@ -54,6 +55,7 @@ private:
 	std::random_device	rd;
 	std::mt19937		rng;
 	Grid				grid;
+	Wall				wall;
 	Snake				snake;
 	GameOver			gameOver;
 	Food				food;

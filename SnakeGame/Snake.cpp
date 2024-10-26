@@ -151,9 +151,9 @@ bool Snake::IsOutGrid() const
 	PosGrid next = m_pos + m_delta;
 
 	return ((0 <= next.row) && 
-			(next.row < m_grid.m_lenRow) &&
+			(next.row < m_grid.s_lenRow) &&
 			(0 <= next.col) &&
-			(next.col < m_grid.m_lenCol));
+			(next.col < m_grid.s_lenCol));
 }
 
 bool Snake::IsCollision() const
@@ -161,5 +161,6 @@ bool Snake::IsCollision() const
 	const ObjectType nextPos = m_grid.GetTypeOccupied(m_pos + m_delta);
 
 	return ((nextPos == ObjectType::SNAKE) ||
-			(nextPos == ObjectType::OBSTACLE));
+			(nextPos == ObjectType::OBSTACLE) ||
+			(nextPos == ObjectType::WALL));
 }

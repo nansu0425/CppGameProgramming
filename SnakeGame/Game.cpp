@@ -26,7 +26,8 @@ Game::Game( MainWindow& wnd )
 	, gfx( wnd )
 	, rng(rd())
 	, grid(gfx)
-	, snake(grid, {grid.m_lenRow / 2, grid.m_lenCol / 2}, 80)
+	, wall(grid)
+	, snake(grid, {grid.s_lenRow / 2, grid.s_lenCol / 2}, 80)
 	, gameOver((gfx.ScreenWidth - gameOver.s_width) / 2, 
 			   (gfx.ScreenHeight - gameOver.s_height) / 2)
 	, food(grid, rng)
@@ -71,6 +72,7 @@ void Game::ComposeFrame()
 		return;
 	}
 
+	wall.Draw();
 	snake.Draw();
 	food.Draw();
 	obstacleManager.DrawObstacles();

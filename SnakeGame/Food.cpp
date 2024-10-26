@@ -1,12 +1,13 @@
 ﻿#include "Food.h"
+#include "Wall.h"
 
 #include <cassert>
 
 Food::Food(Grid& grid, std::mt19937& rng)
 	: m_grid(grid)
 	, m_rng(rng)
-	, m_row(0, grid.m_lenRow - 1)
-	, m_col(0, grid.m_lenCol - 1)
+	, m_row(Wall::s_length, grid.s_lenRow - Wall::s_length - 1)
+	, m_col(Wall::s_length, grid.s_lenCol - Wall::s_length - 1)
 {
 	Spawn();
 }

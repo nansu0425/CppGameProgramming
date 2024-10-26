@@ -152,6 +152,7 @@
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Snake.h" />
+    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DXErr.cpp" />
@@ -166,6 +167,7 @@
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="Snake.cpp" />
+    <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FramebufferPS.hlsl">
