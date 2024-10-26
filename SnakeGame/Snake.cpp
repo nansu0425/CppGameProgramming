@@ -138,7 +138,20 @@ void Snake::IncludeSegmentGrow()
 
 void Snake::Grow()
 {
-	m_segmentsGrow.emplace(s_body);
+	static int s_idxNextColorBody = 0;
+	static int s_diffIdx = 1;
+
+	m_segmentsGrow.emplace(s_colorsBody[s_idxNextColorBody]);
+	s_idxNextColorBody += s_diffIdx;
+
+	if (s_idxNextColorBody == s_numColorsBody - 1)
+	{
+		s_diffIdx = -1;
+	}
+	else if (s_idxNextColorBody == 0)
+	{
+		s_diffIdx = 1;
+	}
 }
 
 void Snake::IncreaseSpeed(int period)

@@ -10,9 +10,9 @@ PosGrid PosGrid::operator+(const PosGrid& other) const
 
 void Grid::Cell::Draw(Graphics& gfx) const
 {
-	for (int dx = 0; dx < lenSide; ++dx)
+	for (int dx = Grid::s_lenBorderLine; dx < lenSide - Grid::s_lenBorderLine; ++dx)
 	{
-		for (int dy = 0; dy < lenSide; ++dy)
+		for (int dy = Grid::s_lenBorderLine; dy < lenSide - Grid::s_lenBorderLine; ++dy)
 		{
 			gfx.PutPixel(x + dx, y + dy, color);
 		}

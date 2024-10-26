@@ -53,6 +53,7 @@ public:
 public:
 	static constexpr int			s_lenRow = 30;
 	static constexpr int			s_lenCol = 40;
+	static constexpr int			s_lenBorderLine = 1;
 
 private:
 	std::vector<std::vector<Cell>>	m_cells;

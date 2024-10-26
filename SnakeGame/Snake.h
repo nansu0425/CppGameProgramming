@@ -73,5 +73,12 @@ private:
 	bool			m_isStop = false;
 
 	static constexpr Color		s_head = Colors::Yellow;
-	static constexpr Color		s_body = Colors::Green;
+	static constexpr int		s_numColorsBody = 4;
+	static constexpr Color		s_colorsBody[s_numColorsBody] =
+	{
+		{10, 100, 32},
+		{10, 130, 48},
+		{18, 160, 48},
+		{10, 130, 48},
+	};
 };
