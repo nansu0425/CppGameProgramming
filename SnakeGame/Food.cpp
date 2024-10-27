@@ -19,8 +19,9 @@ void Food::Draw() const
 
 void Food::Respawn()
 {
-	m_grid.SetTypeOccupied(m_pos, ObjectType::NONE);
+	PosGrid prevFood = m_pos;
 	Spawn();
+	m_grid.SetTypeOccupied(prevFood, ObjectType::NONE);
 }
 
 void Food::Spawn()
