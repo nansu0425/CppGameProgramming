@@ -7,6 +7,8 @@
 #include <queue>
 #include <random>
 
+class FrameTimer;
+
 class Snake
 {
 public:
@@ -47,7 +49,7 @@ private:
 	using QueueSegments		= std::queue<Segment>;
 
 public:
-	Snake(Grid& grid, const PosGrid& pos, int periodMove);
+	Snake(Grid& grid, const PosGrid& pos, float periodMove, const FrameTimer& frameTimer);
 
 	void	Move(Food& food);
 	void	Draw() const;
@@ -58,19 +60,20 @@ public:
 private:
 	bool	IsMoveTriggered();
 	void	IncludeSegmentGrow();
-	void	IncreaseSpeed(int period);
+	void	DecreasePeriodMove(float percentage);
 	bool	IsOutGrid() const;
 	bool	IsCollision() const;
 
 private:
-	Grid&			m_grid;
-	PosGrid			m_pos;
-	PosGrid			m_delta;
-	ListSegments	m_segments;
-	QueueSegments	m_segmentsGrow;
-	int				m_periodMove;
-	int				m_counterMove = 0;
-	bool			m_isStop = false;
+	Grid&				m_grid;
+	PosGrid				m_pos;
+	PosGrid				m_delta;
+	ListSegments		m_segments;
+	QueueSegments		m_segmentsGrow;
+	const FrameTimer&	m_frameTimer;
+	float				m_periodMove;
+	float				m_sumDeltaTime = 0.0f;
+	bool				m_isStop = false;
 
 	static constexpr Color		s_head = Colors::Yellow;
 	static constexpr int		s_numColorsBody = 4;

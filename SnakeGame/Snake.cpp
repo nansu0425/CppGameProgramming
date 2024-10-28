@@ -1,5 +1,6 @@
 ﻿#include "Snake.h"
 #include "Keyboard.h"
+#include "FrameTimer.h"
 
 void Snake::Segment::Move(Grid& grid, const Segment& next)
 {
@@ -18,10 +19,11 @@ void Snake::Segment::Draw(const Grid& grid) const
 	grid.Draw(m_pos);
 }
 
-Snake::Snake(Grid& grid, const PosGrid& pos, int periodMove)
+Snake::Snake(Grid& grid, const PosGrid& pos, float periodMove, const FrameTimer& frameTimer)
 	: m_grid(grid)
 	, m_pos(pos)
 	, m_periodMove(periodMove)
+	, m_frameTimer(frameTimer)
 {
 	m_segments.emplace_front(m_pos, s_head);
 	grid.SetColorCell(m_pos, s_head);
@@ -47,7 +49,7 @@ void Snake::Move(Food& food)
 	{
 		growed = true;
 		IncludeSegmentGrow();
-		IncreaseSpeed(4);
+		DecreasePeriodMove(15.0f);
 	}
 
 	auto next = m_segments.begin();
@@ -116,13 +118,13 @@ void Snake::SetDirection(Direction direction)
 
 bool Snake::IsMoveTriggered()
 {
-	if (m_counterMove < m_periodMove)
+	if (m_sumDeltaTime < m_periodMove)
 	{
-		++m_counterMove;
+		m_sumDeltaTime += m_frameTimer.GetSecondsDeltaTime();
 		return false;
 	}
 
-	m_counterMove = 0;
+	m_sumDeltaTime = 0.0f;
 	
 	return true;
 }
@@ -154,9 +156,9 @@ void Snake::Grow()
 	}
 }
 
-void Snake::IncreaseSpeed(int period)
+void Snake::DecreasePeriodMove(float percentage)
 {
-	m_periodMove -= period;
+	m_periodMove *= 1.0f - percentage / 100.0f;
 }
 
 bool Snake::IsOutGrid() const

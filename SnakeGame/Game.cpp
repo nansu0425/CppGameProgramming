@@ -27,11 +27,11 @@ Game::Game( MainWindow& wnd )
 	, rng(rd())
 	, grid(gfx)
 	, wall(grid)
-	, snake(grid, {grid.s_lenRow / 2, grid.s_lenCol / 2}, 80)
-	, gameOver((gfx.ScreenWidth - gameOver.s_width) / 2, 
-			   (gfx.ScreenHeight - gameOver.s_height) / 2)
+	, snake(grid, {grid.s_lenRow / 2, grid.s_lenCol / 2}, 0.8f, frameTimer)
 	, food(grid, rng)
 	, obstacleManager(grid, rng, 500)
+	, gameOver((gfx.ScreenWidth - gameOver.s_width) / 2,
+			   (gfx.ScreenHeight - gameOver.s_height) / 2)
 {
 	std::uniform_int_distribution<> distDirection(0, 3);
 	snake.SetDirection(static_cast<Snake::Direction>(distDirection(rng)));
@@ -51,6 +51,8 @@ void Game::UpdateModel()
 	{
 		return;
 	}
+
+	frameTimer.UpdateDeltaTime();
 
 	SetDirectionSnake();
 	snake.Move(food);

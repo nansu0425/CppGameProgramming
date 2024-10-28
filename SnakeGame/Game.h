@@ -29,6 +29,7 @@
 #include "Food.h"
 #include "Obstacle.h"
 #include "Wall.h"
+#include "FrameTimer.h"
 
 #include <random>
 
@@ -56,8 +57,9 @@ private:
 	std::mt19937		rng;
 	Grid				grid;
 	Wall				wall;
+	FrameTimer			frameTimer;
 	Snake				snake;
-	GameOver			gameOver;
 	Food				food;
 	ObstacleManager		obstacleManager;
+	GameOver			gameOver;
 };
