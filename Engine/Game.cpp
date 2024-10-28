@@ -20,7 +20,8 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
-#include "math.h"
+
+#include <chrono>
 
 Game::Game( MainWindow& wnd )
 	:
@@ -39,68 +40,26 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	MoveWhiteBox();
-	ScaleWhiteBox();
+
 }
 
 void Game::ComposeFrame()
 {
-	DrawWhiteBox();
-}
+	using Clock = std::chrono::steady_clock;
+	using Duration = std::chrono::duration<float>;
 
-void Game::DrawWhiteBox()
-{
-	for (int dx = 0; dx < width; ++dx)
+	Clock::time_point start = Clock::now();
+
+	for (int x = 0; x < Graphics::ScreenWidth; ++x)
 	{
-		for (int dy = 0; dy < height; ++dy)
+		for (int y = 0; y < Graphics::ScreenHeight; ++y)
 		{
-			gfx.PutPixel(x + dx, y + dy, 255, 255, 255);
+			gfx.PutPixel(x, y, Colors::Green);
 		}
 	}
-}
 
-void Game::MoveWhiteBox()
-{
-	if (wnd.kbd.KeyIsPressed(VK_LEFT))
-	{
-		--x;
-	}
-
-	if (wnd.kbd.KeyIsPressed(VK_UP))
-	{
-		--y;
-	}
-
-	if (wnd.kbd.KeyIsPressed(VK_RIGHT))
-	{
-		++x;
-	}
-
-	if (wnd.kbd.KeyIsPressed(VK_DOWN))
-	{
-		++y;
-	}
-}
-
-void Game::ScaleWhiteBox()
-{
-	if (wnd.kbd.KeyIsPressed('A'))
-	{
-		--width;
-	}
-
-	if (wnd.kbd.KeyIsPressed('W'))
-	{
-		--height;
-	}
-
-	if (wnd.kbd.KeyIsPressed('D'))
-	{
-		++width;
-	}
-
-	if (wnd.kbd.KeyIsPressed('S'))
-	{
-		++height;
-	}
+	Clock::time_point end = Clock::now();
+	
+	Duration runtime = end - start;
+	const float secRuntime = runtime.count();
 }
