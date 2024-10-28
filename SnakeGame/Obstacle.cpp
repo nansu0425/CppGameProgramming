@@ -1,4 +1,5 @@
 ﻿#include "Obstacle.h"
+#include "FrameTimer.h"
 
 Obstacle::Obstacle(Grid& grid, const PosGrid& pos)
 	: m_pos(pos)
@@ -12,6 +13,15 @@ void Obstacle::Draw(const Grid& grid) const
 	grid.Draw(m_pos);
 }
 
+ObstacleManager::ObstacleManager(Grid& grid, std::mt19937& rng, float periodSpawn, const FrameTimer& frameTimer)
+	: m_grid(grid)
+	, m_rng(rng)
+	, m_frameTimer(frameTimer)
+	, m_row(Wall::s_length, grid.s_lenRow - Wall::s_length - 1)
+	, m_col(Wall::s_length, grid.s_lenCol - Wall::s_length - 1)
+	, m_periodSpawn(periodSpawn)
+{}
+
 void ObstacleManager::DrawObstacles() const
 {
 	for (const Obstacle& o : m_obstacles)
@@ -22,7 +32,7 @@ void ObstacleManager::DrawObstacles() const
 
 void ObstacleManager::SpawnObstacle()
 {
-	if (!IsCountSpawn())
+	if (!CanSpawn())
 	{
 		return;
 	}
@@ -37,15 +47,15 @@ void ObstacleManager::SpawnObstacle()
 	m_obstacles.emplace_front(m_grid, newPos);
 }
 
-bool ObstacleManager::IsCountSpawn()
+bool ObstacleManager::CanSpawn()
 {
-	if (m_counterSpawn < m_periodSpawn)
+	if (m_sumDeltaTime < m_periodSpawn)
 	{
-		++m_counterSpawn;
+		m_sumDeltaTime += m_frameTimer.GetSecondsDeltaTime();
 		return false;
 	}
 
-	m_counterSpawn = 0;
+	m_sumDeltaTime = 0.0f;
 
 	return true;
 }

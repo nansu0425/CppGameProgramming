@@ -7,6 +7,8 @@
 #include <forward_list>
 #include <random>
 
+class FrameTimer;
+
 class Obstacle
 {
 public:
@@ -29,26 +31,21 @@ private:
 	using RandNumGen		= std::mt19937;
 
 public:
-	ObstacleManager(Grid& grid, std::mt19937& rng, int periodSpawn)
-		: m_grid(grid)
-		, m_rng(rng)
-		, m_row(Wall::s_length, grid.s_lenRow - Wall::s_length - 1)
-		, m_col(Wall::s_length, grid.s_lenCol - Wall::s_length - 1)
-		, m_periodSpawn(periodSpawn)
-	{}
+	ObstacleManager(Grid& grid, std::mt19937& rng, float periodSpawn, const FrameTimer& frameTimer);
 
 	void	DrawObstacles() const;
 	void	SpawnObstacle();
 
 private:
-	bool	IsCountSpawn();
+	bool	CanSpawn();
 
 private:
 	ListObstacles		m_obstacles;
 	Grid&				m_grid;
 	RandNumGen&			m_rng;
+	const FrameTimer&	m_frameTimer;
 	UniformDist			m_row;
 	UniformDist			m_col;
-	int					m_periodSpawn;
-	int					m_counterSpawn = 0;
+	float				m_periodSpawn;
+	float				m_sumDeltaTime = 0.0f;
 };

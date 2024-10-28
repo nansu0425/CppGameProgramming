@@ -29,7 +29,7 @@ Game::Game( MainWindow& wnd )
 	, wall(grid)
 	, snake(grid, {grid.s_lenRow / 2, grid.s_lenCol / 2}, 0.8f, frameTimer)
 	, food(grid, rng)
-	, obstacleManager(grid, rng, 500)
+	, obstacleManager(grid, rng, 5.0f, frameTimer)
 	, gameOver((gfx.ScreenWidth - gameOver.s_width) / 2,
 			   (gfx.ScreenHeight - gameOver.s_height) / 2)
 {
