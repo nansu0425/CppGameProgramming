@@ -9,7 +9,7 @@ class MainWindow;
 class GameObject
 {
 public:
-	GameObject(MainWindow& wnd, Graphics& gfx, int x, int y, int width, int height)
+	GameObject(MainWindow& wnd, Graphics& gfx, float x, float y, float width, float height)
 		: wnd(wnd)
 		, gfx(gfx)
 		, x(x)
@@ -19,7 +19,7 @@ public:
 	{}
 
 	virtual void Draw() const abstract;
-	virtual void Move() {}
+	virtual void Move(float secondsDeltaTime) {}
 	bool CheckCollision(const GameObject* pOther) const;
 
 protected:
@@ -28,18 +28,18 @@ protected:
 	virtual void HandleRightOutWindow() {}
 	virtual void HandleTopOutWindow() {}
 	virtual void HandleBottomOutWindow() {}
-	int GetLeft() const;
-	int GetRight() const;
-	int GetTop() const;
-	int GetBottom() const;
+	float GetLeft() const;
+	float GetRight() const;
+	float GetTop() const;
+	float GetBottom() const;
 
 protected:
 	MainWindow& wnd;
 	Graphics& gfx;
-	int x;
-	int y;
-	int width;
-	int height;
+	float x;
+	float y;
+	float width;
+	float height;
 };
 
 class GameObjectFactory
@@ -69,37 +69,35 @@ namespace GameObjectType
 	class Face : public GameObject
 	{
 	public:
-		enum Size
-		{
-			WIDTH = 20,
-			HEIGHT = 20,
-		};
+		static constexpr float s_width = 20.0f;
+		static constexpr float s_height = 20.0f;
 
-		Face(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, int x = 0, int y = 0)
-			: GameObject(wnd, gfx, x, y, WIDTH, HEIGHT)
+		Face(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, float x = 0, float y = 0)
+			: GameObject(wnd, gfx, x, y, s_width, s_height)
 		{}
 
 		virtual void Draw() const override;
-		virtual void Move() override;
+		virtual void Move(float secondsDeltaTime) override;
 
 	protected:
 		virtual void HandleLeftOutWindow() override;
 		virtual void HandleRightOutWindow() override;
 		virtual void HandleTopOutWindow() override;
 		virtual void HandleBottomOutWindow() override;
+
+	protected:
+		float velocityY = 60;
+		float velocityX = 60;
 	};
 
 	class GameOver : public GameObject
 	{
 	public:
-		enum Size
-		{
-			WIDTH = 86,
-			HEIGHT = 64,
-		};
+		static constexpr float s_width = 86.0f;
+		static constexpr float s_height = 64.0f;
 
-		GameOver(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, int x = 0, int y = 0)
-			: GameObject(wnd, gfx, x, y, WIDTH, HEIGHT)
+		GameOver(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, float x = 0, float y = 0)
+			: GameObject(wnd, gfx, x, y, s_width, s_height)
 		{}
 
 		virtual void Draw() const override;
@@ -108,14 +106,11 @@ namespace GameObjectType
 	class Title : public GameObject
 	{
 	public:
-		enum Size
-		{
-			WIDTH = 150,
-			HEIGHT = 175,
-		};
+		static constexpr float s_width = 150.0f;
+		static constexpr float s_height = 175.0f;
 
-		Title(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, int x = 0, int y = 0)
-			: GameObject(wnd, gfx, x, y, WIDTH, HEIGHT)
+		Title(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, float x = 0, float y = 0)
+			: GameObject(wnd, gfx, x, y, s_width, s_height)
 		{}
 
 		virtual void Draw() const override;
@@ -124,16 +119,13 @@ namespace GameObjectType
 	class Poo : public GameObject
 	{
 	public:
-		enum Size
-		{
-			WIDTH = 24,
-			HEIGHT = 24,
-		};
+		static constexpr float s_width = 24.0f;
+		static constexpr float s_height = 24.0f;
 
-		Poo(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, int x = -1, int y = -1);
+		Poo(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, float x = -1, float y = -1);
 
 		virtual void Draw() const override;
-		virtual void Move() override;
+		virtual void Move(float secondsDeltaTime) override;
 
 	protected:
 		virtual void HandleLeftOutWindow() override;
@@ -142,7 +134,7 @@ namespace GameObjectType
 		virtual void HandleBottomOutWindow() override;
 
 	protected:
-		int veloX = 0;
-		int veloY = 0;
+		int directionY = 0;
+		int directionX = 0;
 	};
 }

@@ -63,17 +63,19 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	const float secondsDeltaTime = frameTimer.GetSecondsDeltaTime();
+
 	if (!isStarted)
 	{
 		StartGame();
 		return;
 	}
 
-	pFace->Move();
+	pFace->Move(secondsDeltaTime);
 
 	if (!poos.empty())
 	{
-		MovePoos();
+		MovePoos(secondsDeltaTime);
 		DeletePoosCollided(pFace);
 	}
 }
@@ -106,11 +108,11 @@ void Game::DrawPoos()
 	}
 }
 
-void Game::MovePoos()
+void Game::MovePoos(float secondsDeltaTime)
 {
 	for (GameObjectType::Poo* pPoo : poos)
 	{
-		pPoo->Move();
+		pPoo->Move(secondsDeltaTime);
 	}
 }
 

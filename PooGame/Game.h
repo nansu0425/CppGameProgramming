@@ -24,6 +24,7 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "GameObject.h"
+#include "FrameTimer.h"
 
 #include <list>
 
@@ -42,7 +43,7 @@ private:
 	/*  User Functions              */
 	/********************************/
 	void DrawPoos();
-	void MovePoos();
+	void MovePoos(float secondsDeltaTime);
 	void DeletePoosCollided(const GameObject* pObj);
 	void StartGame();
 private:
@@ -51,12 +52,13 @@ private:
 	/********************************/
 	/*  User Variables              */
 	/********************************/
+	FrameTimer							frameTimer;
 	GameObjectFactory					gameObjFactory;
-	GameObjectType::Face*				pFace = gameObjFactory.Create<GameObjectType::Face>(400, 300);
-	GameObjectType::GameOver*			pGameOver = gameObjFactory.Create<GameObjectType::GameOver>(400 - GameObjectType::GameOver::WIDTH / 2, 
-																									300 - GameObjectType::GameOver::HEIGHT / 2);
-	GameObjectType::Title*				pTitle = gameObjFactory.Create<GameObjectType::Title>(400 - GameObjectType::Title::WIDTH / 2,
-																							  300 - GameObjectType::Title::HEIGHT / 2);
+	GameObjectType::Face*				pFace = gameObjFactory.Create<GameObjectType::Face>(400.0f, 300.0f);
+	GameObjectType::GameOver*			pGameOver = gameObjFactory.Create<GameObjectType::GameOver>(400.0f - GameObjectType::GameOver::s_width / 2,
+																									300.0f - GameObjectType::GameOver::s_height / 2);
+	GameObjectType::Title*				pTitle = gameObjFactory.Create<GameObjectType::Title>(400.0f - GameObjectType::Title::s_width / 2,
+																							  300.0f - GameObjectType::Title::s_height / 2);
 	std::list<GameObjectType::Poo*>		poos =
 	{ 
 		gameObjFactory.Create<GameObjectType::Poo>(), 
