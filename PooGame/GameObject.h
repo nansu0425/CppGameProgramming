@@ -7,11 +7,12 @@
 
 class Graphics;
 class MainWindow;
+class Mouse;
 
 class GameObject
 {
 public:
-	GameObject(MainWindow& wnd, Graphics& gfx, const Vector& position, const Vector& size);
+	GameObject(Graphics& gfx, const Vector& position, const Vector& size);
 
 	virtual void Draw() const abstract;
 	virtual void Move(float secondsDeltaTime) {}
@@ -29,7 +30,6 @@ protected:
 	float GetBottom() const;
 
 protected:
-	MainWindow& wnd;
 	Graphics& gfx;
 	Vector position;
 	Vector size;
@@ -38,20 +38,18 @@ protected:
 class GameObjectFactory
 {
 public:
-	GameObjectFactory(MainWindow& wnd, Graphics& gfx)
-		: wnd(wnd)
-		, gfx(gfx)
+	GameObjectFactory(Graphics& gfx)
+		: gfx(gfx)
 		, rng(rd())
 	{}
 
 	template<typename T, typename... Args>
 	T* Create(Args&&... args)
 	{
-		return new T(wnd, gfx, rng, std::forward<Args>(args)...);
+		return new T(gfx, rng, std::forward<Args>(args)...);
 	}
 
 private:
-	MainWindow& wnd;
 	Graphics& gfx;
 	std::random_device rd;
 	std::mt19937 rng;
@@ -64,8 +62,9 @@ namespace GameObjectType
 	public:
 		static constexpr Vector s_size = Vector(20.0f, 20.0f);
 
-		Face(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, const Vector& position)
-			: GameObject(wnd, gfx, position, s_size)
+		Face(Graphics& gfx, std::mt19937& rng, const Vector& position, const Mouse& mouse)
+			: GameObject(gfx, position, s_size)
+			, mouse(mouse)
 		{}
 
 		virtual void Draw() const override;
@@ -78,6 +77,7 @@ namespace GameObjectType
 		virtual void HandleBottomOutWindow() override;
 
 	protected:
+		const Mouse& mouse;
 		static constexpr float s_speed = 120.0f;
 		Vector direction;
 	};
@@ -87,8 +87,8 @@ namespace GameObjectType
 	public:
 		static constexpr Vector s_size = Vector(86.0f, 64.0f);
 
-		GameOver(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, const Vector& position)
-			: GameObject(wnd, gfx, position, s_size)
+		GameOver(Graphics& gfx, std::mt19937& rng, const Vector& position)
+			: GameObject(gfx, position, s_size)
 		{}
 
 		virtual void Draw() const override;
@@ -99,8 +99,8 @@ namespace GameObjectType
 	public:
 		static constexpr Vector s_size = Vector(150.0f, 175.0f);
 
-		Title(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, const Vector& position)
-			: GameObject(wnd, gfx, position, s_size)
+		Title(Graphics& gfx, std::mt19937& rng, const Vector& position)
+			: GameObject(gfx, position, s_size)
 		{}
 
 		virtual void Draw() const override;
@@ -111,7 +111,7 @@ namespace GameObjectType
 	public:
 		static constexpr Vector s_size = Vector(24.0f, 24.0f);
 
-		Poo(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, const Vector& position = Vector(-1.0f, -1.0f));
+		Poo(Graphics& gfx, std::mt19937& rng, const Vector& position = Vector(-1.0f, -1.0f));
 
 		virtual void Draw() const override;
 		virtual void Move(float secondsDeltaTime) override;

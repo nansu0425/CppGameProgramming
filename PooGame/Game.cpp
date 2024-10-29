@@ -25,8 +25,8 @@
 Game::Game( MainWindow& wnd )
 	: wnd( wnd )
 	, gfx( wnd )
-	, gameObjFactory(wnd, gfx)
-	, pFace(gameObjFactory.Create<GameObjectType::Face>(Vector(400.0f, 300.0f)))
+	, gameObjFactory(gfx)
+	, pFace(gameObjFactory.Create<GameObjectType::Face>(Vector(400.0f, 300.0f), wnd.mouse))
 	, pGameOver(gameObjFactory.Create<GameObjectType::GameOver>(Vector(400.0f - GameObjectType::GameOver::s_size.x / 2, 
 																	   300.0f - GameObjectType::GameOver::s_size.y / 2)))
 	, pTitle(gameObjFactory.Create<GameObjectType::Title>(Vector(400.0f - GameObjectType::Title::s_size.x / 2, 

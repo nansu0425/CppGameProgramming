@@ -1,10 +1,10 @@
 ﻿#include "GameObject.h"
 #include "Graphics.h"
 #include "MainWindow.h"
+#include "Mouse.h"
 
-GameObject::GameObject(MainWindow& wnd, Graphics& gfx, const Vector& position, const Vector& size)
-	: wnd(wnd)
-	, gfx(gfx)
+GameObject::GameObject(Graphics& gfx, const Vector& position, const Vector& size)
+	: gfx(gfx)
 	, position(position)
 	, size(size)
 {}
@@ -385,29 +385,19 @@ void GameObjectType::Face::Draw() const
 
 void GameObjectType::Face::Move(float secondsDeltaTime)
 {
-	direction = {0.0f, 0.0f};
-
-	if (wnd.kbd.KeyIsPressed(VK_LEFT))
+	if (!mouse.LeftIsPressed())
 	{
-		--direction.x;
+		return;
 	}
 
-	if (wnd.kbd.KeyIsPressed(VK_UP))
-	{
-		--direction.y;
-	}
+	const Vector center(position.x + size.x / 2.0f,
+						position.y + size.y / 2.0f);
 
-	if (wnd.kbd.KeyIsPressed(VK_RIGHT))
-	{
-		++direction.x;
-	}
+	direction = {static_cast<float>(mouse.GetPosX()), 
+				 static_cast<float>(mouse.GetPosY())};
+	direction -= center;
 
-	if (wnd.kbd.KeyIsPressed(VK_DOWN))
-	{
-		++direction.y;
-	}
-
-	if (direction.IsZero())
+	if (direction.IsZero() || direction.GetLength() < 1.0f)
 	{
 		return;
 	}
@@ -28789,8 +28779,8 @@ void GameObjectType::Title::Draw() const
 	gfx.PutPixel(149 + x, 174 + y, 208, 34, 34);
 }
 
-GameObjectType::Poo::Poo(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, const Vector& position)
-	: GameObject(wnd, gfx, position, s_size)
+GameObjectType::Poo::Poo(Graphics& gfx, std::mt19937& rng, const Vector& position)
+	: GameObject(gfx, position, s_size)
 {
 	// 위치 설정
 	if ((position.x < 0) || (position.y < 0))
