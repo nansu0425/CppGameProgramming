@@ -149,6 +149,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DXErr.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FramebufferPS.hlsl">
