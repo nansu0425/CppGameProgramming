@@ -31,10 +31,12 @@ Game::Game( MainWindow& wnd )
 																	   300.0f - GameObjectType::GameOver::s_size.y / 2)))
 	, pTitle(gameObjFactory.Create<GameObjectType::Title>(Vector(400.0f - GameObjectType::Title::s_size.x / 2, 
 																 300.0f - GameObjectType::Title::s_size.y / 2)))
-	, poos{gameObjFactory.Create<GameObjectType::Poo>(), 
-		   gameObjFactory.Create<GameObjectType::Poo>(), 
-		   gameObjFactory.Create<GameObjectType::Poo>(),}
-{}
+{
+	for (int count = 0; count < s_numPoos; ++count)
+	{
+		poos.emplace_back(gameObjFactory.Create<GameObjectType::Poo>());
+	}
+}
 
 Game::~Game()
 {

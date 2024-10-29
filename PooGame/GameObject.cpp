@@ -28792,17 +28792,17 @@ void GameObjectType::Title::Draw() const
 GameObjectType::Poo::Poo(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, const Vector& position)
 	: GameObject(wnd, gfx, position, s_size)
 {
-	if ((position.x >= 0) && (position.y >= 0))
+	// 위치 설정
+	if ((position.x < 0) || (position.y < 0))
 	{
-		return;
+		std::uniform_real_distribution<float> xAxis(0.0f, static_cast<float>(gfx.ScreenWidth - size.x));
+		std::uniform_real_distribution<float> yAxis(0.0f, static_cast<float>(gfx.ScreenHeight - size.y));
+
+		this->position.x = xAxis(rng);
+		this->position.y = yAxis(rng);
 	}
 
-	std::uniform_real_distribution<float> xAxis(0.0f, static_cast<float>(gfx.ScreenWidth - size.x));
-	std::uniform_real_distribution<float> yAxis(0.0f, static_cast<float>(gfx.ScreenHeight - size.y));
-
-	this->position.x = xAxis(rng);
-	this->position.y = yAxis(rng);
-
+	// 방향 설정
 	std::uniform_int_distribution<> distDirection(-1, 1);
 
 	while ((direction.x == 0.0f) ||
@@ -28811,6 +28811,11 @@ GameObjectType::Poo::Poo(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, cons
 		direction.x = static_cast<float>(distDirection(rng));
 		direction.y = static_cast<float>(distDirection(rng));
 	}
+
+	// 속력 설정
+	std::uniform_real_distribution<float> speed(s_minSpeed, s_maxSpeed);
+
+	this->speed = speed(rng);
 }
 
 void GameObjectType::Poo::Draw() const
@@ -29053,7 +29058,7 @@ void GameObjectType::Poo::Draw() const
 
 void GameObjectType::Poo::Move(float secondsDeltaTime)
 {
-	position += direction.GetNormalized() * s_velocity * secondsDeltaTime;
+	position += direction.GetNormalized() * speed * secondsDeltaTime;
 
 	HandleOutWindow();
 }

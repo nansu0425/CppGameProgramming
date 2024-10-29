@@ -58,5 +58,6 @@ private:
 	GameObjectType::GameOver*			pGameOver;
 	GameObjectType::Title*				pTitle;
 	std::list<GameObjectType::Poo*>		poos;
-	bool isStarted = false;
+	bool								isStarted = false;
+	static constexpr int				s_numPoos = 10;
 };

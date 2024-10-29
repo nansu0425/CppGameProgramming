@@ -78,7 +78,7 @@ namespace GameObjectType
 		virtual void HandleBottomOutWindow() override;
 
 	protected:
-		static constexpr float s_speed = 120;
+		static constexpr float s_speed = 120.0f;
 		Vector direction;
 	};
 
@@ -123,7 +123,9 @@ namespace GameObjectType
 		virtual void HandleBottomOutWindow() override;
 
 	protected:
-		static constexpr float s_velocity = 60;
+		static constexpr float s_minSpeed = 60.0f;
+		static constexpr float s_maxSpeed = 180.0f;
 		Vector direction;
+		float speed = 0.0f;
 	};
 }
