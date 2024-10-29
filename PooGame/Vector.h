@@ -2,11 +2,15 @@
 
 struct Vector
 {
-	Vector() = default;
-	Vector(float x, float y);
+	constexpr Vector() = default;
+	constexpr Vector(float x, float y)
+		: x(x)
+		, y(y)
+	{}
 
 	float		GetLength() const;
 	Vector		GetNormalized() const;
+	bool		IsZero() const;
 
 	Vector		operator+(const Vector& rhs) const;
 	Vector&		operator+=(const Vector& rhs);

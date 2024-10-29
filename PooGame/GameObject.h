@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "Vector.h"
+
 #include <utility>
 #include <random>
 
@@ -9,14 +11,7 @@ class MainWindow;
 class GameObject
 {
 public:
-	GameObject(MainWindow& wnd, Graphics& gfx, float x, float y, float width, float height)
-		: wnd(wnd)
-		, gfx(gfx)
-		, x(x)
-		, y(y)
-		, width(width)
-		, height(height)
-	{}
+	GameObject(MainWindow& wnd, Graphics& gfx, const Vector& position, const Vector& size);
 
 	virtual void Draw() const abstract;
 	virtual void Move(float secondsDeltaTime) {}
@@ -36,10 +31,8 @@ protected:
 protected:
 	MainWindow& wnd;
 	Graphics& gfx;
-	float x;
-	float y;
-	float width;
-	float height;
+	Vector position;
+	Vector size;
 };
 
 class GameObjectFactory
@@ -69,11 +62,10 @@ namespace GameObjectType
 	class Face : public GameObject
 	{
 	public:
-		static constexpr float s_width = 20.0f;
-		static constexpr float s_height = 20.0f;
+		static constexpr Vector s_size = Vector(20.0f, 20.0f);
 
-		Face(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, float x = 0, float y = 0)
-			: GameObject(wnd, gfx, x, y, s_width, s_height)
+		Face(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, const Vector& position)
+			: GameObject(wnd, gfx, position, s_size)
 		{}
 
 		virtual void Draw() const override;
@@ -86,18 +78,17 @@ namespace GameObjectType
 		virtual void HandleBottomOutWindow() override;
 
 	protected:
-		float velocityY = 60;
-		float velocityX = 60;
+		static constexpr float s_speed = 120;
+		Vector direction;
 	};
 
 	class GameOver : public GameObject
 	{
 	public:
-		static constexpr float s_width = 86.0f;
-		static constexpr float s_height = 64.0f;
+		static constexpr Vector s_size = Vector(86.0f, 64.0f);
 
-		GameOver(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, float x = 0, float y = 0)
-			: GameObject(wnd, gfx, x, y, s_width, s_height)
+		GameOver(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, const Vector& position)
+			: GameObject(wnd, gfx, position, s_size)
 		{}
 
 		virtual void Draw() const override;
@@ -106,11 +97,10 @@ namespace GameObjectType
 	class Title : public GameObject
 	{
 	public:
-		static constexpr float s_width = 150.0f;
-		static constexpr float s_height = 175.0f;
+		static constexpr Vector s_size = Vector(150.0f, 175.0f);
 
-		Title(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, float x = 0, float y = 0)
-			: GameObject(wnd, gfx, x, y, s_width, s_height)
+		Title(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, const Vector& position)
+			: GameObject(wnd, gfx, position, s_size)
 		{}
 
 		virtual void Draw() const override;
@@ -119,10 +109,9 @@ namespace GameObjectType
 	class Poo : public GameObject
 	{
 	public:
-		static constexpr float s_width = 24.0f;
-		static constexpr float s_height = 24.0f;
+		static constexpr Vector s_size = Vector(24.0f, 24.0f);
 
-		Poo(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, float x = -1, float y = -1);
+		Poo(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, const Vector& position = Vector(-1.0f, -1.0f));
 
 		virtual void Draw() const override;
 		virtual void Move(float secondsDeltaTime) override;
@@ -134,7 +123,7 @@ namespace GameObjectType
 		virtual void HandleBottomOutWindow() override;
 
 	protected:
-		int directionY = 0;
-		int directionX = 0;
+		static constexpr float s_velocity = 60;
+		Vector direction;
 	};
 }

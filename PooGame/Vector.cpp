@@ -1,11 +1,7 @@
 ﻿#include "Vector.h"
 
 #include <cmath>
-
-Vector::Vector(float x, float y)
-	: x(x)
-	, y(y)
-{}
+#include <cassert>
 
 float Vector::GetLength() const
 {
@@ -14,7 +10,14 @@ float Vector::GetLength() const
 
 Vector Vector::GetNormalized() const
 {
+	assert(!IsZero());
+
 	return *this / GetLength();
+}
+
+bool Vector::IsZero() const
+{
+	return ((x == 0) && (y == 0));
 }
 
 Vector Vector::operator+(const Vector& rhs) const

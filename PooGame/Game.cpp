@@ -20,11 +20,20 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
+#include "Vector.h"
 
 Game::Game( MainWindow& wnd )
 	: wnd( wnd )
 	, gfx( wnd )
 	, gameObjFactory(wnd, gfx)
+	, pFace(gameObjFactory.Create<GameObjectType::Face>(Vector(400.0f, 300.0f)))
+	, pGameOver(gameObjFactory.Create<GameObjectType::GameOver>(Vector(400.0f - GameObjectType::GameOver::s_size.x / 2, 
+																	   300.0f - GameObjectType::GameOver::s_size.y / 2)))
+	, pTitle(gameObjFactory.Create<GameObjectType::Title>(Vector(400.0f - GameObjectType::Title::s_size.x / 2, 
+																 300.0f - GameObjectType::Title::s_size.y / 2)))
+	, poos{gameObjFactory.Create<GameObjectType::Poo>(), 
+		   gameObjFactory.Create<GameObjectType::Poo>(), 
+		   gameObjFactory.Create<GameObjectType::Poo>(),}
 {}
 
 Game::~Game()

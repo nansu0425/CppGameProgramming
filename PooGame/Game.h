@@ -54,16 +54,9 @@ private:
 	/********************************/
 	FrameTimer							frameTimer;
 	GameObjectFactory					gameObjFactory;
-	GameObjectType::Face*				pFace = gameObjFactory.Create<GameObjectType::Face>(400.0f, 300.0f);
-	GameObjectType::GameOver*			pGameOver = gameObjFactory.Create<GameObjectType::GameOver>(400.0f - GameObjectType::GameOver::s_width / 2,
-																									300.0f - GameObjectType::GameOver::s_height / 2);
-	GameObjectType::Title*				pTitle = gameObjFactory.Create<GameObjectType::Title>(400.0f - GameObjectType::Title::s_width / 2,
-																							  300.0f - GameObjectType::Title::s_height / 2);
-	std::list<GameObjectType::Poo*>		poos =
-	{ 
-		gameObjFactory.Create<GameObjectType::Poo>(), 
-		gameObjFactory.Create<GameObjectType::Poo>(),
-		gameObjFactory.Create<GameObjectType::Poo>(),
-	};
+	GameObjectType::Face*				pFace;
+	GameObjectType::GameOver*			pGameOver;
+	GameObjectType::Title*				pTitle;
+	std::list<GameObjectType::Poo*>		poos;
 	bool isStarted = false;
 };

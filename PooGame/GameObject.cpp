@@ -2,24 +2,31 @@
 #include "Graphics.h"
 #include "MainWindow.h"
 
+GameObject::GameObject(MainWindow& wnd, Graphics& gfx, const Vector& position, const Vector& size)
+	: wnd(wnd)
+	, gfx(gfx)
+	, position(position)
+	, size(size)
+{}
+
 float GameObject::GetLeft() const
 {
-	return x;
+	return position.x;
 }
 
 float GameObject::GetRight() const
 {
-	return x + width - 1;
+	return position.x + size.x - 1;
 }
 
 float GameObject::GetTop() const
 {
-	return y;
+	return position.y;
 }
 
 float GameObject::GetBottom() const
 {
-	return y + height - 1;
+	return position.y + size.y - 1;
 }
 
 bool GameObject::CheckCollision(const GameObject* pOther) const
@@ -55,8 +62,8 @@ void GameObject::HandleOutWindow()
 
 void GameObjectType::Face::Draw() const
 {
-	int x = static_cast<int>(this->x);
-	int y = static_cast<int>(this->y);
+	const int x = static_cast<int>(position.x);
+	const int y = static_cast<int>(position.y);
 
 	gfx.PutPixel(7 + x, 0 + y, 0, 0, 0);
 	gfx.PutPixel(8 + x, 0 + y, 0, 0, 0);
@@ -378,55 +385,62 @@ void GameObjectType::Face::Draw() const
 
 void GameObjectType::Face::Move(float secondsDeltaTime)
 {
-	constexpr float velocity = 60;
+	direction = {0.0f, 0.0f};
 
 	if (wnd.kbd.KeyIsPressed(VK_LEFT))
 	{
-		x -= velocity * secondsDeltaTime;
+		--direction.x;
 	}
 
 	if (wnd.kbd.KeyIsPressed(VK_UP))
 	{
-		y -= velocity * secondsDeltaTime;
+		--direction.y;
 	}
 
 	if (wnd.kbd.KeyIsPressed(VK_RIGHT))
 	{
-		x += velocity * secondsDeltaTime;
+		++direction.x;
 	}
 
 	if (wnd.kbd.KeyIsPressed(VK_DOWN))
 	{
-		y += velocity * secondsDeltaTime;
+		++direction.y;
 	}
+
+	if (direction.IsZero())
+	{
+		return;
+	}
+
+	position += direction.GetNormalized() * s_speed * secondsDeltaTime;
 
 	HandleOutWindow();
 }
 
 void GameObjectType::Face::HandleLeftOutWindow()
 {
-	x = 0;
+	position.x = 0;
 }
 
 void GameObjectType::Face::HandleRightOutWindow()
 {
-	x = gfx.ScreenWidth - width;
+	position.x = gfx.ScreenWidth - size.x;
 }
 
 void GameObjectType::Face::HandleTopOutWindow()
 {
-	y = 0;
+	position.y = 0;
 }
 
 void GameObjectType::Face::HandleBottomOutWindow()
 {
-	y = gfx.ScreenHeight - height;
+	position.y = gfx.ScreenHeight - size.y;
 }
 
 void GameObjectType::GameOver::Draw() const
 {
-	int x = static_cast<int>(this->x);
-	int y = static_cast<int>(this->y);
+	const int x = static_cast<int>(position.x);
+	const int y = static_cast<int>(position.y);
 
 	gfx.PutPixel(49 + x, 0 + y, 0, 146, 14);
 	gfx.PutPixel(50 + x, 0 + y, 0, 146, 14);
@@ -2520,8 +2534,8 @@ void GameObjectType::GameOver::Draw() const
 
 void GameObjectType::Title::Draw() const
 {
-	int x = static_cast<int>(this->x);
-	int y = static_cast<int>(this->y);
+	const int x = static_cast<int>(position.x);
+	const int y = static_cast<int>(position.y);
 
 	gfx.PutPixel(0 + x, 0 + y, 208, 34, 34);
 	gfx.PutPixel(1 + x, 0 + y, 208, 34, 34);
@@ -28775,34 +28789,34 @@ void GameObjectType::Title::Draw() const
 	gfx.PutPixel(149 + x, 174 + y, 208, 34, 34);
 }
 
-GameObjectType::Poo::Poo(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, float x, float y)
-	: GameObject(wnd, gfx, x, y, s_width, s_height)
+GameObjectType::Poo::Poo(MainWindow& wnd, Graphics& gfx, std::mt19937& rng, const Vector& position)
+	: GameObject(wnd, gfx, position, s_size)
 {
-	if ((x >= 0) && (y >= 0))
+	if ((position.x >= 0) && (position.y >= 0))
 	{
 		return;
 	}
 
-	std::uniform_real_distribution<float> xAxis(0.0f, static_cast<float>(gfx.ScreenWidth - s_width));
-	std::uniform_real_distribution<float> yAxis(0.0f, static_cast<float>(gfx.ScreenHeight - s_height));
+	std::uniform_real_distribution<float> xAxis(0.0f, static_cast<float>(gfx.ScreenWidth - size.x));
+	std::uniform_real_distribution<float> yAxis(0.0f, static_cast<float>(gfx.ScreenHeight - size.y));
 
-	this->x = xAxis(rng);
-	this->y = yAxis(rng);
+	this->position.x = xAxis(rng);
+	this->position.y = yAxis(rng);
 
-	std::uniform_int_distribution<> direction(-1, 1);
+	std::uniform_int_distribution<> distDirection(-1, 1);
 
-	while ((directionX == 0) ||
-		   (directionY == 0))
+	while ((direction.x == 0.0f) ||
+		   (direction.y == 0.0f))
 	{
-		directionX = direction(rng);
-		directionY = direction(rng);
+		direction.x = static_cast<float>(distDirection(rng));
+		direction.y = static_cast<float>(distDirection(rng));
 	}
 }
 
 void GameObjectType::Poo::Draw() const
 {
-	int x = static_cast<int>(this->x);
-	int y = static_cast<int>(this->y);
+	const int x = static_cast<int>(position.x);
+	const int y = static_cast<int>(position.y);
 
 	gfx.PutPixel(14 + x, 0 + y, 138, 77, 0);
 	gfx.PutPixel(7 + x, 1 + y, 138, 77, 0);
@@ -29039,34 +29053,31 @@ void GameObjectType::Poo::Draw() const
 
 void GameObjectType::Poo::Move(float secondsDeltaTime)
 {
-	constexpr float velocity = 60;
-
-	x += static_cast<float>(directionX) * velocity * secondsDeltaTime;
-	y += static_cast<float>(directionY) * velocity * secondsDeltaTime;
+	position += direction.GetNormalized() * s_velocity * secondsDeltaTime;
 
 	HandleOutWindow();
 }
 
 void GameObjectType::Poo::HandleLeftOutWindow()
 {
-	x = 0;
-	directionX = 1;
+	position.x = 0.0f;
+	direction.x = 1.0f;
 }
 
 void GameObjectType::Poo::HandleRightOutWindow()
 {
-	x = gfx.ScreenWidth - width;
-	directionX = -1;
+	position.x = gfx.ScreenWidth - size.x;
+	direction.x = -1.0f;
 }
 
 void GameObjectType::Poo::HandleTopOutWindow()
 {
-	y = 0;
-	directionY = 1;
+	position.y = 0.0f;
+	direction.y = 1.0f;
 }
 
 void GameObjectType::Poo::HandleBottomOutWindow()
 {
-	y = gfx.ScreenHeight - height;
-	directionY = -1;
+	position.y = gfx.ScreenHeight - size.y;
+	direction.y = -1.0f;
 }
