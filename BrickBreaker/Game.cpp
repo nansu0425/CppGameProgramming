@@ -25,17 +25,9 @@
 Game::Game( MainWindow& wnd )
 	: m_wnd( wnd )
 	, m_gfx( wnd )
-	, m_yellowBrick(new BrickBreaker::Brick<Colors::Yellow>(Vector(200.0f, 300.0f)))
-	, m_redBrick(new BrickBreaker::Brick<Colors::Red>(Vector(300.0f, 300.0f)))
-	, m_greebBrick(new BrickBreaker::Brick<Colors::Green>(Vector(400.0f, 300.0f)))
+	, m_yellowBrick(Vector(200.0f, 300.0f))
+	, m_redBrick(Vector(400.0f, 300.0f))
 {}
-
-Game::~Game()
-{
-	delete m_yellowBrick;
-	delete m_redBrick;
-	delete m_greebBrick;
-}
 
 void Game::Go()
 {
@@ -47,11 +39,14 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	const float deltaTime = m_timer.CalculateDeltaTime();
+
+	m_yellowBrick.Update(deltaTime);
+	m_yellowBrick.Update(deltaTime);
 }
 
 void Game::ComposeFrame()
 {
-	m_yellowBrick->Draw(m_gfx);
-	m_redBrick->Draw(m_gfx);
-	m_greebBrick->Draw(m_gfx);
+	m_yellowBrick.Draw(m_gfx);
+	m_redBrick.Draw(m_gfx);
 }

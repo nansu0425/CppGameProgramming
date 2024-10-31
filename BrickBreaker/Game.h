@@ -23,15 +23,14 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
-#include "Rectangle.h"
-#include "Constants.h"
+#include "Brick.h"
+#include "FrameTimer.h"
 
 class Game
 {
 public:
 	Game( class MainWindow& wnd );
 	Game( const Game& ) = delete;
-	~Game();
 	Game&						operator=( const Game& ) = delete;
 	void						Go();
 private:
@@ -46,7 +45,7 @@ private:
 	/********************************/
 	/*  User Variables              */
 	/********************************/
-	BrickBreaker::Rectangle<BrickBreaker::Size::Brick, Colors::Yellow>*		m_yellowBrick;
-	BrickBreaker::Rectangle<BrickBreaker::Size::Brick, Colors::Red>*		m_redBrick;
-	BrickBreaker::Rectangle<BrickBreaker::Size::Brick, Colors::Green>*		m_greebBrick;
+	FrameTimer								m_timer;
+	BrickBreaker::Brick<Colors::Yellow>		m_yellowBrick;
+	BrickBreaker::Brick<Colors::Red>		m_redBrick;
 };
