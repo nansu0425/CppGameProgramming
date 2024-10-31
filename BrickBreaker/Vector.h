@@ -2,10 +2,16 @@
 
 struct Vector
 {
-	constexpr Vector() = default;
-	constexpr Vector(float x, float y)
+	constexpr	Vector() = default;
+	
+	constexpr	Vector(float x, float y)
 		: x(x)
 		, y(y)
+	{}
+	
+	constexpr	Vector(size_t x, size_t y)
+		: x(static_cast<float>(x))
+		, y(static_cast<float>(y))
 	{}
 
 	float		GetLength() const;

@@ -1,4 +1,4 @@
-/****************************************************************************************** 
+﻿/****************************************************************************************** 
  *	Chili DirectX Framework Version 16.07.20											  *	
  *	Game.h																				  *
  *	Copyright 2016 PlanetChili.net <http://www.planetchili.net>							  *
@@ -23,24 +23,30 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
+#include "Rectangle.h"
+#include "Constants.h"
 
 class Game
 {
 public:
 	Game( class MainWindow& wnd );
 	Game( const Game& ) = delete;
-	Game& operator=( const Game& ) = delete;
-	void Go();
+	~Game();
+	Game&						operator=( const Game& ) = delete;
+	void						Go();
 private:
-	void ComposeFrame();
-	void UpdateModel();
+	void						ComposeFrame();
+	void						UpdateModel();
 	/********************************/
 	/*  User Functions              */
 	/********************************/
 private:
-	MainWindow& wnd;
-	Graphics gfx;
+	MainWindow&					m_wnd;
+	Graphics					m_gfx;
 	/********************************/
 	/*  User Variables              */
 	/********************************/
+	BrickBreaker::Rectangle<BrickBreaker::Size::Brick, Colors::Yellow>*		m_yellowBrick;
+	BrickBreaker::Rectangle<BrickBreaker::Size::Brick, Colors::Red>*		m_redBrick;
+	BrickBreaker::Rectangle<BrickBreaker::Size::Brick, Colors::Green>*		m_greebBrick;
 };

@@ -1,4 +1,4 @@
-/****************************************************************************************** 
+﻿/****************************************************************************************** 
  *	Chili DirectX Framework Version 16.07.20											  *	
  *	Game.cpp																			  *
  *	Copyright 2016 PlanetChili.net <http://www.planetchili.net>							  *
@@ -20,20 +20,29 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
+#include "Brick.h"
 
 Game::Game( MainWindow& wnd )
-	:
-	wnd( wnd ),
-	gfx( wnd )
+	: m_wnd( wnd )
+	, m_gfx( wnd )
+	, m_yellowBrick(new BrickBreaker::Brick<Colors::Yellow>(Vector(200.0f, 300.0f)))
+	, m_redBrick(new BrickBreaker::Brick<Colors::Red>(Vector(300.0f, 300.0f)))
+	, m_greebBrick(new BrickBreaker::Brick<Colors::Green>(Vector(400.0f, 300.0f)))
+{}
+
+Game::~Game()
 {
+	delete m_yellowBrick;
+	delete m_redBrick;
+	delete m_greebBrick;
 }
 
 void Game::Go()
 {
-	gfx.BeginFrame();	
+	m_gfx.BeginFrame();	
 	UpdateModel();
 	ComposeFrame();
-	gfx.EndFrame();
+	m_gfx.EndFrame();
 }
 
 void Game::UpdateModel()
@@ -42,4 +51,7 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
+	m_yellowBrick->Draw(m_gfx);
+	m_redBrick->Draw(m_gfx);
+	m_greebBrick->Draw(m_gfx);
 }
