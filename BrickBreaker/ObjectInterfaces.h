@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-
 /////////////////////////////////////////Forward Declarations/////////////////////////////////////////
 
 class Graphics;
@@ -36,9 +35,24 @@ namespace BrickBreaker
 	 *------------------------*/
 
 	template<const Vector& size>
-	class IRectangleObject
+	class IRectangleObject : public IGameObject
 	{
 	public:
 		virtual const Rectangle<size>&	GetRectangle() const abstract;
+	};
+
+	/*---------------------*
+	 *    IMovingObject    *
+	 *---------------------*/
+
+	template<size_t speed>
+	class IMovingObject : public IGameObject
+	{
+	public:
+		virtual void					Move(float deltaTime) abstract;
+
+		virtual float					GetSpeed() const abstract;
+		virtual const Vector&			GetDirection() const abstract;
+		virtual void					SetDirection(const Vector& direction) abstract;
 	};
 }

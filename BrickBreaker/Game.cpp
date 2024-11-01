@@ -27,6 +27,7 @@ Game::Game( MainWindow& wnd )
 	, m_gfx( wnd )
 	, m_yellowBrick(Vector(200.0f, 300.0f))
 	, m_redBrick(Vector(400.0f, 300.0f))
+	, m_ball(Vector(100.0f, 200.0f), Vector(1.0f, 2.0f))
 {}
 
 void Game::Go()
@@ -43,10 +44,12 @@ void Game::UpdateModel()
 
 	m_yellowBrick.Update(deltaTime);
 	m_yellowBrick.Update(deltaTime);
+	m_ball.Update(deltaTime);
 }
 
 void Game::ComposeFrame()
 {
 	m_yellowBrick.Draw(m_gfx);
 	m_redBrick.Draw(m_gfx);
+	m_ball.Draw(m_gfx);
 }

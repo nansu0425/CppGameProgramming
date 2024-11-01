@@ -2,19 +2,19 @@
 
 #include "ObjectInterfaces.h"
 #include "Rectangle.h"
-#include "Constants.h"
+#include "Globals.h"
 #include "Graphics.h"
+
+/////////////////////////////////////////Method Declarations/////////////////////////////////////////
 
 namespace BrickBreaker
 {
-	/////////////////////////////////////////Method Declarations/////////////////////////////////////////
-
 	/*-------------*
 	 *    Brick    *
 	 *-------------*/
 
 	template<const Color& color>
-	class Brick : public IGameObject, public IRectangleObject<Size::Brick>
+	class Brick : public IRectangleObject<GBrick::g_size>
 	{
 	public:
 		constexpr Brick(const Vector& position);
@@ -25,15 +25,18 @@ namespace BrickBreaker
 		virtual const Vector&						GetPosition() const final;
 		virtual void								SetPosition(const Vector& position) final;
 		virtual const Vector&						GetSize() const final;
-		virtual const Rectangle<Size::Brick>&		GetRectangle() const final;
+		virtual const Rectangle<GBrick::g_size>&	GetRectangle() const final;
 		const Color&								GetColor() const;
 
 	private:
-		Rectangle<Size::Brick>						m_rectangle;
+		Rectangle<GBrick::g_size>					m_rectangle;
 	};
+}
 
-	/////////////////////////////////////////Method Definitions/////////////////////////////////////////
+/////////////////////////////////////////Method Definitions/////////////////////////////////////////
 
+namespace BrickBreaker
+{
 	/*-------------*
 	 *    Brick    *
 	 *-------------*/
@@ -50,9 +53,9 @@ namespace BrickBreaker
 	template<const Color& color>
 	inline void Brick<color>::Draw(Graphics& gfx) const
 	{
-		for (int dx = 0; dx < static_cast<int>(Size::Brick.x); ++dx)
+		for (int dx = 0; dx < static_cast<int>(GetSize().x); ++dx)
 		{
-			for (int dy = 0; dy < static_cast<int>(Size::Brick.y); ++dy)
+			for (int dy = 0; dy < static_cast<int>(GetSize().y); ++dy)
 			{
 				gfx.PutPixel(static_cast<int>(GetPosition().x) + dx, 
 							 static_cast<int>(GetPosition().y) + dy, 
@@ -76,14 +79,15 @@ namespace BrickBreaker
 	template<const Color& color>
 	inline const Vector& Brick<color>::GetSize() const
 	{
-		return Size::Brick;
+		return GBrick::g_size;
 	}
 
 	template<const Color& color>
-	inline const Rectangle<Size::Brick>& Brick<color>::GetRectangle() const
+	inline const Rectangle<GBrick::g_size>& Brick<color>::GetRectangle() const
 	{
 		return m_rectangle;
 	}
+
 	template<const Color& color>
 	inline const Color& Brick<color>::GetColor() const
 	{

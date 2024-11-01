@@ -25,6 +25,7 @@
 #include "Graphics.h"
 #include "Brick.h"
 #include "FrameTimer.h"
+#include "Ball.h"
 
 class Game
 {
@@ -48,4 +49,5 @@ private:
 	FrameTimer								m_timer;
 	BrickBreaker::Brick<Colors::Yellow>		m_yellowBrick;
 	BrickBreaker::Brick<Colors::Red>		m_redBrick;
+	BrickBreaker::Ball						m_ball;
 };
