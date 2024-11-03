@@ -4,8 +4,6 @@
 #include "Rectangle.h"
 #include "Sprites.h"
 
-class Graphics;
-
 namespace BrickBreaker
 {
 	/*------------*
@@ -20,9 +18,9 @@ namespace BrickBreaker
 	public:
 							Ball(const Vector& position, const Vector& direction);
 
-		void				Update(float deltaTime) { Move(deltaTime); }
+		void				Update(float deltaTime, const Graphics& gfx) { Move(deltaTime, gfx); }
 		void				Draw(Graphics& gfx) const { Sprites::DrawBall(GetPosition(), gfx); }
-		void				Move(float deltaTime) { SetPosition(GetPosition() + GetDirection().GetNormalized() * GetSpeed() * deltaTime); }
+		void				Move(float deltaTime, const Graphics& gfx);
 
 		const Vector&		GetPosition() const { return GetRectangle().GetPosition(); };
 		void				SetPosition(const Vector& position) { m_rectangle.SetPosition(position); }
@@ -31,6 +29,12 @@ namespace BrickBreaker
 		float				GetSpeed() const { return GBall::g_speed; }
 		const Vector&		GetDirection() const { return m_direction; }
 		void				SetDirection(const Vector& direction) { m_direction = direction; }
+
+	private:
+		void				ReboundX(const Vector& direction) { SetDirection(Vector(-direction.x, direction.y)); }
+		void				ReboundY(const Vector& direction) { SetDirection(Vector(direction.x, -direction.y)); }
+		Rectangle			GetNextMoveRectangle(float deltaTime) const { return GetPosition() + GetDirection().GetNormalized() * GetSpeed() * deltaTime; }
+		void				ReboundOutScreen(float deltaTime, const Graphics& gfx, Rectangle& nextRectangle);
 
 	private:
 		Rectangle			m_rectangle;
