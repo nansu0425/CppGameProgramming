@@ -2,10 +2,14 @@
 
 #include <chrono>
 
+/*------------------*
+ *    FrameTimer    *
+ *------------------*/
+
 class FrameTimer
 {
 private:
-	using Clock			= std::chrono::steady_clock;
+	using				Clock = std::chrono::steady_clock;
 
 public:
 	FrameTimer();

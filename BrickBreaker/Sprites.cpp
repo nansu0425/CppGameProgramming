@@ -2,8 +2,6 @@
 #include "Vector.h"
 #include "Graphics.h"
 
-/////////////////////////////////////////Method Definitions/////////////////////////////////////////
-
 namespace BrickBreaker
 {
 	/*---------------*

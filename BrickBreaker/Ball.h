@@ -1,10 +1,10 @@
 ﻿#pragma once
 
-#include "ObjectInterfaces.h"
 #include "Globals.h"
 #include "Rectangle.h"
+#include "Sprites.h"
 
-/////////////////////////////////////////Method Declarations/////////////////////////////////////////
+class Graphics;
 
 namespace BrickBreaker
 {
@@ -12,25 +12,28 @@ namespace BrickBreaker
 	 *    Ball    *
 	 *------------*/
 
-	class Ball : public IRectangleObject<GBall::g_size>, public IMovingObject<GBall::g_speed>
+	class Ball
 	{
+	private:
+		using				Rectangle = Rectangle<GBall::g_size>;
+
 	public:
-		Ball(const Vector& position, const Vector& direction);
+							Ball(const Vector& position, const Vector& direction);
 
-		virtual void							Update(float deltaTime) final;
-		virtual void							Draw(Graphics& gfx) const final;
-		virtual void							Move(float deltaTime) final;
+		void				Update(float deltaTime) { Move(deltaTime); }
+		void				Draw(Graphics& gfx) const { Sprites::DrawBall(GetPosition(), gfx); }
+		void				Move(float deltaTime) { SetPosition(GetPosition() + GetDirection().GetNormalized() * GetSpeed() * deltaTime); }
 
-		virtual const Vector&					GetPosition() const final;
-		virtual void							SetPosition(const Vector& position) final;
-		virtual const Vector&					GetSize() const final;
-		virtual const Rectangle<GBall::g_size>&	GetRectangle() const final;
-		virtual float							GetSpeed() const final;
-		virtual const Vector&					GetDirection() const final;
-		virtual void							SetDirection(const Vector& direction) final;
+		const Vector&		GetPosition() const { return GetRectangle().GetPosition(); };
+		void				SetPosition(const Vector& position) { m_rectangle.SetPosition(position); }
+		const Vector&		GetSize() const { return GBall::g_size; }
+		const Rectangle&	GetRectangle() const { return m_rectangle; }
+		float				GetSpeed() const { return GBall::g_speed; }
+		const Vector&		GetDirection() const { return m_direction; }
+		void				SetDirection(const Vector& direction) { m_direction = direction; }
 
 	private:
-		Rectangle<GBall::g_size>				m_rectangle;
-		Vector									m_direction;
+		Rectangle			m_rectangle;
+		Vector				m_direction;
 	};
 }

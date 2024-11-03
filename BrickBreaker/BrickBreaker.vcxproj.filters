@@ -72,9 +72,6 @@
     <ClInclude Include="Globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectInterfaces.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Ball.h">
       <Filter>Header Files</Filter>
     </ClInclude>

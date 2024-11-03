@@ -1,5 +1,9 @@
 ﻿#include "FrameTimer.h"
 
+/*------------------*
+ *    FrameTimer    *
+ *------------------*/
+
 FrameTimer::FrameTimer()
 	: m_last(Clock::now())
 {}
