@@ -21,27 +21,29 @@ namespace BrickBreaker
 	class Brick
 	{
 	private:
-		using				Rectangle = Rectangle<GBrick::g_size>;
+		using					RectangleBrick = Rectangle<GBrick::g_size>;
 
 	public:
-							Brick() = default;
-							Brick(const Vector& position, const Color& color);
+								Brick() = default;
+								Brick(const Vector& position, const Color& color);
 
-		void				Draw(Graphics& gfx) const;
-		void				Update(float deltaTime) {}
+		void					Draw(Graphics& gfx) const;
+		void					Update(float deltaTime) {}
 
-		const Vector&		GetPosition() const { return m_rectangle.GetPosition(); }
-		void				SetPosition(const Vector& position) { m_rectangle.SetPosition(position); }
-		const Vector&		GetSize() const { return GBrick::g_size; }
-		const Rectangle&	GetRectangle() const { return m_rectangle; }
-		const Color&		GetColor() const { return m_color; }
-		bool				IsBroken() const { return m_bBroken; }
-		void				SetBroken() { m_bBroken = true; }
+		const Vector&			GetPosition() const { return m_rectangle.GetPosition(); }
+		void					SetPosition(const Vector& position) { m_rectangle.SetPosition(position); }
+		const Vector&			GetSize() const { return GBrick::g_size; }
+		const RectangleBrick&	GetRectangle() const { return m_rectangle; }
+		const Color&			GetColor() const { return m_color; }
+		bool					IsBroken() const { return m_bBroken; }
+		void					SetBroken() { m_bBroken = true; }
+		template<const Vector& sizeOther>
+		bool					IsCollision(const Rectangle<sizeOther>& other) const { return m_rectangle.IsCollision(other); }
 
 	private:
-		Rectangle			m_rectangle;
-		Color				m_color;
-		bool				m_bBroken = false;
+		RectangleBrick			m_rectangle;
+		Color					m_color;
+		bool					m_bBroken = false;
 	};
 
 	/*--------------------*
@@ -56,6 +58,7 @@ namespace BrickBreaker
 	public:
 							BrickManager(Ball& ball);
 
+		void				Update();
 		void				Draw(Graphics& gfx) const;
 
 	private:

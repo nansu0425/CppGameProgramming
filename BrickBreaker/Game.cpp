@@ -41,6 +41,7 @@ void Game::UpdateModel()
 	const float deltaTime = m_timer.CalculateDeltaTime();
 
 	m_ball.Update(deltaTime, m_gfx);
+	m_brickManager.Update();
 }
 
 void Game::ComposeFrame()

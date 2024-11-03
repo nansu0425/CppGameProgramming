@@ -26,6 +26,8 @@ namespace BrickBreaker
 		float				GetBottom() const { return GetPosition().y + GetSize().y - 1.0f; }
 		bool				IsOutScreenX(const Graphics& gfx) const { return ((GetLeft() < 0.0f) || (gfx.ScreenWidth <= GetRight())); }
 		bool				IsOutScreenY(const Graphics& gfx) const { return ((GetTop() < 0.0f) || (gfx.ScreenHeight <= GetBottom())); }
+		template<const Vector& sizeOther>
+		bool				IsCollision(const Rectangle<sizeOther>& other) const;
 			 
 	private:
 		Vector				m_position;
@@ -42,4 +44,14 @@ namespace BrickBreaker
 	inline constexpr Rectangle<size>::Rectangle(const Vector& position)
 		: m_position(position)
 	{}
+
+	template<const Vector& size>
+	template<const Vector& sizeOther>
+	inline bool Rectangle<size>::IsCollision(const Rectangle<sizeOther>& other) const
+	{
+		return ((other.GetLeft() <= GetRight()) &&
+				(GetLeft() <= other.GetRight()) &&
+				(other.GetTop() <= GetBottom()) &&
+				(GetTop() <= other.GetBottom()));
+	}
 }

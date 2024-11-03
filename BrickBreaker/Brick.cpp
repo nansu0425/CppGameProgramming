@@ -45,13 +45,33 @@ namespace BrickBreaker
 		}
 	}
 
+	void BrickManager::Update()
+	{
+		for (auto& rowBricks : m_bricks)
+		{
+			for (Brick& brick : rowBricks)
+			{
+				if (!brick.IsBroken() && 
+					brick.IsCollision(m_ball.GetRectangle()))
+				{
+					brick.SetBroken();
+
+					// TODO: 공 튕기는 것 구현
+				}
+			}
+		}
+	}
+
 	void BrickManager::Draw(Graphics& gfx) const
 	{
 		for (auto& rowBricks : m_bricks)
 		{
 			for (const Brick& brick : rowBricks)
 			{
-				brick.Draw(gfx);
+				if (!brick.IsBroken())
+				{
+					brick.Draw(gfx);
+				}
 			}
 		}
 	}
