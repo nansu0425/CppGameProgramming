@@ -2,35 +2,14 @@
 
 #include "Rectangle.h"
 #include "Globals.h"
-#include "Graphics.h"
+#include "array"
+
+class Graphics;
+class Color;
 
 namespace BrickBreaker
 {
-	/*-------------*
-	 *    Brick    *
-	 *-------------*/
-
-	template<const Color& color>
-	class Brick
-	{
-	private:
-		using				Rectangle = Rectangle<GBrick::g_size>;
-
-	public:
-		constexpr			Brick(const Vector& position);
-
-		void				Draw(Graphics& gfx) const;
-		void				Update(float deltaTime) {}
-
-		const Vector&		GetPosition() const { return m_rectangle.GetPosition(); }
-		void				SetPosition(const Vector& position) { m_rectangle.SetPosition(position); }
-		const Vector&		GetSize() const { return GBrick::g_size; }
-		const Rectangle&	GetRectangle() const { return m_rectangle; }
-		const Color&		GetColor() const { return color; }
-
-	private:
-		Rectangle			m_rectangle;
-	};
+	class Ball;
 }
 
 namespace BrickBreaker
@@ -39,22 +18,48 @@ namespace BrickBreaker
 	 *    Brick    *
 	 *-------------*/
 
-	template<const Color& color>
-	inline constexpr Brick<color>::Brick(const Vector& position)
-		: m_rectangle(position)
-	{}
-
-	template<const Color& color>
-	inline void Brick<color>::Draw(Graphics& gfx) const
+	class Brick
 	{
-		for (int dx = 0; dx < static_cast<int>(GetSize().x); ++dx)
-		{
-			for (int dy = 0; dy < static_cast<int>(GetSize().y); ++dy)
-			{
-				gfx.PutPixel(static_cast<int>(GetPosition().x) + dx, 
-							 static_cast<int>(GetPosition().y) + dy, 
-							 color);
-			}
-		}
-	}
+	private:
+		using				Rectangle = Rectangle<GBrick::g_size>;
+
+	public:
+							Brick() = default;
+							Brick(const Vector& position, const Color& color);
+
+		void				Draw(Graphics& gfx) const;
+		void				Update(float deltaTime) {}
+
+		const Vector&		GetPosition() const { return m_rectangle.GetPosition(); }
+		void				SetPosition(const Vector& position) { m_rectangle.SetPosition(position); }
+		const Vector&		GetSize() const { return GBrick::g_size; }
+		const Rectangle&	GetRectangle() const { return m_rectangle; }
+		const Color&		GetColor() const { return m_color; }
+		bool				IsBroken() const { return m_bBroken; }
+		void				SetBroken() { m_bBroken = true; }
+
+	private:
+		Rectangle			m_rectangle;
+		Color				m_color;
+		bool				m_bBroken = false;
+	};
+
+	/*--------------------*
+	 *    BrickManager    *
+	 *--------------------*/
+
+	class BrickManager
+	{
+	private:
+		using				Array = std::array<std::array<Brick, GBrickManager::g_colBricks>, GBrickManager::g_rowBricks>;
+
+	public:
+							BrickManager(Ball& ball);
+
+		void				Draw(Graphics& gfx) const;
+
+	private:
+		Ball&				m_ball;
+		Array				m_bricks;
+	};
 }

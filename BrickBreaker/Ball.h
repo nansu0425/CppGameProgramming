@@ -21,6 +21,8 @@ namespace BrickBreaker
 		void				Update(float deltaTime, const Graphics& gfx) { Move(deltaTime, gfx); }
 		void				Draw(Graphics& gfx) const { Sprites::DrawBall(GetPosition(), gfx); }
 		void				Move(float deltaTime, const Graphics& gfx);
+		void				ReboundX(const Vector& direction) { SetDirection(Vector(-direction.x, direction.y)); }
+		void				ReboundY(const Vector& direction) { SetDirection(Vector(direction.x, -direction.y)); }
 
 		const Vector&		GetPosition() const { return GetRectangle().GetPosition(); };
 		void				SetPosition(const Vector& position) { m_rectangle.SetPosition(position); }
@@ -31,8 +33,6 @@ namespace BrickBreaker
 		void				SetDirection(const Vector& direction) { m_direction = direction; }
 
 	private:
-		void				ReboundX(const Vector& direction) { SetDirection(Vector(-direction.x, direction.y)); }
-		void				ReboundY(const Vector& direction) { SetDirection(Vector(direction.x, -direction.y)); }
 		Rectangle			GetNextMoveRectangle(float deltaTime) const { return GetPosition() + GetDirection().GetNormalized() * GetSpeed() * deltaTime; }
 		void				ReboundOutScreen(float deltaTime, const Graphics& gfx, Rectangle& nextRectangle);
 

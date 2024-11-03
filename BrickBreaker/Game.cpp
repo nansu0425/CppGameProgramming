@@ -20,14 +20,12 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
-#include "Brick.h"
 
 Game::Game( MainWindow& wnd )
 	: m_wnd( wnd )
 	, m_gfx( wnd )
-	, m_yellowBrick(Vector(200.0f, 300.0f))
-	, m_redBrick(Vector(400.0f, 300.0f))
 	, m_ball(Vector(100.0f, 200.0f), Vector(-1.0f, -2.0f))
+	, m_brickManager(m_ball)
 {}
 
 void Game::Go()
@@ -42,14 +40,11 @@ void Game::UpdateModel()
 {
 	const float deltaTime = m_timer.CalculateDeltaTime();
 
-	m_yellowBrick.Update(deltaTime);
-	m_yellowBrick.Update(deltaTime);
 	m_ball.Update(deltaTime, m_gfx);
 }
 
 void Game::ComposeFrame()
 {
-	m_yellowBrick.Draw(m_gfx);
-	m_redBrick.Draw(m_gfx);
+	m_brickManager.Draw(m_gfx);
 	m_ball.Draw(m_gfx);
 }

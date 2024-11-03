@@ -46,8 +46,7 @@ private:
 	/********************************/
 	/*  User Variables              */
 	/********************************/
-	FrameTimer								m_timer;
-	BrickBreaker::Brick<Colors::Yellow>		m_yellowBrick;
-	BrickBreaker::Brick<Colors::Red>		m_redBrick;
-	BrickBreaker::Ball						m_ball;
+	FrameTimer					m_timer;
+	BrickBreaker::Ball			m_ball;
+	BrickBreaker::BrickManager	m_brickManager;
 };

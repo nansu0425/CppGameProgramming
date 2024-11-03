@@ -13,6 +13,7 @@ namespace BrickBreaker
 	class Rectangle
 	{
 	public:
+		constexpr			Rectangle() = default;
 		constexpr			Rectangle(const Vector& position);
 
 		const Vector&		GetPosition() const { return m_position; }
