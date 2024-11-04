@@ -28,7 +28,7 @@ namespace BrickBreaker
 								Brick(const Vector& position, const Color& color);
 
 		void					Draw(Graphics& gfx) const;
-		void					Update(float deltaTime) {}
+		void					Update(Ball& ball);
 
 		const Vector&			GetPosition() const { return m_rectangle.GetPosition(); }
 		void					SetPosition(const Vector& position) { m_rectangle.SetPosition(position); }
@@ -39,6 +39,9 @@ namespace BrickBreaker
 		void					SetBroken() { m_bBroken = true; }
 		template<const Vector& sizeOther>
 		bool					IsCollision(const Rectangle<sizeOther>& other) const { return m_rectangle.IsCollision(other); }
+
+	private:
+		void					ReboundBall(Ball& ball);
 
 	private:
 		RectangleBrick			m_rectangle;

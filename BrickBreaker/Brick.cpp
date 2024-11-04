@@ -2,6 +2,8 @@
 #include "Graphics.h"
 #include "Ball.h"
 
+#include <algorithm>
+
 namespace BrickBreaker
 {
 	/*-------------*
@@ -23,6 +25,48 @@ namespace BrickBreaker
 							 static_cast<int>(GetPosition().y) + dy,
 							 GetColor());
 			}
+		}
+	}
+
+	void Brick::Update(Ball& ball)
+	{
+		if (!IsBroken() &&
+			IsCollision(ball.GetRectangle()))
+		{
+			SetBroken();
+			ReboundBall(ball);
+		}
+	}
+
+	void Brick::ReboundBall(Ball& ball)
+	{
+		const float diffLeft = ball.GetRectangle().GetLeft() - GetRectangle().GetLeft();
+		const float diffRight = GetRectangle().GetRight() - ball.GetRectangle().GetRight();
+		const float diffTop = ball.GetRectangle().GetTop() - GetRectangle().GetTop();
+		const float diffBottom = GetRectangle().GetBottom() - ball.GetRectangle().GetBottom();
+
+		if ((diffLeft >= 0) &&
+			(diffRight >= 0))
+		{
+			ball.ReboundY(ball.GetDirection());
+		}
+		else if ((diffTop >= 0) &&
+				 (diffBottom >= 0))
+		{
+			ball.ReboundX(ball.GetDirection());
+		}
+		else if (std::min(diffLeft, diffRight) < std::min(diffTop, diffBottom))
+		{
+			ball.ReboundX(ball.GetDirection());
+		}
+		else if (std::min(diffTop, diffBottom) < std::min(diffLeft, diffRight))
+		{
+			ball.ReboundY(ball.GetDirection());
+		}
+		else
+		{
+			ball.ReboundX(ball.GetDirection());
+			ball.ReboundY(ball.GetDirection());
 		}
 	}
 
@@ -51,13 +95,7 @@ namespace BrickBreaker
 		{
 			for (Brick& brick : rowBricks)
 			{
-				if (!brick.IsBroken() && 
-					brick.IsCollision(m_ball.GetRectangle()))
-				{
-					brick.SetBroken();
-
-					// TODO: 공 튕기는 것 구현
-				}
+				brick.Update(m_ball);
 			}
 		}
 	}
