@@ -19,6 +19,7 @@ namespace BrickBreaker
 		const Vector&		GetPosition() const { return m_position; }
 		void				SetPosition(const Vector& position) { m_position = position; }
 		const Vector&		GetSize() const { return size; }
+		static void			Draw(Graphics& gfx, const Vector& position, Color color, int thicknessBorder = 0);
 
 		float				GetLeft() const { return GetPosition().x; }
 		float				GetRight() const { return GetPosition().x + GetSize().x - 1.0f; }
@@ -44,6 +45,20 @@ namespace BrickBreaker
 	inline constexpr Rectangle<size>::Rectangle(const Vector& position)
 		: m_position(position)
 	{}
+
+	template<const Vector& size>
+	inline void Rectangle<size>::Draw(Graphics& gfx, const Vector& position, Color color, int thicknessBorder)
+	{
+		for (int dx = thicknessBorder; dx < static_cast<int>(size.x) - thicknessBorder; ++dx)
+		{
+			for (int dy = thicknessBorder; dy < static_cast<int>(size.y) - thicknessBorder; ++dy)
+			{
+				gfx.PutPixel(static_cast<int>(position.x) + dx,
+							 static_cast<int>(position.y) + dy,
+							 color);
+			}
+		}
+	}
 
 	template<const Vector& size>
 	template<const Vector& sizeOther>

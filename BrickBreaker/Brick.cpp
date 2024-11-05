@@ -17,7 +17,7 @@ namespace BrickBreaker
 
 	void Brick::Draw(Graphics& gfx) const
 	{
-		for (int dx = GBrick::g_thicknessBorder; dx < static_cast<int>(GetSize().x) - GBrick::g_thicknessBorder; ++dx)
+		/*for (int dx = GBrick::g_thicknessBorder; dx < static_cast<int>(GetSize().x) - GBrick::g_thicknessBorder; ++dx)
 		{
 			for (int dy = GBrick::g_thicknessBorder; dy < static_cast<int>(GetSize().y) - GBrick::g_thicknessBorder; ++dy)
 			{
@@ -25,7 +25,9 @@ namespace BrickBreaker
 							 static_cast<int>(GetPosition().y) + dy,
 							 GetColor());
 			}
-		}
+		}*/
+
+		RectangleBrick::Draw(gfx, GetPosition(), GetColor(), GBrick::g_thicknessBorder);
 	}
 
 	void Brick::Update(Ball& ball)
