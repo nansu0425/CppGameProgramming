@@ -31,6 +31,7 @@ namespace BrickBreaker
 
 	private:
 		void					Move(float deltaTime);
+		RectanglePaddle			GetNextMoveRectangle(float deltaTime) const { return m_rectangle.GetPosition() + m_direction * GetSpeed() * deltaTime; }
 
 	private:
 		Graphics&				m_gfx;

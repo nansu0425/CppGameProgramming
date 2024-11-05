@@ -1,5 +1,6 @@
 ﻿#include "Paddle.h"
 #include "MainWindow.h"
+#include "Ball.h"
 
 namespace BrickBreaker
 {
@@ -12,7 +13,14 @@ namespace BrickBreaker
 
 	void Paddle::Update(float deltaTime)
 	{
+		// 이동
 		Move(deltaTime);
+
+		// Ball 충돌 처리
+		if (m_rectangle.IsCollision(m_ball.GetRectangle()))
+		{
+			m_ball.ReboundCollision(m_rectangle);
+		}
 	}
 
 	void Paddle::Draw() const
@@ -34,9 +42,13 @@ namespace BrickBreaker
 			++m_direction.x;
 		}
 
-		if (m_direction.x != 0.0f)
+		const RectanglePaddle& next = GetNextMoveRectangle(deltaTime);
+
+		if (next.IsOutScreenX(m_gfx))
 		{
-			m_rectangle.SetPosition(m_rectangle.GetPosition() + m_direction * GetSpeed() * deltaTime);
+			return;
 		}
+
+		m_rectangle = next;
 	}
 }
