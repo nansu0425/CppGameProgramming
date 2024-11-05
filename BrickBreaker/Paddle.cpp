@@ -13,13 +13,12 @@ namespace BrickBreaker
 
 	void Paddle::Update(float deltaTime)
 	{
-		// 이동
 		Move(deltaTime);
 
-		// Ball 충돌 처리
-		if (m_rectangle.IsCollision(m_ball.GetRectangle()))
+		if ((m_ball.GetDirection().y > 0.0f) &&
+			m_rectangle.IsCollision(m_ball.GetRectangle()))
 		{
-			m_ball.ReboundCollision(m_rectangle);
+			HandleCollisionBall();
 		}
 	}
 
@@ -50,5 +49,25 @@ namespace BrickBreaker
 		}
 
 		m_rectangle = next;
+	}
+
+	void Paddle::HandleCollisionBall()
+	{
+		const float diffLeft = m_ball.GetRectangle().GetLeft() - m_rectangle.GetLeft();
+		const float diffRight = m_rectangle.GetRight() - m_ball.GetRectangle().GetRight();
+		const float diffTop = m_ball.GetRectangle().GetTop() - m_rectangle.GetTop();
+		const float diffBottom = m_rectangle.GetBottom() - m_ball.GetRectangle().GetBottom();
+
+		// Paddle의 윗쪽 변과 충돌할 때만 공을 튕긴다
+		if (!((diffBottom > 0) && (diffTop < 0)))
+		{
+			return;
+		}
+
+		// 충돌 인정 범위
+		if (diffTop <= std::min(diffLeft, diffRight))
+		{
+			m_ball.ReboundY(m_ball.GetDirection());
+		}
 	}
 }

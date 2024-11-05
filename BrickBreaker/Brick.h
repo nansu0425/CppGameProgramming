@@ -41,7 +41,7 @@ namespace BrickBreaker
 		bool					IsCollision(const Rectangle<sizeOther>& other) const { return m_rectangle.IsCollision(other); }
 
 	private:
-		void					ReboundBall(Ball& ball);
+		void					HandleCollisionBall(Ball& ball);
 
 	private:
 		RectangleBrick			m_rectangle;

@@ -25,8 +25,6 @@ namespace BrickBreaker
 		void					Move(float deltaTime, const Graphics& gfx);
 		void					ReboundX(const Vector& direction) { SetDirection(Vector(-direction.x, direction.y)); }
 		void					ReboundY(const Vector& direction) { SetDirection(Vector(direction.x, -direction.y)); }
-		template<const Vector& sizeOther>
-		void					ReboundCollision(const Rectangle<sizeOther>& other);
 
 		const Vector&			GetPosition() const { return GetRectangle().GetPosition(); };
 		void					SetPosition(const Vector& position) { m_rectangle.SetPosition(position); }
@@ -44,37 +42,4 @@ namespace BrickBreaker
 		RectangleBall			m_rectangle;
 		Vector					m_direction;
 	};
-
-	template<const Vector& sizeOther>
-	inline void Ball::ReboundCollision(const Rectangle<sizeOther>& other)
-	{
-		const float diffLeft = GetRectangle().GetLeft() - other.GetLeft();
-		const float diffRight = other.GetRight() - GetRectangle().GetRight();
-		const float diffTop = GetRectangle().GetTop() - other.GetTop();
-		const float diffBottom = other.GetBottom() - GetRectangle().GetBottom();
-
-		if ((diffLeft >= 0) &&
-			(diffRight >= 0))
-		{
-			ReboundY(GetDirection());
-		}
-		else if ((diffTop >= 0) &&
-				 (diffBottom >= 0))
-		{
-			ReboundX(GetDirection());
-		}
-		else if (std::min(diffLeft, diffRight) < std::min(diffTop, diffBottom))
-		{
-			ReboundX(GetDirection());
-		}
-		else if (std::min(diffTop, diffBottom) < std::min(diffLeft, diffRight))
-		{
-			ReboundY(GetDirection());
-		}
-		else
-		{
-			ReboundX(GetDirection());
-			ReboundY(GetDirection());
-		}
-	}
 }

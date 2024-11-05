@@ -26,38 +26,26 @@ namespace BrickBreaker
 			IsCollision(ball.GetRectangle()))
 		{
 			SetBroken();
-			ball.ReboundCollision(GetRectangle());
+			HandleCollisionBall(ball);
 		}
 	}
 
-	void Brick::ReboundBall(Ball& ball)
+	void Brick::HandleCollisionBall(Ball& ball)
 	{
 		const float diffLeft = ball.GetRectangle().GetLeft() - GetRectangle().GetLeft();
 		const float diffRight = GetRectangle().GetRight() - ball.GetRectangle().GetRight();
 		const float diffTop = ball.GetRectangle().GetTop() - GetRectangle().GetTop();
 		const float diffBottom = GetRectangle().GetBottom() - ball.GetRectangle().GetBottom();
 
-		if ((diffLeft >= 0) &&
-			(diffRight >= 0))
-		{
-			ball.ReboundY(ball.GetDirection());
-		}
-		else if ((diffTop >= 0) &&
-				 (diffBottom >= 0))
+		// Ball의 x축 방향을 반대로 바꾼다
+		if (std::min(diffLeft, diffRight) <= std::min(diffTop, diffBottom))
 		{
 			ball.ReboundX(ball.GetDirection());
 		}
-		else if (std::min(diffLeft, diffRight) < std::min(diffTop, diffBottom))
+
+		// Ball의 y축 방향을 반대로 바꾼다
+		if (std::min(diffTop, diffBottom) <= std::min(diffLeft, diffRight))
 		{
-			ball.ReboundX(ball.GetDirection());
-		}
-		else if (std::min(diffTop, diffBottom) < std::min(diffLeft, diffRight))
-		{
-			ball.ReboundY(ball.GetDirection());
-		}
-		else
-		{
-			ball.ReboundX(ball.GetDirection());
 			ball.ReboundY(ball.GetDirection());
 		}
 	}
