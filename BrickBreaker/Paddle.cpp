@@ -70,5 +70,14 @@ namespace BrickBreaker
 		{
 			m_ball.ReboundY(m_ball.GetDirection());
 		}
+
+		// 튕기는 Ball의 속도 벡터에 Paddle의 속도 벡터를 더한다
+		if (m_direction.x != 0.0f)
+		{
+			const Vector& velocityBall = m_ball.GetDirection().GetNormalized() * m_ball.GetSpeed();
+			const Vector& velocityPaddle = m_direction.GetNormalized() * GetSpeed();
+
+			m_ball.SetDirection(velocityBall + velocityPaddle);
+		}
 	}
 }
