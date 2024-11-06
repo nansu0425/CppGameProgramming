@@ -25,7 +25,7 @@ namespace BrickBreaker
 	namespace GBall
 	{
 		constexpr Vector			g_size(14.0f, 14.0f);
-		constexpr size_t			g_speed = 400;
+		constexpr size_t			g_speed = 600;
 	}
 
 	namespace GPaddle

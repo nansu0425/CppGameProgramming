@@ -13,12 +13,12 @@ namespace BrickBreaker
 
 	void Paddle::Update(float deltaTime)
 	{
-		Move(deltaTime);
+		Move();
 
 		if (m_ball.CanPaddleHandleCollision() &&
 			m_rectangle.IsCollision(m_ball.GetRectangle()))
 		{
-			HandleCollisionBall();
+			HandleCollisionBall(deltaTime);
 			m_ball.DeterminePaddleCanHandleCollision(*this);
 		}
 	}
@@ -28,21 +28,15 @@ namespace BrickBreaker
 		RectanglePaddle::Draw(m_gfx, m_rectangle.GetPosition(), m_color);
 	}
 
-	void Paddle::Move(float deltaTime)
+	void Paddle::Move()
 	{
-		m_direction.x = 0.0f;
+		const Vector mouse(static_cast<float>(m_wnd.mouse.GetPosX()), 
+						   static_cast<float>(m_wnd.mouse.GetPosY()));
+		const Vector center(m_rectangle.GetPosition() + GetSize() / 2);
 
-		if (m_wnd.kbd.KeyIsPressed(VK_LEFT))
-		{
-			--m_direction.x;
-		}
-		
-		if (m_wnd.kbd.KeyIsPressed(VK_RIGHT))
-		{
-			++m_direction.x;
-		}
+		m_velocity = Vector(mouse.x - center.x, 0.0f);
 
-		const RectanglePaddle& next = GetNextMoveRectangle(deltaTime);
+		const RectanglePaddle& next = GetNextMoveRectangle();
 
 		if (next.IsOutScreenX(m_gfx))
 		{
@@ -52,7 +46,7 @@ namespace BrickBreaker
 		m_rectangle = next;
 	}
 
-	void Paddle::HandleCollisionBall()
+	void Paddle::HandleCollisionBall(float deltaTime)
 	{
 		const float diffLeft = m_ball.GetRectangle().GetLeft() - m_rectangle.GetLeft();
 		const float diffRight = m_rectangle.GetRight() - m_ball.GetRectangle().GetRight();
@@ -71,13 +65,8 @@ namespace BrickBreaker
 			m_ball.ReboundY(m_ball.GetDirection());
 		}
 
-		// 튕기는 Ball의 속도 벡터에 Paddle의 속도 벡터를 더한다
-		if (m_direction.x != 0.0f)
-		{
-			const Vector& velocityBall = m_ball.GetDirection().GetNormalized() * m_ball.GetSpeed();
-			const Vector& velocityPaddle = m_direction.GetNormalized() * GetSpeed();
-
-			m_ball.SetDirection(velocityBall + velocityPaddle);
-		}
+		// Ball이 튕길 때 Paddle의 속도 벡터를 더한다
+		const Vector& velocityBall = m_ball.GetDirection().GetNormalized() * m_ball.GetSpeed() * deltaTime;
+		m_ball.SetDirection(velocityBall + m_velocity);
 	}
 }

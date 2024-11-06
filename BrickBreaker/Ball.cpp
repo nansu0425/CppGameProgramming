@@ -26,13 +26,15 @@ namespace BrickBreaker
 
 	bool Ball::ReboundOutScreen(float deltaTime, const Graphics& gfx, RectangleBall& nextRectangle)
 	{
+		bool isRebound = false;
+
 		// 다음 이동 위치가 화면의 x축 범위를 넘어가는 경우
 		if (nextRectangle.IsOutScreenX(gfx))
 		{
 			ReboundX(GetDirection());
 			nextRectangle = GetNextMoveRectangle(deltaTime);
 
-			return true;
+			isRebound = true;
 		}
 
 		// 다음 이동 위치가 화면의 y축 범위를 넘어가는 경우
@@ -41,9 +43,9 @@ namespace BrickBreaker
 			ReboundY(GetDirection());
 			nextRectangle = GetNextMoveRectangle(deltaTime);
 
-			return true;
+			isRebound = true;
 		}
 
-		return false;
+		return isRebound;
 	}
 }

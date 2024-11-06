@@ -29,11 +29,12 @@ namespace BrickBreaker
 		const RectanglePaddle&	GetRectangle() const { return m_rectangle; }
 
 		float					GetSpeed() const { return GPaddle::g_speed; }
+		const Vector&			GetSize() const { return GPaddle::g_size; }
 
 	private:
-		void					Move(float deltaTime);
-		RectanglePaddle			GetNextMoveRectangle(float deltaTime) const { return m_rectangle.GetPosition() + m_direction * GetSpeed() * deltaTime; }
-		void					HandleCollisionBall();
+		void					Move();
+		RectanglePaddle			GetNextMoveRectangle() const { return m_rectangle.GetPosition() + m_velocity; }
+		void					HandleCollisionBall(float deltaTime);
 
 	private:
 		Graphics&				m_gfx;
@@ -42,5 +43,6 @@ namespace BrickBreaker
 		Color					m_color = Colors::Gray;
 		RectanglePaddle			m_rectangle;
 		Vector					m_direction;
+		Vector					m_velocity;
 	};
 }
