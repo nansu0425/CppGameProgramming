@@ -26,6 +26,7 @@ namespace BrickBreaker
 
 		void					Update(float deltaTime);
 		void					Draw() const;
+		const RectanglePaddle&	GetRectangle() const { return m_rectangle; }
 
 		float					GetSpeed() const { return GPaddle::g_speed; }
 
@@ -41,6 +42,5 @@ namespace BrickBreaker
 		Color					m_color = Colors::Gray;
 		RectanglePaddle			m_rectangle;
 		Vector					m_direction;
-		
 	};
 }

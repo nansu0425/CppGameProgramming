@@ -1,6 +1,7 @@
 ﻿#include "Brick.h"
 #include "Graphics.h"
 #include "Ball.h"
+#include "Paddle.h"
 
 #include <algorithm>
 
@@ -20,13 +21,14 @@ namespace BrickBreaker
 		RectangleBrick::Draw(gfx, GetPosition(), GetColor(), GBrick::g_thicknessBorder);
 	}
 
-	void Brick::Update(Ball& ball)
+	void Brick::Update(Ball& ball, const Paddle& paddle)
 	{
 		if (!IsBroken() &&
 			IsCollision(ball.GetRectangle()))
 		{
 			SetBroken();
 			HandleCollisionBall(ball);
+			ball.DeterminePaddleCanHandleCollision(paddle);
 		}
 	}
 
@@ -69,13 +71,13 @@ namespace BrickBreaker
 		}
 	}
 
-	void BrickManager::Update()
+	void BrickManager::Update(const Paddle& paddle)
 	{
 		for (auto& rowBricks : m_bricks)
 		{
 			for (Brick& brick : rowBricks)
 			{
-				brick.Update(m_ball);
+				brick.Update(m_ball, paddle);
 			}
 		}
 	}

@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "Rectangle.h"
 #include "Sprites.h"
+#include "Paddle.h"
 
 #include <algorithm>
 
@@ -20,11 +21,13 @@ namespace BrickBreaker
 	public:
 								Ball(const Vector& position, const Vector& direction);
 
-		void					Update(float deltaTime, const Graphics& gfx) { Move(deltaTime, gfx); }
+		void					Update(float deltaTime, const Graphics& gfx, const Paddle& paddle) { Move(deltaTime, gfx, paddle); }
 		void					Draw(Graphics& gfx) const { Sprites::DrawBall(GetPosition(), gfx); }
-		void					Move(float deltaTime, const Graphics& gfx);
+		void					Move(float deltaTime, const Graphics& gfx, const Paddle& paddle);
 		void					ReboundX(const Vector& direction) { SetDirection(Vector(-direction.x, direction.y)); }
 		void					ReboundY(const Vector& direction) { SetDirection(Vector(direction.x, -direction.y)); }
+		void					DeterminePaddleCanHandleCollision(const Paddle& paddle) { m_canPaddleHandleCollision = !m_rectangle.IsCollision(paddle.GetRectangle()); }
+		bool					CanPaddleHandleCollision() const { return m_canPaddleHandleCollision; }
 
 		const Vector&			GetPosition() const { return GetRectangle().GetPosition(); };
 		void					SetPosition(const Vector& position) { m_rectangle.SetPosition(position); }
@@ -36,10 +39,11 @@ namespace BrickBreaker
 
 	private:
 		RectangleBall			GetNextMoveRectangle(float deltaTime) const { return GetPosition() + GetDirection().GetNormalized() * GetSpeed() * deltaTime; }
-		void					ReboundOutScreen(float deltaTime, const Graphics& gfx, RectangleBall& nextRectangle);
+		bool					ReboundOutScreen(float deltaTime, const Graphics& gfx, RectangleBall& nextRectangle);
 
 	private:
 		RectangleBall			m_rectangle;
 		Vector					m_direction;
+		bool					m_canPaddleHandleCollision = true;
 	};
 }

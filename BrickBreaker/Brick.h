@@ -10,6 +10,7 @@ class Color;
 namespace BrickBreaker
 {
 	class Ball;
+	class Paddle;
 }
 
 namespace BrickBreaker
@@ -28,7 +29,7 @@ namespace BrickBreaker
 								Brick(const Vector& position, const Color& color);
 
 		void					Draw(Graphics& gfx) const;
-		void					Update(Ball& ball);
+		void					Update(Ball& ball, const Paddle& paddle);
 
 		const Vector&			GetPosition() const { return m_rectangle.GetPosition(); }
 		void					SetPosition(const Vector& position) { m_rectangle.SetPosition(position); }
@@ -61,7 +62,7 @@ namespace BrickBreaker
 	public:
 							BrickManager(Ball& ball);
 
-		void				Update();
+		void				Update(const Paddle& paddle);
 		void				Draw(Graphics& gfx) const;
 
 	private:
