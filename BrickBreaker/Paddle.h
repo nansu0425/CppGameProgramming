@@ -37,6 +37,7 @@ namespace BrickBreaker
 		void					Move();
 		RectanglePaddle			GetNextMoveRectangle() const { return m_rectangle.GetPosition() + m_velocity; }
 		void					HandleCollisionBall(float deltaTime);
+		bool					IsCollisionWall(const RectanglePaddle& rectangle);
 
 	private:
 		Graphics&				m_gfx;
@@ -45,5 +46,6 @@ namespace BrickBreaker
 		RectanglePaddle			m_rectangle;
 		Vector					m_direction;
 		Vector					m_velocity;
+		bool					m_isCollisionWall = false;
 	};
 }

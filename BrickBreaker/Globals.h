@@ -51,5 +51,7 @@ namespace BrickBreaker
 	{
 		constexpr size_t			g_width = 32;
 		constexpr size_t			g_height = Graphics::ScreenHeight / static_cast<int>(GWall::g_size.y);
+		constexpr Vector			g_position((Graphics::ScreenWidth / static_cast<int>(GWall::g_size.x) - g_width) / 2 * GWall::g_size.x,
+											   0.0f);
 	}
 }

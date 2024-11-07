@@ -1,6 +1,7 @@
 ﻿#include "Paddle.h"
 #include "MainWindow.h"
 #include "Ball.h"
+#include "Wall.h"
 
 namespace BrickBreaker
 {
@@ -41,7 +42,8 @@ namespace BrickBreaker
 
 		const RectanglePaddle& next = GetNextMoveRectangle();
 
-		if (next.IsOutScreenX(m_gfx))
+		if (IsCollisionWall(next) ||
+			next.IsOutScreenX(m_gfx))
 		{
 			return;
 		}
@@ -80,5 +82,17 @@ namespace BrickBreaker
 		// Paddle의 실제 속도 벡터보다 영향력을 줄인다
 		m_ball.SetDirection(velocityBall + m_velocity / 2);
 		
+	}
+
+	bool Paddle::IsCollisionWall(const RectanglePaddle& rectangle)
+	{
+		const float leftWall = WallManager::GetPosition().x 
+							   + Wall::GetSize().x 
+							   - 1.0f;
+		const float rightWall = WallManager::GetPosition().x 
+							   + (WallManager::GetWidth() * Wall::GetSize().x) 
+							   - Wall::GetSize().x + 1.0f;
+
+		return ((rectangle.GetLeft() <= leftWall) || (rightWall <= rectangle.GetRight()));
 	}
 }

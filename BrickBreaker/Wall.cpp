@@ -63,23 +63,22 @@ namespace BrickBreaker
 
 	WallManager::WallManager(Graphics& gfx)
 		: m_gfx(gfx)
-		, m_position((Graphics::ScreenWidth / 20 - GetWidth()) / 2 * 20.0f, 0.0f)
 	{
 		// 윗쪽 벽의 위치 설정
 		for (int col = 1; col < GetWidth() - 1; ++col)
 		{
-			m_wallsTop[col - 1].SetPosition(Vector(m_position.x + Wall::GetSize().x * col, 
-												   m_position.y));
+			m_wallsTop[col - 1].SetPosition(Vector(GetPosition().x + Wall::GetSize().x * col, 
+												   GetPosition().y));
 		}
 
 		// 왼쪽, 오른쪽 벽의 위치 설정
 		for (int row = 0; row < GetHeight(); ++row)
 		{
-			m_wallsLeft[row].SetPosition(Vector(m_wallsTop[0].GetPosition().x,
-												m_position.y + Wall::GetSize().y * row));
+			m_wallsLeft[row].SetPosition(Vector(m_wallsTop[0].GetPosition().x - Wall::GetSize().x,
+												GetPosition().y + Wall::GetSize().y * row));
 
-			m_wallsRight[row].SetPosition(Vector(m_wallsTop[GetWidth() - 3].GetPosition().x,
-												 m_position.y + Wall::GetSize().y * row));
+			m_wallsRight[row].SetPosition(Vector(m_wallsTop[GetWidth() - 3].GetPosition().x + Wall::GetSize().x,
+												 GetPosition().y + Wall::GetSize().y * row));
 		}
 	}
 
@@ -101,10 +100,11 @@ namespace BrickBreaker
 		}
 	}
 
-	void WallManager::Update(Ball& ball, const Paddle& paddle)
+	void WallManager::Update(Ball& ball, Paddle& paddle)
 	{
 		bool isCollisionBall = false;
 
+		// 윗쪽 벽
 		for (Wall& wall : m_wallsTop)
 		{
 			wall.Update(ball, paddle, m_canHandleCollisionBall, isCollisionBall);
@@ -115,6 +115,7 @@ namespace BrickBreaker
 			}
 		}
 
+		// 왼쪽 벽
 		for (Wall& wall : m_wallsLeft)
 		{
 			wall.Update(ball, paddle, m_canHandleCollisionBall, isCollisionBall);
@@ -125,6 +126,7 @@ namespace BrickBreaker
 			}
 		}
 
+		// 오른쪽 벽
 		for (Wall& wall : m_wallsRight)
 		{
 			wall.Update(ball, paddle, m_canHandleCollisionBall, isCollisionBall);

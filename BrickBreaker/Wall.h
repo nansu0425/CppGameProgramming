@@ -49,26 +49,26 @@ namespace BrickBreaker
 	class WallManager
 	{
 	private:
-		using				RectangleWall = Rectangle<GWall::g_size>;
-		using				ArrayTop = std::array<Wall, GWallManager::g_width - 2>;
-		using				ArrayLeft = std::array<Wall, GWallManager::g_height>;
-		using				ArrayRight = std::array<Wall, GWallManager::g_height>;
+		using					RectangleWall = Rectangle<GWall::g_size>;
+		using					ArrayTop = std::array<Wall, GWallManager::g_width - 2>;
+		using					ArrayLeft = std::array<Wall, GWallManager::g_height>;
+		using					ArrayRight = std::array<Wall, GWallManager::g_height>;
 
 	public:
-							WallManager(Graphics& gfx);
+								WallManager(Graphics& gfx);
 
-		void				Draw() const;
-		void				Update(Ball& ball, const Paddle& paddle);
+		void					Draw() const;
+		void					Update(Ball& ball, Paddle& paddle);
 		
-		static size_t		GetWidth() { return GWallManager::g_width; }
-		static size_t		GetHeight()  { return GWallManager::g_height; }
+		static size_t			GetWidth() { return GWallManager::g_width; }
+		static size_t			GetHeight()  { return GWallManager::g_height; }
+		static const Vector&	GetPosition() { return GWallManager::g_position; }
 
 	private:
-		Graphics&			m_gfx;
-		const Vector		m_position;
-		ArrayTop			m_wallsTop;
-		ArrayLeft			m_wallsLeft;
-		ArrayRight			m_wallsRight;
-		bool				m_canHandleCollisionBall = true;
+		Graphics&				m_gfx;
+		ArrayTop				m_wallsTop;
+		ArrayLeft				m_wallsLeft;
+		ArrayRight				m_wallsRight;
+		bool					m_canHandleCollisionBall = true;
 	};
 }
