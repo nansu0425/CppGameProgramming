@@ -45,6 +45,7 @@ void Game::UpdateModel()
 	m_paddle.Update(deltaTime);
 	m_brickManager.Update(m_paddle);
 	m_ball.Update(deltaTime, m_gfx, m_paddle);
+	m_wallManager.Update(m_ball, m_paddle);
 }
 
 void Game::ComposeFrame()

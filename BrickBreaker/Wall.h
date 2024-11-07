@@ -9,6 +9,12 @@ class Graphics;
 
 namespace BrickBreaker
 {
+	class Ball;
+	class Paddle;
+}
+
+namespace BrickBreaker
+{
 	/*------------*
 	 *    Wall    *
 	 *------------*/
@@ -19,7 +25,7 @@ namespace BrickBreaker
 		using					RectangleWall = Rectangle<GWall::g_size>;
 
 	public:
-		// void					Update();
+		void					Update(Ball& ball, const Paddle& paddle, bool& isOtherWallCollisionBall, bool& isCollisionBall);
 		void					Draw(Graphics& gfx) const;
 
 		static const Color&		GetColor() { return GWall::g_color; }
@@ -28,6 +34,9 @@ namespace BrickBreaker
 
 		const Vector&			GetPosition() const { return m_rectangle.GetPosition(); }
 		void					SetPosition(const Vector& position) { m_rectangle.SetPosition(position); }
+
+	private:
+		void					HandleCollisionBall(Ball& ball) const;
 
 	private:
 		RectangleWall			m_rectangle;
@@ -49,9 +58,10 @@ namespace BrickBreaker
 							WallManager(Graphics& gfx);
 
 		void				Draw() const;
+		void				Update(Ball& ball, const Paddle& paddle);
 		
-		size_t				GetWidth() const { return GWallManager::g_width; }
-		size_t				GetHeight() const { return GWallManager::g_height; }
+		static size_t		GetWidth() { return GWallManager::g_width; }
+		static size_t		GetHeight()  { return GWallManager::g_height; }
 
 	private:
 		Graphics&			m_gfx;
@@ -59,5 +69,6 @@ namespace BrickBreaker
 		ArrayTop			m_wallsTop;
 		ArrayLeft			m_wallsLeft;
 		ArrayRight			m_wallsRight;
+		bool				m_canHandleCollisionBall = true;
 	};
 }

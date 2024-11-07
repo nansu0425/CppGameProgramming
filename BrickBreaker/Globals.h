@@ -15,12 +15,12 @@ namespace BrickBreaker
 	namespace GBrickManager
 	{
 		constexpr size_t			g_rowBricks = 4;
-		constexpr size_t			g_colBricks = 18;
+		constexpr size_t			g_colBricks = 12;
 		constexpr Color				g_colors[g_rowBricks] =
 		{
 			Colors::Red, Colors::Green, Colors::Blue, Colors::Cyan,
 		};
-		constexpr Vector			g_position(40.0f, 40.0f);
+		constexpr Vector			g_position(160.0f, 60.0f);
 	}
 
 	namespace GBall
