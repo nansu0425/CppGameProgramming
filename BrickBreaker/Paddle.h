@@ -22,14 +22,16 @@ namespace BrickBreaker
 		using					RectanglePaddle = Rectangle<GPaddle::g_size>;
 
 	public:
+								Paddle(Graphics& gfx, const MainWindow& wnd, Ball& ball);
 								Paddle(Graphics& gfx, const MainWindow& wnd, Ball& ball, const Vector& position);
 
 		void					Update(float deltaTime);
 		void					Draw() const;
 		const RectanglePaddle&	GetRectangle() const { return m_rectangle; }
 
-		float					GetSpeed() const { return GPaddle::g_speed; }
-		const Vector&			GetSize() const { return GPaddle::g_size; }
+		static float			GetSpeed() { return GPaddle::g_speed; }
+		static const Vector&	GetSize() { return GPaddle::g_size; }
+		static const Color&		GetColor() { return GPaddle::g_color; }
 
 	private:
 		void					Move();
@@ -40,7 +42,6 @@ namespace BrickBreaker
 		Graphics&				m_gfx;
 		const MainWindow&		m_wnd;
 		Ball&					m_ball;
-		Color					m_color = Colors::Gray;
 		RectanglePaddle			m_rectangle;
 		Vector					m_direction;
 		Vector					m_velocity;

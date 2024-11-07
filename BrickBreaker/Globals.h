@@ -2,6 +2,7 @@
 
 #include "Vector.h"
 #include "Colors.h"
+#include "Graphics.h"
 
 namespace BrickBreaker
 {
@@ -35,5 +36,20 @@ namespace BrickBreaker
 	{
 		constexpr Vector			g_size(100.0f, 30.0f);
 		constexpr float				g_speed = 500.0f;
+		constexpr Vector			g_initPosition(400.0f - g_size.x / 2, 500.0f);
+		constexpr Color				g_color = Colors::White;
+	}
+
+	namespace GWall
+	{
+		constexpr Vector			g_size(20.0f, 20.0f);
+		constexpr Color				g_color = Colors::Gray;
+		constexpr int				g_thicknessBorder = 1;
+	}
+
+	namespace GWallManager
+	{
+		constexpr size_t			g_width = 32;
+		constexpr size_t			g_height = Graphics::ScreenHeight / static_cast<int>(GWall::g_size.y);
 	}
 }

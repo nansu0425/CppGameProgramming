@@ -27,6 +27,7 @@
 #include "FrameTimer.h"
 #include "Ball.h"
 #include "Paddle.h"
+#include "Wall.h"
 
 class Game
 {
@@ -51,4 +52,5 @@ private:
 	BrickBreaker::Ball			m_ball;
 	BrickBreaker::BrickManager	m_brickManager;
 	BrickBreaker::Paddle		m_paddle;
+	BrickBreaker::WallManager	m_wallManager;
 };

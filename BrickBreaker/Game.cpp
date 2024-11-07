@@ -26,7 +26,8 @@ Game::Game( MainWindow& wnd )
 	: m_wnd( wnd )
 	, m_gfx( wnd )
 	, m_brickManager(m_ball)
-	, m_paddle(m_gfx, m_wnd, m_ball, Vector(350.0f, 500.0f))
+	, m_paddle(m_gfx, m_wnd, m_ball)
+	, m_wallManager(m_gfx)
 {}
 
 void Game::Go()
@@ -48,6 +49,7 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
+	m_wallManager.Draw();
 	m_brickManager.Draw(m_gfx);
 	m_ball.Draw(m_gfx);
 	m_paddle.Draw();

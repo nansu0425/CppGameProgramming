@@ -4,6 +4,9 @@
 
 namespace BrickBreaker
 {
+	Paddle::Paddle(Graphics& gfx, const MainWindow& wnd, Ball& ball)
+		: Paddle(gfx, wnd, ball, GPaddle::g_initPosition)
+	{}
 	Paddle::Paddle(Graphics& gfx, const MainWindow& wnd, Ball& ball, const Vector& position)
 		: m_gfx(gfx)
 		, m_wnd(wnd)
@@ -25,7 +28,7 @@ namespace BrickBreaker
 
 	void Paddle::Draw() const
 	{
-		RectanglePaddle::Draw(m_gfx, m_rectangle.GetPosition(), m_color);
+		RectanglePaddle::Draw(m_gfx, m_rectangle.GetPosition(), GetColor());
 	}
 
 	void Paddle::Move()
