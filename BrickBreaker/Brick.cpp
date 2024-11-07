@@ -21,13 +21,19 @@ namespace BrickBreaker
 		RectangleBrick::Draw(gfx, GetPosition(), GetColor(), GBrick::g_thicknessBorder);
 	}
 
-	void Brick::Update(Ball& ball, const Paddle& paddle)
+	void Brick::Update(Ball& ball, const Paddle& paddle, bool& isOtherBrickCollisionBall)
 	{
 		if (!IsBroken() &&
 			IsCollision(ball.GetRectangle()))
 		{
 			SetBroken();
-			HandleCollisionBall(ball);
+			
+			if (!isOtherBrickCollisionBall)
+			{
+				HandleCollisionBall(ball);
+				isOtherBrickCollisionBall = true;
+			}
+			
 			ball.DeterminePaddleCanHandleCollision(paddle);
 		}
 	}
@@ -73,11 +79,13 @@ namespace BrickBreaker
 
 	void BrickManager::Update(const Paddle& paddle)
 	{
+		m_isOtherBrickCollisionBall = false;
+
 		for (auto& rowBricks : m_bricks)
 		{
 			for (Brick& brick : rowBricks)
 			{
-				brick.Update(m_ball, paddle);
+				brick.Update(m_ball, paddle, m_isOtherBrickCollisionBall);
 			}
 		}
 	}

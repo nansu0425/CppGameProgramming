@@ -1,16 +1,32 @@
 ﻿#include "Ball.h"
 #include "Paddle.h"
 
+#include <random>
+
 namespace BrickBreaker
 {
 	/*------------*
 	 *    Ball    *
 	 *------------*/
 
+	Ball::Ball()
+		: Ball(GBall::g_initPosition, GBall::g_rangeDirectionX)
+	{}
+
 	Ball::Ball(const Vector& position, const Vector& direction)
 		: m_rectangle(position)
 		, m_direction(direction)
 	{}
+
+	Ball::Ball(const Vector& position, float rangeDirectionX)
+		: m_rectangle(position)
+	{
+		std::random_device rd;
+		std::mt19937 rng(rd());
+		std::uniform_real_distribution<float> directionX(-rangeDirectionX, rangeDirectionX);
+		
+		m_direction = Vector(directionX(rng), -1.0f);
+	}
 
 	void Ball::Move(float deltaTime, const Graphics& gfx, const Paddle& paddle)
 	{

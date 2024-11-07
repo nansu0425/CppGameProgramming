@@ -19,7 +19,9 @@ namespace BrickBreaker
 		using					RectangleBall = Rectangle<GBall::g_size>;
 
 	public:
+								Ball();
 								Ball(const Vector& position, const Vector& direction);
+								Ball(const Vector& position, float rangeDirectionX);
 
 		void					Update(float deltaTime, const Graphics& gfx, const Paddle& paddle) { Move(deltaTime, gfx, paddle); }
 		void					Draw(Graphics& gfx) const { Sprites::DrawBall(GetPosition(), gfx); }

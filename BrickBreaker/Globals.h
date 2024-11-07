@@ -26,6 +26,9 @@ namespace BrickBreaker
 	{
 		constexpr Vector			g_size(14.0f, 14.0f);
 		constexpr size_t			g_speed = 600;
+		constexpr Vector			g_initPosition(400.0f - g_size.x / 2,
+												   400.0f - g_size.y / 2);
+		constexpr float				g_rangeDirectionX = 0.7f;
 	}
 
 	namespace GPaddle

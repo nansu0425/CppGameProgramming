@@ -29,7 +29,7 @@ namespace BrickBreaker
 								Brick(const Vector& position, const Color& color);
 
 		void					Draw(Graphics& gfx) const;
-		void					Update(Ball& ball, const Paddle& paddle);
+		void					Update(Ball& ball, const Paddle& paddle, bool& isOtherBrickCollisionBall);
 
 		const Vector&			GetPosition() const { return m_rectangle.GetPosition(); }
 		void					SetPosition(const Vector& position) { m_rectangle.SetPosition(position); }
@@ -68,5 +68,6 @@ namespace BrickBreaker
 	private:
 		Ball&				m_ball;
 		Array				m_bricks;
+		bool				m_isOtherBrickCollisionBall = false;
 	};
 }

@@ -20,11 +20,11 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
+#include "Globals.h"
 
 Game::Game( MainWindow& wnd )
 	: m_wnd( wnd )
 	, m_gfx( wnd )
-	, m_ball(Vector(100.0f, 200.0f), Vector(-1.0f, -2.0f))
 	, m_brickManager(m_ball)
 	, m_paddle(m_gfx, m_wnd, m_ball, Vector(350.0f, 500.0f))
 {}
