@@ -13,5 +13,6 @@ namespace BrickBreaker
 	{
 	public:
 		static void				DrawBall(const Vector& position, Graphics& gfx);
+		static void				DrawGameOver(const Vector& position, Graphics& gfx);
 	};
 }

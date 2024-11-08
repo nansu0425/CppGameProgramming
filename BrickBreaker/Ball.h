@@ -19,9 +19,9 @@ namespace BrickBreaker
 		using					RectangleBall = Rectangle<GBall::g_size>;
 
 	public:
-								Ball();
-								Ball(const Vector& position, const Vector& direction);
-								Ball(const Vector& position, float rangeDirectionX);
+								Ball(class GameOver& gameOver);
+								Ball(const Vector& position, const Vector& direction, class GameOver& gameOver);
+								Ball(const Vector& position, float rangeDirectionX, class GameOver& gameOver);
 
 		void					Update(float deltaTime, const Graphics& gfx, const Paddle& paddle) { Move(deltaTime, gfx, paddle); }
 		void					Draw(Graphics& gfx) const { Sprites::DrawBall(GetPosition(), gfx); }
@@ -44,6 +44,7 @@ namespace BrickBreaker
 		bool					ReboundOutScreen(float deltaTime, const Graphics& gfx, RectangleBall& nextRectangle);
 
 	private:
+		class GameOver&			m_gameOver;
 		RectangleBall			m_rectangle;
 		Vector					m_direction;
 		bool					m_canPaddleHandleCollision = true;

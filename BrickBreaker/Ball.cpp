@@ -1,5 +1,6 @@
 ﻿#include "Ball.h"
 #include "Paddle.h"
+#include "GameOver.h"
 
 #include <random>
 
@@ -9,17 +10,19 @@ namespace BrickBreaker
 	 *    Ball    *
 	 *------------*/
 
-	Ball::Ball()
-		: Ball(GBall::g_initPosition, GBall::g_rangeDirectionX)
+	Ball::Ball(GameOver& gameOver)
+		: Ball(GBall::g_initPosition, GBall::g_rangeDirectionX, gameOver)
 	{}
 
-	Ball::Ball(const Vector& position, const Vector& direction)
+	Ball::Ball(const Vector& position, const Vector& direction, GameOver& gameOver)
 		: m_rectangle(position)
 		, m_direction(direction)
+		, m_gameOver(gameOver)
 	{}
 
-	Ball::Ball(const Vector& position, float rangeDirectionX)
+	Ball::Ball(const Vector& position, float rangeDirectionX, GameOver& gameOver)
 		: m_rectangle(position)
+		, m_gameOver(gameOver)
 	{
 		std::random_device rd;
 		std::mt19937 rng(rd());
@@ -34,7 +37,10 @@ namespace BrickBreaker
 		
 		if (ReboundOutScreen(deltaTime, gfx, nextRectangle))
 		{
-			DeterminePaddleCanHandleCollision(paddle);
+			// DeterminePaddleCanHandleCollision(paddle);
+			
+			// 게임 종료
+			m_gameOver.SetOver();
 		}
 
 		SetPosition(nextRectangle.GetPosition());

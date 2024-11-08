@@ -25,6 +25,7 @@
 Game::Game( MainWindow& wnd )
 	: m_wnd( wnd )
 	, m_gfx( wnd )
+	, m_ball(m_gameOver)
 	, m_brickManager(m_ball)
 	, m_paddle(m_gfx, m_wnd, m_ball)
 	, m_wallManager(m_gfx)
@@ -40,6 +41,11 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	if (m_gameOver.IsOver())
+	{
+		return;
+	}
+
 	const float deltaTime = m_timer.CalculateDeltaTime();
 
 	m_paddle.Update(deltaTime);
@@ -52,6 +58,15 @@ void Game::ComposeFrame()
 {
 	m_wallManager.Draw();
 	m_brickManager.Draw(m_gfx);
-	m_ball.Draw(m_gfx);
+	
+	if (m_gameOver.IsOver())
+	{
+		m_gameOver.Draw(m_gfx);
+	}
+	else
+	{
+		m_ball.Draw(m_gfx);
+	}
+	
 	m_paddle.Draw();
 }
