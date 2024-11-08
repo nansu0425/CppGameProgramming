@@ -4,6 +4,7 @@
 #include "Paddle.h"
 
 #include <algorithm>
+#include <cmath>
 
 namespace BrickBreaker
 {
@@ -45,16 +46,38 @@ namespace BrickBreaker
 		const float diffTop = ball.GetRectangle().GetTop() - GetRectangle().GetTop();
 		const float diffBottom = GetRectangle().GetBottom() - ball.GetRectangle().GetBottom();
 
-		// Ball의 x축 방향을 반대로 바꾼다
+		// Ball의 x축 방향을 바꾼다
 		if (std::min(diffLeft, diffRight) <= std::min(diffTop, diffBottom))
 		{
-			ball.ReboundX(ball.GetDirection());
+			// 왼쪽 변 충돌
+			if (diffLeft < 0.0f)
+			{
+				ball.SetDirection(Vector(-std::abs(ball.GetDirection().x), 
+										 ball.GetDirection().y));
+			}
+			// 오른쪽 변 충돌
+			else if (diffRight < 0.0f)
+			{
+				ball.SetDirection(Vector(std::abs(ball.GetDirection().x),
+										 ball.GetDirection().y));
+			}
 		}
 
-		// Ball의 y축 방향을 반대로 바꾼다
+		// Ball의 y축 방향을 바꾼다
 		if (std::min(diffTop, diffBottom) <= std::min(diffLeft, diffRight))
 		{
-			ball.ReboundY(ball.GetDirection());
+			// 윗쪽 변 충돌
+			if (diffTop < 0.0f)
+			{
+				ball.SetDirection(Vector(ball.GetDirection().x,
+										 -std::abs(ball.GetDirection().y)));
+			}
+			// 아랫쪽 변 충돌
+			else if (diffBottom < 0.0f)
+			{
+				ball.SetDirection(Vector(ball.GetDirection().x,
+										 std::abs(ball.GetDirection().y)));
+			}
 		}
 	}
 
