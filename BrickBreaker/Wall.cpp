@@ -3,6 +3,7 @@
 #include "Ball.h"
 
 #include <algorithm>
+#include <cmath>
 
 namespace BrickBreaker
 {
@@ -10,14 +11,14 @@ namespace BrickBreaker
 	 *    Wall    *
 	 *------------*/
 
-	void Wall::Update(Ball& ball, const Paddle& paddle, bool& canHandleCollisionBall, bool& isCollisionBall)
+	void Wall::Update(Ball& ball, const Paddle& paddle, bool& canHandleCollisionBall, bool& isCollisionBall, bool isWallTop)
 	{
 		// Ball의 충돌 처리를 할 수 있는 상태
 		if (canHandleCollisionBall)
 		{
 			if (m_rectangle.IsCollision(ball.GetRectangle()))
 			{
-				HandleCollisionBall(ball);
+				HandleCollisionBall(ball, isWallTop);
 				ball.DeterminePaddleCanHandleCollision(paddle);
 				
 				// Ball과 한번이라도 충돌이 발생하면 충돌 처리를 할 수 없는 상태가 된다
@@ -37,23 +38,26 @@ namespace BrickBreaker
 		RectangleWall::Draw(gfx, m_rectangle.GetPosition(), GetColor(), GetThicknessBorder());
 	}
 
-	void Wall::HandleCollisionBall(Ball& ball) const
+	void Wall::HandleCollisionBall(Ball& ball, bool isWallTop) const
 	{
+		const Vector& dirBall = ball.GetDirection();
 		const float diffLeft = ball.GetRectangle().GetLeft() - m_rectangle.GetLeft();
 		const float diffRight = m_rectangle.GetRight() - ball.GetRectangle().GetRight();
-		const float diffTop = ball.GetRectangle().GetTop() - m_rectangle.GetTop();
-		const float diffBottom = m_rectangle.GetBottom() - ball.GetRectangle().GetBottom();
 
-		// Ball의 x축 방향을 반대로 바꾼다
-		if (std::min(diffLeft, diffRight) <= std::min(diffTop, diffBottom))
+		// 윗쪽 벽 충돌
+		if (isWallTop)
 		{
-			ball.ReboundX(ball.GetDirection());
+			ball.SetDirection(Vector(dirBall.x, std::abs(dirBall.y)));
 		}
-
-		// Ball의 y축 방향을 반대로 바꾼다
-		if (std::min(diffTop, diffBottom) <= std::min(diffLeft, diffRight))
+		// 왼쪽 벽 충돌
+		else if (diffLeft < 0)
 		{
-			ball.ReboundY(ball.GetDirection());
+			ball.SetDirection(Vector(-1 * std::abs(dirBall.x), dirBall.y));
+		}
+		// 오른쪽 벽 충돌
+		else if (diffRight < 0)
+		{
+			ball.SetDirection(Vector(std::abs(dirBall.x), dirBall.y));
 		}
 	}
 
@@ -107,7 +111,7 @@ namespace BrickBreaker
 		// 윗쪽 벽
 		for (Wall& wall : m_wallsTop)
 		{
-			wall.Update(ball, paddle, m_canHandleCollisionBall, isCollisionBall);
+			wall.Update(ball, paddle, m_canHandleCollisionBall, isCollisionBall, true);
 
 			if (isCollisionBall)
 			{
@@ -118,7 +122,7 @@ namespace BrickBreaker
 		// 왼쪽 벽
 		for (Wall& wall : m_wallsLeft)
 		{
-			wall.Update(ball, paddle, m_canHandleCollisionBall, isCollisionBall);
+			wall.Update(ball, paddle, m_canHandleCollisionBall, isCollisionBall, false);
 
 			if (isCollisionBall)
 			{
@@ -129,7 +133,7 @@ namespace BrickBreaker
 		// 오른쪽 벽
 		for (Wall& wall : m_wallsRight)
 		{
-			wall.Update(ball, paddle, m_canHandleCollisionBall, isCollisionBall);
+			wall.Update(ball, paddle, m_canHandleCollisionBall, isCollisionBall, false);
 
 			if (isCollisionBall)
 			{

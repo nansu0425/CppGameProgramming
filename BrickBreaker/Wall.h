@@ -25,7 +25,7 @@ namespace BrickBreaker
 		using					RectangleWall = Rectangle<GWall::g_size>;
 
 	public:
-		void					Update(Ball& ball, const Paddle& paddle, bool& isOtherWallCollisionBall, bool& isCollisionBall);
+		void					Update(Ball& ball, const Paddle& paddle, bool& isOtherWallCollisionBall, bool& isCollisionBall, bool isWallTop);
 		void					Draw(Graphics& gfx) const;
 
 		static const Color&		GetColor() { return GWall::g_color; }
@@ -36,7 +36,7 @@ namespace BrickBreaker
 		void					SetPosition(const Vector& position) { m_rectangle.SetPosition(position); }
 
 	private:
-		void					HandleCollisionBall(Ball& ball) const;
+		void					HandleCollisionBall(Ball& ball, bool isWallTop) const;
 
 	private:
 		RectangleWall			m_rectangle;
