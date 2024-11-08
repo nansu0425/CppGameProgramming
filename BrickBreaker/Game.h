@@ -29,6 +29,7 @@
 #include "Paddle.h"
 #include "Wall.h"
 #include "GameOver.h"
+#include "Life.h"
 
 class Game
 {
@@ -55,4 +56,5 @@ private:
 	BrickBreaker::Paddle		m_paddle;
 	BrickBreaker::WallManager	m_wallManager;
 	BrickBreaker::GameOver		m_gameOver;
+	BrickBreaker::Life			m_life;
 };

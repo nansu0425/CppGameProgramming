@@ -25,10 +25,11 @@
 Game::Game( MainWindow& wnd )
 	: m_wnd( wnd )
 	, m_gfx( wnd )
-	, m_ball(m_gameOver)
+	, m_ball(m_life)
 	, m_brickManager(m_ball)
 	, m_paddle(m_gfx, m_wnd, m_ball)
 	, m_wallManager(m_gfx)
+	, m_life(m_gameOver)
 {}
 
 void Game::Go()
@@ -66,6 +67,7 @@ void Game::ComposeFrame()
 	else
 	{
 		m_ball.Draw(m_gfx);
+		m_life.Draw(m_gfx);
 	}
 	
 	m_paddle.Draw();

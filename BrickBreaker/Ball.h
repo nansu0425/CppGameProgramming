@@ -6,6 +6,7 @@
 #include "Paddle.h"
 
 #include <algorithm>
+#include <random>
 
 namespace BrickBreaker
 {
@@ -17,11 +18,11 @@ namespace BrickBreaker
 	{
 	private:
 		using					RectangleBall = Rectangle<GBall::g_size>;
+		using					DistributionF = std::uniform_real_distribution<float>;
 
 	public:
-								Ball(class GameOver& gameOver);
-								Ball(const Vector& position, const Vector& direction, class GameOver& gameOver);
-								Ball(const Vector& position, float rangeDirectionX, class GameOver& gameOver);
+								Ball(class Life& life);
+								Ball(const Vector& position, float rangeDirectionX, class Life& life);
 
 		void					Update(float deltaTime, const Graphics& gfx, const Paddle& paddle) { Move(deltaTime, gfx, paddle); }
 		void					Draw(Graphics& gfx) const { Sprites::DrawBall(GetPosition(), gfx); }
@@ -30,6 +31,7 @@ namespace BrickBreaker
 		void					ReboundY(const Vector& direction) { SetDirection(Vector(direction.x, -direction.y)); }
 		void					DeterminePaddleCanHandleCollision(const Paddle& paddle) { m_canPaddleHandleCollision = !m_rectangle.IsCollision(paddle.GetRectangle()); }
 		bool					CanPaddleHandleCollision() const { return m_canPaddleHandleCollision; }
+		void					Spawn();
 
 		const Vector&			GetPosition() const { return GetRectangle().GetPosition(); };
 		void					SetPosition(const Vector& position) { m_rectangle.SetPosition(position); }
@@ -44,9 +46,11 @@ namespace BrickBreaker
 		bool					ReboundOutScreen(float deltaTime, const Graphics& gfx, RectangleBall& nextRectangle);
 
 	private:
-		class GameOver&			m_gameOver;
+		class Life&				m_life;
+		std::mt19937			m_rng;
 		RectangleBall			m_rectangle;
 		Vector					m_direction;
+		DistributionF			m_directionX;
 		bool					m_canPaddleHandleCollision = true;
 	};
 }

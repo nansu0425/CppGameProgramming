@@ -1,8 +1,6 @@
 ﻿#include "Ball.h"
 #include "Paddle.h"
-#include "GameOver.h"
-
-#include <random>
+#include "Life.h"
 
 namespace BrickBreaker
 {
@@ -10,40 +8,44 @@ namespace BrickBreaker
 	 *    Ball    *
 	 *------------*/
 
-	Ball::Ball(GameOver& gameOver)
-		: Ball(GBall::g_initPosition, GBall::g_rangeDirectionX, gameOver)
+	Ball::Ball(Life& life)
+		: Ball(GBall::g_initPosition, GBall::g_rangeDirectionX, life)
 	{}
 
-	Ball::Ball(const Vector& position, const Vector& direction, GameOver& gameOver)
+	Ball::Ball(const Vector& position, float rangeDirectionX, Life& life)
 		: m_rectangle(position)
-		, m_direction(direction)
-		, m_gameOver(gameOver)
-	{}
-
-	Ball::Ball(const Vector& position, float rangeDirectionX, GameOver& gameOver)
-		: m_rectangle(position)
-		, m_gameOver(gameOver)
+		, m_life(life)
 	{
 		std::random_device rd;
-		std::mt19937 rng(rd());
-		std::uniform_real_distribution<float> directionX(-rangeDirectionX, rangeDirectionX);
-		
-		m_direction = Vector(directionX(rng), -1.0f);
+		m_rng = std::mt19937(rd());
+		m_directionX = DistributionF(-GBall::g_rangeDirectionX,
+									 GBall::g_rangeDirectionX);
+
+		Spawn();
 	}
 
 	void Ball::Move(float deltaTime, const Graphics& gfx, const Paddle& paddle)
 	{
 		RectangleBall nextRectangle = GetNextMoveRectangle(deltaTime);
-		
-		if (ReboundOutScreen(deltaTime, gfx, nextRectangle))
+
+		if (nextRectangle.IsOutScreenY(gfx))
 		{
-			// DeterminePaddleCanHandleCollision(paddle);
-			
-			// 게임 종료
-			m_gameOver.SetOver();
+			m_life.Decrease();
+
+			if (!m_life.IsEmpty())
+			{
+				Spawn();
+				return;
+			}
 		}
 
 		SetPosition(nextRectangle.GetPosition());
+	}
+
+	void Ball::Spawn()
+	{
+		SetPosition(GBall::g_initPosition);
+		SetDirection(Vector(m_directionX(m_rng), -1.0f));
 	}
 
 	bool Ball::ReboundOutScreen(float deltaTime, const Graphics& gfx, RectangleBall& nextRectangle)
