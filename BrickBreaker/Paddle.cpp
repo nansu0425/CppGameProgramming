@@ -42,9 +42,9 @@ namespace BrickBreaker
 
 		const RectanglePaddle& next = GetNextMoveRectangle();
 
-		if (IsCollisionWall(next) ||
-			next.IsOutScreenX(m_gfx))
+		if (IsCollisionWall(next))
 		{
+			m_velocity = Vector();
 			return;
 		}
 
@@ -70,17 +70,20 @@ namespace BrickBreaker
 			m_ball.ReboundY(m_ball.GetDirection());
 		}
 
-		// Ball이 튕길 때 Paddle의 속도 벡터를 더한다
-		Vector velocityBall = m_ball.GetDirection().GetNormalized() * m_ball.GetSpeed() * deltaTime;
+		Vector velocityReboundBall = m_ball.GetDirection().GetNormalized() * m_ball.GetSpeed() * deltaTime;
 
-		// Paddle이 멈춰있을 땐 Ball 속도 벡터의 x성분 영향력이 감소한다
+		// Paddle이 멈춰있을 땐 Ball velocity의 x성분 영향력이 감소한다
 		if (m_velocity.x == 0.0f)
 		{
-			velocityBall.x /= 2;
+			velocityReboundBall.x /= 2;
+		}
+		// Paddle이 움직일 땐 Paddle의 실제 velocity보다 영향력을 줄인다
+		else
+		{
+			velocityReboundBall += m_velocity / 2;
 		}
 		
-		// Paddle의 실제 속도 벡터보다 영향력을 줄인다
-		m_ball.SetDirection(velocityBall + m_velocity / 2);
+		m_ball.SetDirection(velocityReboundBall);
 		
 	}
 
