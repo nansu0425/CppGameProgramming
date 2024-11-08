@@ -12,9 +12,9 @@ namespace BrickBreaker
 
 namespace BrickBreaker
 {
-	/*-------------*
-	 *    Brick    *
-	 *-------------*/
+	/*--------------*
+	 *    Paddle    *
+	 *--------------*/
 
 	class Paddle
 	{
@@ -40,7 +40,8 @@ namespace BrickBreaker
 		bool					IsCollisionWall(const RectanglePaddle& rectangle);
 
 	private:
-		static constexpr float	s_factorVelocityOnReboundBall = 0.5f;
+		static constexpr float	s_factorVelocityOnReboundBall = 0.8f;
+		static constexpr float	s_minTanReboundBall = 0.5f;
 
 		Graphics&				m_gfx;
 		const MainWindow&		m_wnd;

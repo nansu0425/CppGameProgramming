@@ -5,9 +5,14 @@
 
 namespace BrickBreaker
 {
+	/*--------------*
+	 *    Paddle    *
+	 *--------------*/
+
 	Paddle::Paddle(Graphics& gfx, const MainWindow& wnd, Ball& ball)
 		: Paddle(gfx, wnd, ball, GPaddle::g_initPosition)
 	{}
+
 	Paddle::Paddle(Graphics& gfx, const MainWindow& wnd, Ball& ball, const Vector& position)
 		: m_gfx(gfx)
 		, m_wnd(wnd)
@@ -71,8 +76,20 @@ namespace BrickBreaker
 			velocityReboundBall = directionReboundBall * m_ball.GetSpeed() * deltaTime;
 		}
 
+		// Paddle의 velocity를 튕기는 Ball의 velocity에 더한다
 		velocityReboundBall += m_velocity * s_factorVelocityOnReboundBall;
-		m_ball.SetDirection(velocityReboundBall);
+
+		Vector directionReboundBall = velocityReboundBall;
+
+		// 위로 튕기는 Ball의 velocity가 최소 기울기보다 작으면 최소 기울기에 맞춘다
+		if ((velocityReboundBall.y < 0.0f) &&
+			(std::abs(velocityReboundBall.y / velocityReboundBall.x) < s_minTanReboundBall))
+		{
+			directionReboundBall = Vector((std::signbit(velocityReboundBall.x) ? -1.0f : 1.0f), 
+										  -s_minTanReboundBall);
+		}
+
+		m_ball.SetDirection(directionReboundBall);
 	}
 
 	bool Paddle::IsCollisionWall(const RectanglePaddle& rectangle)
@@ -84,6 +101,7 @@ namespace BrickBreaker
 							   + (WallManager::GetWidth() * Wall::GetSize().x) 
 							   - Wall::GetSize().x + 1.0f;
 
-		return ((rectangle.GetLeft() <= leftWall) || (rightWall <= rectangle.GetRight()));
+		return ((rectangle.GetLeft() <= leftWall) || 
+				(rightWall <= rectangle.GetRight()));
 	}
 }
