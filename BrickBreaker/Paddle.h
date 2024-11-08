@@ -40,6 +40,8 @@ namespace BrickBreaker
 		bool					IsCollisionWall(const RectanglePaddle& rectangle);
 
 	private:
+		static constexpr float	s_factorVelocityOnReboundBall = 0.5f;
+
 		Graphics&				m_gfx;
 		const MainWindow&		m_wnd;
 		Ball&					m_ball;

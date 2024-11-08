@@ -19,6 +19,8 @@ namespace BrickBreaker
 		const Vector&		GetPosition() const { return m_position; }
 		void				SetPosition(const Vector& position) { m_position = position; }
 		const Vector&		GetSize() const { return size; }
+		Vector				GetCenter() const { return m_position + size / 2; }
+		
 		static void			Draw(Graphics& gfx, const Vector& position, Color color, int thicknessBorder = 0);
 
 		float				GetLeft() const { return GetPosition().x; }

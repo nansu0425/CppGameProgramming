@@ -34,11 +34,8 @@ namespace BrickBreaker
 
 	void Paddle::Move()
 	{
-		const Vector mouse(static_cast<float>(m_wnd.mouse.GetPosX()), 
-						   static_cast<float>(m_wnd.mouse.GetPosY()));
-		const Vector center(m_rectangle.GetPosition() + GetSize() / 2);
-
-		m_velocity = Vector(mouse.x - center.x, 0.0f);
+		const float xMouse = static_cast<float>(m_wnd.mouse.GetPosX());
+		m_velocity = Vector(xMouse - m_rectangle.GetCenter().x, 0.0f);
 
 		const RectanglePaddle& next = GetNextMoveRectangle();
 
@@ -58,33 +55,24 @@ namespace BrickBreaker
 		const float diffTop = m_ball.GetRectangle().GetTop() - m_rectangle.GetTop();
 		const float diffBottom = m_rectangle.GetBottom() - m_ball.GetRectangle().GetBottom();
 
-		// Ball의 x축 방향을 반대로 바꾼다
+		Vector velocityReboundBall;
+
+		// Ball이 Paddle의 왼쪽, 오른쪽 변에서 튕기는 경우
 		if (std::min(diffLeft, diffRight) <= std::min(diffTop, diffBottom))
 		{
 			m_ball.ReboundX(m_ball.GetDirection());
+			velocityReboundBall = m_ball.GetDirection().GetNormalized() * m_ball.GetSpeed() * deltaTime;
 		}
 
-		// Ball의 y축 방향을 반대로 바꾼다
+		// Ball이 Paddle의 윗쪽, 아랫쪽 변에서 튕기는 경우
 		if (std::min(diffTop, diffBottom) <= std::min(diffLeft, diffRight))
 		{
-			m_ball.ReboundY(m_ball.GetDirection());
+			const Vector directionReboundBall = (m_ball.GetRectangle().GetCenter() - m_rectangle.GetCenter()).GetNormalized();
+			velocityReboundBall = directionReboundBall * m_ball.GetSpeed() * deltaTime;
 		}
 
-		Vector velocityReboundBall = m_ball.GetDirection().GetNormalized() * m_ball.GetSpeed() * deltaTime;
-
-		// Paddle이 멈춰있을 땐 Ball velocity의 x성분 영향력이 감소한다
-		if (m_velocity.x == 0.0f)
-		{
-			velocityReboundBall.x /= 2;
-		}
-		// Paddle이 움직일 땐 Paddle의 실제 velocity보다 영향력을 줄인다
-		else
-		{
-			velocityReboundBall += m_velocity / 2;
-		}
-		
+		velocityReboundBall += m_velocity * s_factorVelocityOnReboundBall;
 		m_ball.SetDirection(velocityReboundBall);
-		
 	}
 
 	bool Paddle::IsCollisionWall(const RectanglePaddle& rectangle)
