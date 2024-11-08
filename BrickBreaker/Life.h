@@ -13,19 +13,16 @@ namespace BrickBreaker
 	class Life
 	{
 	public:
-									Life(class GameOver& gameOver);
-
 		void						Draw(Graphics& gfx);
 
 		int							IsEmpty() const { return (m_count == 0); }
-		void						Decrease();
+		void						Decrease() { --m_count; }
 
 	private:
 		static constexpr int		s_initCount = 3;
 		static constexpr Vector		s_size = Vector(24.0f, 24.0f);
 		static constexpr Vector		s_position = Vector(0.0f, 0.0f);
 
-		class GameOver&				m_gameOver;
 		int							m_count = s_initCount;
 	};
 }

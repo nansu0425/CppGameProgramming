@@ -29,15 +29,15 @@ namespace BrickBreaker
 								Brick(const Vector& position, const Color& color);
 
 		void					Draw(Graphics& gfx) const;
-		void					Update(Ball& ball, const Paddle& paddle, bool& isOtherBrickCollisionBall);
+		void					Update(Ball& ball, const Paddle& paddle, bool& isOtherBrickCollisionBall, size_t& m_numberBricks);
 
 		const Vector&			GetPosition() const { return m_rectangle.GetPosition(); }
 		void					SetPosition(const Vector& position) { m_rectangle.SetPosition(position); }
 		const Vector&			GetSize() const { return GBrick::g_size; }
 		const RectangleBrick&	GetRectangle() const { return m_rectangle; }
 		const Color&			GetColor() const { return m_color; }
-		bool					IsBroken() const { return m_bBroken; }
-		void					SetBroken() { m_bBroken = true; }
+		bool					IsBroken() const { return m_isBroken; }
+		void					SetBroken();
 		template<const Vector& sizeOther>
 		bool					IsCollision(const Rectangle<sizeOther>& other) const { return m_rectangle.IsCollision(other); }
 
@@ -47,7 +47,7 @@ namespace BrickBreaker
 	private:
 		RectangleBrick			m_rectangle;
 		Color					m_color;
-		bool					m_bBroken = false;
+		bool					m_isBroken = false;
 	};
 
 	/*--------------------*
@@ -65,9 +65,12 @@ namespace BrickBreaker
 		void				Update(const Paddle& paddle);
 		void				Draw(Graphics& gfx) const;
 
+		bool				IsEmpty() const { return (m_numberBricks == 0); }
+
 	private:
 		Ball&				m_ball;
 		Array				m_bricks;
+		size_t				m_numberBricks = GBrickManager::g_rowBricks * GBrickManager::g_colBricks;
 		bool				m_isOtherBrickCollisionBall = false;
 	};
 }

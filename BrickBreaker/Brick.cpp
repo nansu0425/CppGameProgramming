@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cassert>
 
 namespace BrickBreaker
 {
@@ -22,12 +23,13 @@ namespace BrickBreaker
 		RectangleBrick::Draw(gfx, GetPosition(), GetColor(), GBrick::g_thicknessBorder);
 	}
 
-	void Brick::Update(Ball& ball, const Paddle& paddle, bool& isOtherBrickCollisionBall)
+	void Brick::Update(Ball& ball, const Paddle& paddle, bool& isOtherBrickCollisionBall, size_t& m_numberBricks)
 	{
 		if (!IsBroken() &&
 			IsCollision(ball.GetRectangle()))
 		{
 			SetBroken();
+			--m_numberBricks;
 			
 			if (!isOtherBrickCollisionBall)
 			{
@@ -37,6 +39,13 @@ namespace BrickBreaker
 			
 			ball.DeterminePaddleCanHandleCollision(paddle);
 		}
+	}
+
+	void Brick::SetBroken()
+	{
+		assert(!IsBroken());
+
+		m_isBroken = true;
 	}
 
 	void Brick::HandleCollisionBall(Ball& ball)
@@ -108,7 +117,7 @@ namespace BrickBreaker
 		{
 			for (Brick& brick : rowBricks)
 			{
-				brick.Update(m_ball, paddle, m_isOtherBrickCollisionBall);
+				brick.Update(m_ball, paddle, m_isOtherBrickCollisionBall, m_numberBricks);
 			}
 		}
 	}

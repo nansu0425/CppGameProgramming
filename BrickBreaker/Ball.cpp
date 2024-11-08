@@ -35,8 +35,9 @@ namespace BrickBreaker
 			if (!m_life.IsEmpty())
 			{
 				Spawn();
-				return;
 			}
+
+			return;
 		}
 
 		SetPosition(nextRectangle.GetPosition());

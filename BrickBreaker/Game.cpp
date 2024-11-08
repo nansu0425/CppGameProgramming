@@ -29,7 +29,6 @@ Game::Game( MainWindow& wnd )
 	, m_brickManager(m_ball)
 	, m_paddle(m_gfx, m_wnd, m_ball)
 	, m_wallManager(m_gfx)
-	, m_life(m_gameOver)
 {}
 
 void Game::Go()
@@ -51,7 +50,21 @@ void Game::UpdateModel()
 
 	m_paddle.Update(deltaTime);
 	m_brickManager.Update(m_paddle);
+
+	if (m_brickManager.IsEmpty())
+	{
+		m_gameOver.SetOver();
+		return;
+	}
+
 	m_ball.Update(deltaTime, m_gfx, m_paddle);
+
+	if (m_life.IsEmpty())
+	{
+		m_gameOver.SetOver();
+		return;
+	}
+
 	m_wallManager.Update(m_ball, m_paddle);
 }
 
@@ -67,8 +80,8 @@ void Game::ComposeFrame()
 	else
 	{
 		m_ball.Draw(m_gfx);
-		m_life.Draw(m_gfx);
 	}
-	
+
+	m_life.Draw(m_gfx);
 	m_paddle.Draw();
 }
