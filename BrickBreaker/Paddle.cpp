@@ -24,11 +24,11 @@ namespace BrickBreaker
 	{
 		Move();
 
-		if (m_ball.CanPaddleHandleCollision() &&
+		if (m_canHandleCollisionBall &&
 			m_rectangle.IsCollision(m_ball.GetRectangle()))
 		{
 			HandleCollisionBall(deltaTime);
-			m_ball.DeterminePaddleCanHandleCollision(*this);
+			DisableHandleCollisionBall();
 		}
 	}
 

@@ -25,7 +25,7 @@ namespace BrickBreaker
 		using					RectangleWall = Rectangle<GWall::g_size>;
 
 	public:
-		void					Update(Ball& ball, const Paddle& paddle, bool isWallTop);
+		void					Update(Ball& ball, Paddle& paddle, bool isWallTop);
 		void					Draw(Graphics& gfx) const;
 
 		static const Color&		GetColor() { return GWall::g_color; }

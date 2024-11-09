@@ -29,8 +29,6 @@ namespace BrickBreaker
 		void					Move(float deltaTime, const Graphics& gfx, const Paddle& paddle);
 		void					ReboundX(const Vector& direction) { SetDirection(Vector(-direction.x, direction.y)); }
 		void					ReboundY(const Vector& direction) { SetDirection(Vector(direction.x, -direction.y)); }
-		void					DeterminePaddleCanHandleCollision(const Paddle& paddle) { m_canPaddleHandleCollision = !m_rectangle.IsCollision(paddle.GetRectangle()); }
-		bool					CanPaddleHandleCollision() const { return m_canPaddleHandleCollision; }
 		void					Spawn();
 
 		const Vector&			GetPosition() const { return GetRectangle().GetPosition(); };

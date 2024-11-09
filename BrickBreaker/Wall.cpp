@@ -11,13 +11,14 @@ namespace BrickBreaker
 	 *    Wall    *
 	 *------------*/
 
-	void Wall::Update(Ball& ball, const Paddle& paddle, bool isWallTop)
+	void Wall::Update(Ball& ball, Paddle& paddle, bool isWallTop)
 	{
 		// Ball과 충돌 발생
 		if (m_rectangle.IsCollision(ball.GetRectangle()))
 		{
 			HandleCollisionBall(ball, isWallTop);
-			ball.DeterminePaddleCanHandleCollision(paddle);
+			
+			paddle.EnableHandleCollisionBall();
 		}
 	}
 

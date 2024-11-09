@@ -23,7 +23,7 @@ namespace BrickBreaker
 		RectangleBrick::Draw(gfx, GetPosition(), GetColor(), GBrick::g_thicknessBorder);
 	}
 
-	void Brick::Update(Ball& ball, const Paddle& paddle, bool& isOtherBrickCollisionBall, size_t& m_numberBricks)
+	void Brick::Update(Ball& ball, Paddle& paddle, bool& isOtherBrickCollisionBall, size_t& m_numberBricks)
 	{
 		if (!IsBroken() &&
 			IsCollision(ball.GetRectangle()))
@@ -37,7 +37,7 @@ namespace BrickBreaker
 				isOtherBrickCollisionBall = true;
 			}
 			
-			ball.DeterminePaddleCanHandleCollision(paddle);
+			paddle.EnableHandleCollisionBall();
 		}
 	}
 
@@ -109,7 +109,7 @@ namespace BrickBreaker
 		}
 	}
 
-	void BrickManager::Update(const Paddle& paddle)
+	void BrickManager::Update(Paddle& paddle)
 	{
 		m_isOtherBrickCollisionBall = false;
 

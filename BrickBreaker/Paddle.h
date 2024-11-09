@@ -28,6 +28,8 @@ namespace BrickBreaker
 		void					Update(float deltaTime);
 		void					Draw() const;
 		const RectanglePaddle&	GetRectangle() const { return m_rectangle; }
+		void					EnableHandleCollisionBall() { m_canHandleCollisionBall = true; }
+		void					DisableHandleCollisionBall() { m_canHandleCollisionBall = false; }
 
 		static float			GetSpeed() { return GPaddle::g_speed; }
 		static const Vector&	GetSize() { return GPaddle::g_size; }
@@ -50,5 +52,6 @@ namespace BrickBreaker
 		Vector					m_direction;
 		Vector					m_velocity;
 		bool					m_isCollisionWall = false;
+		bool					m_canHandleCollisionBall = false;
 	};
 }
