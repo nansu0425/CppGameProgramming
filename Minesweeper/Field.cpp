@@ -1,6 +1,5 @@
 ﻿#include "Field.h"
 #include "Vei2.h"
-#include "SpriteCodex.h"
 #include "RectI.h"
 #include "MainWindow.h"
 
@@ -128,7 +127,12 @@ void Field::OnUpdate(MainWindow& wnd)
 {
 	if (wnd.mouse.LeftIsPressed())
 	{
-		OnClick(ConvertToPosGrid(wnd.mouse.GetPos()));
+		const Vei2 posMouse = wnd.mouse.GetPos();
+
+		if (s_rect.Contains(posMouse))
+		{
+			OnClick(ConvertToPosGrid(posMouse));
+		}
 	}
 }
 
@@ -158,8 +162,7 @@ const Field::Tile& Field::At(const Vei2& posGrid) const
 
 void Field::DrawBackground(Graphics& gfx) const
 {
-	gfx.DrawRect(RectI(0, s_width, 0, s_height) * SpriteCodex::tileSize, 
-				 SpriteCodex::baseColor);
+	gfx.DrawRect(s_rect, SpriteCodex::baseColor);
 }
 
 Vei2 Field::ConvertToPosGrid(const Vei2& pos) const

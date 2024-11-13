@@ -1,5 +1,8 @@
 ﻿#pragma once
 
+#include "RectI.h"
+#include "SpriteCodex.h"
+
 #include <array>
 
 class Vei2;
@@ -16,6 +19,10 @@ private:
 	static constexpr int	s_nMines = 20;
 	static constexpr int	s_width = 20;
 	static constexpr int	s_height = 16;
+	static constexpr RectI	s_rect = RectI(0, 
+										   s_width * SpriteCodex::tileSize,
+										   0, 
+										   s_height * SpriteCodex::tileSize);
 
 	class Tile
 	{
