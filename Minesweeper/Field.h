@@ -41,6 +41,7 @@ private:
 		void				Reveal();
 		bool				IsRevealed() const;
 		bool				IsHidden() const;
+		void				ToggleFlag();
 
 	private:
 		State				m_state = State::Hidden;
@@ -55,12 +56,14 @@ public:
 
 	void					OnDraw(Graphics& gfx) const;
 	void					OnUpdate(MainWindow& wnd);
-	void					OnClick(const Vei2& posGrid);
 
 	Tile&					At(const Vei2& posGrid);
 	const Tile&				At(const Vei2& posGrid) const;
 
 private:
+	void					OnLeftClickMouse(const Vei2& posGrid);
+	void					OnRightClickMouse(const Vei2& posGrid);
+
 	void					DrawBackground(Graphics& gfx) const;
 	Vei2					ConvertToPosGrid(const Vei2& pos) const;
 

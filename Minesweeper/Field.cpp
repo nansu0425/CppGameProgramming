@@ -33,17 +33,6 @@ Field::Field()
 			}
 		}
 	}
-
-	// reveal test
-	for (int count = 0; count < 120; ++count)
-	{
-		const Vei2 pos = Vei2(distX(rng), distY(rng));
-
-		if (!At(pos).IsRevealed())
-		{
-			At(pos).Reveal();
-		}
-	}
 }
 
 void Field::Tile::SpawnMine()
@@ -73,6 +62,24 @@ bool Field::Tile::IsRevealed() const
 bool Field::Tile::IsHidden() const
 {
 	return (m_state == State::Hidden);
+}
+
+void Field::Tile::ToggleFlag()
+{
+	switch (m_state)
+	{
+	case State::Hidden:
+		m_state = State::Flagged;
+		break;
+
+	case State::Flagged:
+		m_state = State::Hidden;
+		break;
+
+	default:
+		assert(true);
+		break;
+	}
 }
 
 void Field::Tile::OnDraw(const Vei2& posGrid, Graphics& gfx) const
@@ -131,16 +138,33 @@ void Field::OnUpdate(MainWindow& wnd)
 
 		if (s_rect.Contains(posMouse))
 		{
-			OnClick(ConvertToPosGrid(posMouse));
+			OnLeftClickMouse(ConvertToPosGrid(posMouse));
+		}
+	}
+	else if (wnd.mouse.RightIsPressed())
+	{
+		const Vei2 posMouse = wnd.mouse.GetPos();
+
+		if (s_rect.Contains(posMouse))
+		{
+			OnRightClickMouse(ConvertToPosGrid(posMouse));
 		}
 	}
 }
 
-void Field::OnClick(const Vei2& posGrid)
+void Field::OnLeftClickMouse(const Vei2& posGrid)
 {
 	if (At(posGrid).IsHidden())
 	{
 		At(posGrid).Reveal();
+	}
+}
+
+void Field::OnRightClickMouse(const Vei2& posGrid)
+{
+	if (!At(posGrid).IsRevealed())
+	{
+		At(posGrid).ToggleFlag();
 	}
 }
 
