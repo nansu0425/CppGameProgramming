@@ -132,22 +132,28 @@ void Field::OnDraw(Graphics& gfx) const
 
 void Field::OnUpdate(MainWindow& wnd)
 {
-	if (wnd.mouse.LeftIsPressed())
+	while (!wnd.mouse.IsEmpty())
 	{
-		const Vei2 posMouse = wnd.mouse.GetPos();
+		const Mouse::Event evt = wnd.mouse.Read();
 
-		if (s_rect.Contains(posMouse))
+		switch (evt.GetType())
 		{
-			OnLeftClickMouse(ConvertToPosGrid(posMouse));
-		}
-	}
-	else if (wnd.mouse.RightIsPressed())
-	{
-		const Vei2 posMouse = wnd.mouse.GetPos();
+		case Mouse::Event::Type::LPress:
+			if (s_rect.Contains(evt.GetPos()))
+			{
+				OnLeftClickMouse(ConvertToPosGrid(evt.GetPos()));
+			}
+			break;
 
-		if (s_rect.Contains(posMouse))
-		{
-			OnRightClickMouse(ConvertToPosGrid(posMouse));
+		case Mouse::Event::Type::RPress:
+			if (s_rect.Contains(evt.GetPos()))
+			{
+				OnRightClickMouse(ConvertToPosGrid(evt.GetPos()));
+			}
+			break;
+
+		default:
+			break;
 		}
 	}
 }
