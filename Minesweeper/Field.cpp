@@ -5,6 +5,7 @@
 
 #include <cassert>
 #include <random>
+#include <algorithm>
 
 /*-------------*
  *    Field    *
@@ -20,6 +21,7 @@ Field::Field()
 	std::uniform_int_distribution<int> distX(0, s_width - 1);
 	std::uniform_int_distribution<int> distY(0, s_height - 1);
 
+	// spawn mines
 	for (int count = 0; count < s_nMines; ++count)
 	{
 		while (true)
@@ -31,6 +33,15 @@ Field::Field()
 				At(pos).SpawnMine();
 				break;
 			}
+		}
+	}
+
+	// init the number of neighbor mines
+	for (Vei2 posGrid = Vei2(0, 0); posGrid.y < s_height; ++posGrid.y)
+	{
+		for (posGrid.x = 0; posGrid.x < s_width; ++posGrid.x)
+		{
+			At(posGrid).InitNumNeighborMines(CountNeighborMines(posGrid));
 		}
 	}
 }
@@ -82,6 +93,14 @@ void Field::Tile::ToggleFlag()
 	}
 }
 
+void Field::Tile::InitNumNeighborMines(int nNeighborMines)
+{
+	assert((-1 <= nNeighborMines) &&
+		   (nNeighborMines <= 8));
+
+	m_nNeighborMines = nNeighborMines;
+}
+
 void Field::Tile::OnDraw(const Vei2& posGrid, Graphics& gfx) const
 {
 	const Vei2 posScreen = posGrid * SpriteCodex::tileSize;
@@ -107,7 +126,7 @@ void Field::Tile::OnDraw(const Vei2& posGrid, Graphics& gfx) const
 		}
 		else
 		{
-			SpriteCodex::DrawTile0(posScreen, gfx);
+			SpriteCodex::DrawTileNumber(m_nNeighborMines, posScreen, gfx);
 		}
 		break;
 
@@ -188,6 +207,36 @@ const Field::Tile& Field::At(const Vei2& posGrid) const
 	assert((0 <= posGrid.y) && (posGrid.y < s_height));
 
 	return m_grid[posGrid.y][posGrid.x];
+}
+
+int Field::CountNeighborMines(const Vei2& posGrid)
+{
+	int count = 0;
+
+	if (At(posGrid).HasMine())
+	{
+		--count;
+
+		return count;
+	}
+
+	const int xStart = std::max(0, posGrid.x - 1);
+	const int xEnd = std::min(s_width - 1, posGrid.x + 1);
+	const int yStart = std::max(0, posGrid.y - 1);
+	const int yEnd = std::min(s_height - 1, posGrid.y + 1);
+
+	for (Vei2 posNeighbor = Vei2(xStart, yStart); posNeighbor.y <= yEnd; ++posNeighbor.y)
+	{
+		for (posNeighbor.x = xStart; posNeighbor.x <= xEnd; ++posNeighbor.x)
+		{
+			if (At(posNeighbor).HasMine())
+			{
+				++count;
+			}
+		}
+	}
+
+	return count;
 }
 
 void Field::DrawBackground(Graphics& gfx) const

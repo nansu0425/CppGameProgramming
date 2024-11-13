@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Graphics.h"
 #include "Vei2.h"
@@ -25,4 +25,5 @@ public:
 	static void DrawTileFlag( const Vei2& pos,Graphics& gfx );
 	static void DrawTileBomb( const Vei2& pos,Graphics& gfx );
 	static void DrawTileBombRed( const Vei2& pos,Graphics& gfx );
+	static void DrawTileNumber(int number, const Vei2& pos, Graphics& gfx);
 };

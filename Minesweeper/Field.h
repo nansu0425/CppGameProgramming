@@ -42,10 +42,12 @@ private:
 		bool				IsRevealed() const;
 		bool				IsHidden() const;
 		void				ToggleFlag();
+		void				InitNumNeighborMines(int nNeighborMines);
 
 	private:
 		State				m_state = State::Hidden;
 		bool				m_hasMine = false;
+		int					m_nNeighborMines = -1;
 		
 	};
 
@@ -57,15 +59,15 @@ public:
 	void					OnDraw(Graphics& gfx) const;
 	void					OnUpdate(MainWindow& wnd);
 
-	Tile&					At(const Vei2& posGrid);
-	const Tile&				At(const Vei2& posGrid) const;
-
 private:
 	void					OnLeftClickMouse(const Vei2& posGrid);
 	void					OnRightClickMouse(const Vei2& posGrid);
 
 	void					DrawBackground(Graphics& gfx) const;
 	Vei2					ConvertToPosGrid(const Vei2& pos) const;
+	Tile&					At(const Vei2& posGrid);
+	const					Tile& At(const Vei2& posGrid) const;
+	int						CountNeighborMines(const Vei2& posGrid);
 
 private:
 	ArrayTile				m_grid;
