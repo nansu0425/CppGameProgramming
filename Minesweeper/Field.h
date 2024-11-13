@@ -34,7 +34,7 @@ private:
 			Revealed,
 		};
 
-		void				OnDraw(const Vei2& posGrid, Graphics& gfx) const;
+		void				OnDraw(const Vei2& posGrid, Graphics& gfx, const bool& isOver) const;
 
 		void				SpawnMine();
 		bool				HasMine() const;
@@ -56,11 +56,11 @@ private:
 public:
 							Field();
 
-	void					OnDraw(Graphics& gfx) const;
-	void					OnUpdate(MainWindow& wnd);
+	void					OnDraw(Graphics& gfx, const bool& isOver) const;
+	void					OnUpdate(MainWindow& wnd, bool& isOver);
 
 private:
-	void					OnLeftClickMouse(const Vei2& posGrid);
+	void					OnLeftClickMouse(const Vei2& posGrid, bool& isOver);
 	void					OnRightClickMouse(const Vei2& posGrid);
 
 	void					DrawBackground(Graphics& gfx) const;

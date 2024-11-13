@@ -45,4 +45,5 @@ private:
 	/*  User Variables              */
 	/********************************/
 	Field	m_field;
+	bool	m_isOver = false;
 };

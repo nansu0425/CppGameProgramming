@@ -38,10 +38,10 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	m_field.OnUpdate(wnd);
+	m_field.OnUpdate(wnd, m_isOver);
 }
 
 void Game::ComposeFrame()
 {
-	m_field.OnDraw(gfx);
+	m_field.OnDraw(gfx, m_isOver);
 }

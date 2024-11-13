@@ -101,7 +101,7 @@ void Field::Tile::InitNumNeighborMines(int nNeighborMines)
 	m_nNeighborMines = nNeighborMines;
 }
 
-void Field::Tile::OnDraw(const Vei2& posGrid, Graphics& gfx) const
+void Field::Tile::OnDraw(const Vei2& posGrid, Graphics& gfx, const bool& isOver) const
 {
 	const Vei2 posScreen = posGrid * SpriteCodex::tileSize;
 
@@ -111,18 +111,41 @@ void Field::Tile::OnDraw(const Vei2& posGrid, Graphics& gfx) const
 	switch (m_state)
 	{
 	case State::Hidden:
-		SpriteCodex::DrawTileButton(posScreen, gfx);
+		if (isOver && HasMine())
+		{
+			SpriteCodex::DrawTileBomb(posScreen, gfx);
+		}
+		else
+		{
+			SpriteCodex::DrawTileButton(posScreen, gfx);
+		}
 		break;
 
 	case State::Flagged:
-		SpriteCodex::DrawTileButton(posScreen, gfx);
-		SpriteCodex::DrawTileFlag(posScreen, gfx);
+		if (isOver)
+		{
+			SpriteCodex::DrawTileBomb(posScreen, gfx);
+
+			if (HasMine())
+			{
+				SpriteCodex::DrawTileFlag(posScreen, gfx);
+			}
+			else
+			{
+				SpriteCodex::DrawTileCross(posScreen, gfx);
+			}
+		}
+		else
+		{
+			SpriteCodex::DrawTileButton(posScreen, gfx);
+			SpriteCodex::DrawTileFlag(posScreen, gfx);
+		}
 		break;
 
 	case State::Revealed:
 		if (HasMine())
 		{
-			SpriteCodex::DrawTileBomb(posScreen, gfx);
+			SpriteCodex::DrawTileBombRed(posScreen, gfx);
 		}
 		else
 		{
@@ -136,7 +159,7 @@ void Field::Tile::OnDraw(const Vei2& posGrid, Graphics& gfx) const
 	}
 }
 
-void Field::OnDraw(Graphics& gfx) const
+void Field::OnDraw(Graphics& gfx, const bool& isOver) const
 {
 	DrawBackground(gfx);
 
@@ -144,13 +167,18 @@ void Field::OnDraw(Graphics& gfx) const
 	{
 		for (posGrid.x = 0; posGrid.x < s_width; ++posGrid.x)
 		{
-			At(posGrid).OnDraw(posGrid, gfx);
+			At(posGrid).OnDraw(posGrid, gfx, isOver);
 		}
 	}
 }
 
-void Field::OnUpdate(MainWindow& wnd)
+void Field::OnUpdate(MainWindow& wnd, bool& isOver)
 {
+	if (isOver)
+	{
+		return;
+	}
+
 	while (!wnd.mouse.IsEmpty())
 	{
 		const Mouse::Event evt = wnd.mouse.Read();
@@ -160,7 +188,7 @@ void Field::OnUpdate(MainWindow& wnd)
 		case Mouse::Event::Type::LPress:
 			if (s_rect.Contains(evt.GetPos()))
 			{
-				OnLeftClickMouse(ConvertToPosGrid(evt.GetPos()));
+				OnLeftClickMouse(ConvertToPosGrid(evt.GetPos()), isOver);
 			}
 			break;
 
@@ -177,11 +205,16 @@ void Field::OnUpdate(MainWindow& wnd)
 	}
 }
 
-void Field::OnLeftClickMouse(const Vei2& posGrid)
+void Field::OnLeftClickMouse(const Vei2& posGrid, bool& isOver)
 {
 	if (At(posGrid).IsHidden())
 	{
 		At(posGrid).Reveal();
+
+		if (At(posGrid).HasMine())
+		{
+			isOver = true;
+		}
 	}
 }
 
