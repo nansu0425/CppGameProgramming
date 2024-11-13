@@ -1,4 +1,4 @@
-#include "RectI.h"
+﻿#include "RectI.h"
 
 RectI::RectI( int left_in,int right_in,int top_in,int bottom_in )
 	:
@@ -47,4 +47,12 @@ RectI RectI::GetExpanded( int offset ) const
 Vei2 RectI::GetCenter() const
 {
 	return Vei2( (left + right) / 2,(top + bottom) / 2 );
+}
+
+RectI RectI::operator*(int scalar) const
+{
+	return RectI(left * scalar, 
+				 right * scalar, 
+				 top * scalar, 
+				 bottom * scalar);
 }

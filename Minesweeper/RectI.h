@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Vei2.h"
 
@@ -14,6 +14,8 @@ public:
 	static RectI FromCenter( const Vei2& center,int halfWidth,int halfHeight );
 	RectI GetExpanded( int offset ) const;
 	Vei2 GetCenter() const;
+	
+	RectI		operator*(int scalar) const;
 public:
 	int left;
 	int right;

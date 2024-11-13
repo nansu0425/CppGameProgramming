@@ -1,4 +1,4 @@
-/****************************************************************************************** 
+﻿/****************************************************************************************** 
  *	Chili DirectX Framework Version 16.07.20											  *	
  *	Mouse.cpp																			  *
  *	Copyright 2016 PlanetChili <http://www.planetchili.net>								  *
@@ -21,7 +21,7 @@
 #include "Mouse.h"
 
 
-std::pair<int,int> Mouse::GetPos() const
+Vei2 Mouse::GetPos() const
 {
 	return { x,y };
 }

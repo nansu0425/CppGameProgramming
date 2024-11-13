@@ -1,4 +1,4 @@
-/****************************************************************************************** 
+﻿/****************************************************************************************** 
  *	Chili DirectX Framework Version 16.07.20											  *	
  *	Mouse.h																				  *
  *	Copyright 2016 PlanetChili <http://www.planetchili.net>								  *
@@ -19,6 +19,9 @@
  *	along with The Chili DirectX Framework.  If not, see <http://www.gnu.org/licenses/>.  *
  ******************************************************************************************/
 #pragma once
+
+#include "Vei2.h"
+
 #include <queue>
 
 class Mouse
@@ -70,7 +73,7 @@ public:
 		{
 			return type;
 		}
-		std::pair<int,int> GetPos() const
+		Vei2 GetPos() const
 		{
 			return{ x,y };
 		}
@@ -95,7 +98,7 @@ public:
 	Mouse() = default;
 	Mouse( const Mouse& ) = delete;
 	Mouse& operator=( const Mouse& ) = delete;
-	std::pair<int,int> GetPos() const;
+	Vei2 GetPos() const;
 	int GetPosX() const;
 	int GetPosY() const;
 	bool LeftIsPressed() const;

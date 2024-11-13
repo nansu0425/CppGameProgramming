@@ -1,4 +1,4 @@
-/****************************************************************************************** 
+﻿/****************************************************************************************** 
  *	Chili DirectX Framework Version 16.07.20											  *	
  *	Game.cpp																			  *
  *	Copyright 2016 PlanetChili.net <http://www.planetchili.net>							  *
@@ -38,8 +38,10 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	m_field.OnUpdate(wnd);
 }
 
 void Game::ComposeFrame()
 {
+	m_field.OnDraw(gfx);
 }
