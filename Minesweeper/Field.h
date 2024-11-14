@@ -2,12 +2,13 @@
 
 #include "RectI.h"
 #include "SpriteCodex.h"
-#include "Graphics.h"
+#include "Colors.h"
 
 #include <array>
 
 class Vei2;
 class MainWindow;
+class Graphics;
 
 /*-------------*
  *    Field    *
@@ -17,9 +18,11 @@ class Field
 {
 private:
 	static constexpr int	s_nMines = 12;
-	static constexpr int	s_width = 13;
+	static constexpr int	s_width = 15;
 	static constexpr int	s_height = 9;
 	static constexpr RectI	s_rectGrid = RectI(0, s_width - 1, 0, s_height - 1);
+	static constexpr int	s_thicknessBorder = 10;
+	static constexpr Color	s_colorBorder = Colors::Blue;
 
 	class Tile
 	{
@@ -61,6 +64,7 @@ private:
 	void					OnRightClickMouse(const Vei2& posGrid);
 
 	void					DrawBackground(Graphics& gfx) const;
+	void					DrawBorder(const RectI& rectScreen, Graphics& gfx) const;
 	Vei2					ConvertToGrid(const Vei2& vecScreen) const;
 	Vei2					ConvertToScreen(const Vei2& vecGrid) const;
 	Tile&					At(const Vei2& posGrid);

@@ -288,8 +288,31 @@ void Field::DrawBackground(Graphics& gfx) const
 		   (m_posScreen.x <= m_posScreen.x + (s_width + 1) * SpriteCodex::tileSize) &&
 		   (m_posScreen.y <= m_posScreen.y + (s_height + 1) * SpriteCodex::tileSize));
 
-
 	gfx.DrawRect(rectScreen, SpriteCodex::baseColor);
+	DrawBorder(rectScreen, gfx);
+}
+
+void Field::DrawBorder(const RectI& rectScreen, Graphics& gfx) const
+{
+	// top border
+	gfx.DrawRect(RectI(Vei2(rectScreen.left, rectScreen.top - s_thicknessBorder),
+					   Vei2(rectScreen.right + s_thicknessBorder - 1, rectScreen.top)),
+				 s_colorBorder);
+
+	// right border
+	gfx.DrawRect(RectI(Vei2(rectScreen.right, rectScreen.top),
+					   Vei2(rectScreen.right + s_thicknessBorder - 1, rectScreen.bottom + s_thicknessBorder - 1)),
+				 s_colorBorder);
+
+	// bottom border
+	gfx.DrawRect(RectI(Vei2(rectScreen.left - s_thicknessBorder, rectScreen.bottom),
+					   Vei2(rectScreen.right, rectScreen.bottom + s_thicknessBorder - 1)),
+				 s_colorBorder);
+
+	// left border
+	gfx.DrawRect(RectI(Vei2(rectScreen.left - s_thicknessBorder, rectScreen.top - s_thicknessBorder),
+					   Vei2(rectScreen.left, rectScreen.bottom)),
+				 s_colorBorder);
 }
 
 Vei2 Field::ConvertToGrid(const Vei2& vecScreen) const
