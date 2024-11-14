@@ -9,6 +9,7 @@
 class Vei2;
 class MainWindow;
 class Graphics;
+class GameStateManager;
 
 /*-------------*
  *    Field    *
@@ -17,9 +18,9 @@ class Graphics;
 class Field
 {
 private:
-	static constexpr int	s_nMines = 12;
-	static constexpr int	s_width = 15;
-	static constexpr int	s_height = 9;
+	static constexpr int	s_nMines = 1;
+	static constexpr int	s_width = 3;
+	static constexpr int	s_height = 3;
 	static constexpr RectI	s_rectGrid = RectI(0, s_width - 1, 0, s_height - 1);
 	static constexpr int	s_thicknessBorder = 10;
 	static constexpr Color	s_colorBorder = Colors::Blue;
@@ -34,7 +35,7 @@ private:
 			Revealed,
 		};
 
-		void				OnDraw(const Vei2& posGrid, Graphics& gfx, const bool& isOver) const;
+		void				OnDraw(const Vei2& posGrid, Graphics& gfx, const GameStateManager& gameStateManager) const;
 
 		void				SpawnMine();
 		bool				HasMine() const;
@@ -56,11 +57,11 @@ private:
 public:
 							Field();
 
-	void					OnDraw(Graphics& gfx, const bool& isOver) const;
-	void					OnUpdate(MainWindow& wnd, bool& isOver);
+	void					OnDraw(Graphics& gfx, const GameStateManager& gameStateManager) const;
+	void					OnUpdate(MainWindow& wnd, GameStateManager& gameStateManager);
 
 private:
-	void					OnLeftClickMouse(const Vei2& posGrid, bool& isOver);
+	void					OnLeftClickMouse(const Vei2& posGrid, GameStateManager& stateManager);
 	void					OnRightClickMouse(const Vei2& posGrid);
 
 	void					DrawBackground(Graphics& gfx) const;
@@ -75,4 +76,5 @@ private:
 private:
 	ArrayTile				m_grid;
 	Vei2					m_posScreen;
+	int						m_nUnrevealedTiles = s_width * s_height;
 };

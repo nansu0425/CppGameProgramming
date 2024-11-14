@@ -38,10 +38,20 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	m_field.OnUpdate(wnd, m_isOver);
+	if (m_gameStateManager.IsGameOver())
+	{
+		return;
+	}
+
+	m_field.OnUpdate(wnd, m_gameStateManager);
 }
 
 void Game::ComposeFrame()
 {
-	m_field.OnDraw(gfx, m_isOver);
+	m_field.OnDraw(gfx, m_gameStateManager);
+
+	if (m_gameStateManager.IsGameOver())
+	{
+		m_gameStateManager.DrawOnGameOver(gfx);
+	}
 }

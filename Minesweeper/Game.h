@@ -24,6 +24,7 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "Field.h"
+#include "GameStateManager.h"
 
 class Game
 {
@@ -44,6 +45,6 @@ private:
 	/********************************/
 	/*  User Variables              */
 	/********************************/
-	Field	m_field;
-	bool	m_isOver = false;
+	Field				m_field;
+	GameStateManager	m_gameStateManager;
 };

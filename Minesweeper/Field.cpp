@@ -2,6 +2,7 @@
 #include "Vei2.h"
 #include "RectI.h"
 #include "MainWindow.h"
+#include "GameStateManager.h"
 
 #include <cassert>
 #include <random>
@@ -103,12 +104,13 @@ void Field::Tile::SetNumNeighborMines(int nNeighborMines)
 	m_nNeighborMines = nNeighborMines;
 }
 
-void Field::Tile::OnDraw(const Vei2& posScreen, Graphics& gfx, const bool& isOver) const
+void Field::Tile::OnDraw(const Vei2& posScreen, Graphics& gfx, const GameStateManager& gameStateManager) const
 {
 	switch (m_state)
 	{
 	case State::Hidden:
-		if (isOver && HasMine())
+		if (gameStateManager.IsGameOver() &&
+			HasMine())
 		{
 			SpriteCodex::DrawTileBomb(posScreen, gfx);
 		}
@@ -119,7 +121,7 @@ void Field::Tile::OnDraw(const Vei2& posScreen, Graphics& gfx, const bool& isOve
 		break;
 
 	case State::Flagged:
-		if (isOver)
+		if (gameStateManager.IsGameOver())
 		{
 			SpriteCodex::DrawTileBomb(posScreen, gfx);
 
@@ -156,7 +158,7 @@ void Field::Tile::OnDraw(const Vei2& posScreen, Graphics& gfx, const bool& isOve
 	}
 }
 
-void Field::OnDraw(Graphics& gfx, const bool& isOver) const
+void Field::OnDraw(Graphics& gfx, const GameStateManager& stateManager) const
 {
 	DrawBackground(gfx);
 
@@ -164,18 +166,13 @@ void Field::OnDraw(Graphics& gfx, const bool& isOver) const
 	{
 		for (posGrid.x = 0; posGrid.x < s_width; ++posGrid.x)
 		{
-			At(posGrid).OnDraw(ConvertToScreen(posGrid), gfx, isOver);
+			At(posGrid).OnDraw(ConvertToScreen(posGrid), gfx, stateManager);
 		}
 	}
 }
 
-void Field::OnUpdate(MainWindow& wnd, bool& isOver)
+void Field::OnUpdate(MainWindow& wnd, GameStateManager& gameStateManager)
 {
-	if (isOver)
-	{
-		return;
-	}
-
 	while (!wnd.mouse.IsEmpty())
 	{
 		const Mouse::Event evt = wnd.mouse.Read();
@@ -185,7 +182,7 @@ void Field::OnUpdate(MainWindow& wnd, bool& isOver)
 		case Mouse::Event::Type::LPress:
 			if (IsOnField(evt.GetPos()))
 			{
-				OnLeftClickMouse(ConvertToGrid(evt.GetPos()), isOver);
+				OnLeftClickMouse(ConvertToGrid(evt.GetPos()), gameStateManager);
 			}
 			break;
 
@@ -202,15 +199,22 @@ void Field::OnUpdate(MainWindow& wnd, bool& isOver)
 	}
 }
 
-void Field::OnLeftClickMouse(const Vei2& posGrid, bool& isOver)
+void Field::OnLeftClickMouse(const Vei2& posGrid, GameStateManager& gameStateManager)
 {
 	if (At(posGrid).IsHidden())
 	{
 		At(posGrid).Reveal();
+		--m_nUnrevealedTiles;
 
+		// 게임 패배
 		if (At(posGrid).HasMine())
 		{
-			isOver = true;
+			gameStateManager.SetGameOver(false);
+		}
+		// 게임 승리
+		else if (m_nUnrevealedTiles == s_nMines)
+		{
+			gameStateManager.SetGameOver(true);
 		}
 	}
 }
