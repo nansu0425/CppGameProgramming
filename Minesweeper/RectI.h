@@ -20,8 +20,9 @@ public:
 	static RectI FromCenter( const Vei2& center,int halfWidth,int halfHeight );
 	RectI GetExpanded( int offset ) const;
 	Vei2 GetCenter() const;
+	Vei2 GetPosition() const;
 	
-	RectI		operator*(int scalar) const;
+	RectI operator*(int scalar) const;
 public:
 	int left;
 	int right;

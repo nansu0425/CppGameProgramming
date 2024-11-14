@@ -48,6 +48,11 @@ Vei2 RectI::GetCenter() const
 	return Vei2( (left + right) / 2,(top + bottom) / 2 );
 }
 
+Vei2 RectI::GetPosition() const
+{
+	return Vei2(left, top);
+}
+
 RectI RectI::operator*(int scalar) const
 {
 	return RectI(left * scalar, 

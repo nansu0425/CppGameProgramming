@@ -12,16 +12,18 @@
  *-------------*/
 
 Field::Field()
+	: m_posScreen((Graphics::ScreenWidth - s_width * SpriteCodex::tileSize) / 2,
+				  (Graphics::ScreenHeight - s_height * SpriteCodex::tileSize) / 2)
 {
 	assert((0 <= s_nMines) && (s_nMines <= s_width * s_height));
 
+	// spawn mines
 	std::random_device rd;
 	std::mt19937 rng(rd());
 
 	std::uniform_int_distribution<int> distX(0, s_width - 1);
 	std::uniform_int_distribution<int> distY(0, s_height - 1);
-
-	// spawn mines
+	
 	for (int count = 0; count < s_nMines; ++count)
 	{
 		while (true)
@@ -36,12 +38,12 @@ Field::Field()
 		}
 	}
 
-	// init the number of neighbor mines
+	// Set the number of neighbor mines
 	for (Vei2 posGrid = Vei2(0, 0); posGrid.y < s_height; ++posGrid.y)
 	{
 		for (posGrid.x = 0; posGrid.x < s_width; ++posGrid.x)
 		{
-			At(posGrid).InitNumNeighborMines(CountNeighborMines(posGrid));
+			At(posGrid).SetNumNeighborMines(CountNeighborMines(posGrid));
 		}
 	}
 }
@@ -93,7 +95,7 @@ void Field::Tile::ToggleFlag()
 	}
 }
 
-void Field::Tile::InitNumNeighborMines(int nNeighborMines)
+void Field::Tile::SetNumNeighborMines(int nNeighborMines)
 {
 	assert((-1 <= nNeighborMines) &&
 		   (nNeighborMines <= 8));
@@ -101,13 +103,8 @@ void Field::Tile::InitNumNeighborMines(int nNeighborMines)
 	m_nNeighborMines = nNeighborMines;
 }
 
-void Field::Tile::OnDraw(const Vei2& posGrid, Graphics& gfx, const bool& isOver) const
+void Field::Tile::OnDraw(const Vei2& posScreen, Graphics& gfx, const bool& isOver) const
 {
-	const Vei2 posScreen = posGrid * SpriteCodex::tileSize;
-
-	assert((0 <= posScreen.x) && (posScreen.x < Graphics::ScreenWidth));
-	assert((0 <= posScreen.y) && (posScreen.y < Graphics::ScreenHeight));
-
 	switch (m_state)
 	{
 	case State::Hidden:
@@ -167,7 +164,7 @@ void Field::OnDraw(Graphics& gfx, const bool& isOver) const
 	{
 		for (posGrid.x = 0; posGrid.x < s_width; ++posGrid.x)
 		{
-			At(posGrid).OnDraw(posGrid, gfx, isOver);
+			At(posGrid).OnDraw(ConvertToScreen(posGrid), gfx, isOver);
 		}
 	}
 }
@@ -186,16 +183,16 @@ void Field::OnUpdate(MainWindow& wnd, bool& isOver)
 		switch (evt.GetType())
 		{
 		case Mouse::Event::Type::LPress:
-			if (s_rect.Contains(evt.GetPos()))
+			if (IsOnField(evt.GetPos()))
 			{
-				OnLeftClickMouse(ConvertToPosGrid(evt.GetPos()), isOver);
+				OnLeftClickMouse(ConvertToGrid(evt.GetPos()), isOver);
 			}
 			break;
 
 		case Mouse::Event::Type::RPress:
-			if (s_rect.Contains(evt.GetPos()))
+			if (IsOnField(evt.GetPos()))
 			{
-				OnRightClickMouse(ConvertToPosGrid(evt.GetPos()));
+				OnRightClickMouse(ConvertToGrid(evt.GetPos()));
 			}
 			break;
 
@@ -272,12 +269,49 @@ int Field::CountNeighborMines(const Vei2& posGrid)
 	return count;
 }
 
-void Field::DrawBackground(Graphics& gfx) const
+bool Field::IsOnField(const Vei2 posScreen) const
 {
-	gfx.DrawRect(s_rect, SpriteCodex::baseColor);
+	return ((m_posScreen.x <= posScreen.x) &&
+			(posScreen.x < m_posScreen.x + s_width * SpriteCodex::tileSize) &&
+			(m_posScreen.y <= posScreen.y) &&
+			(posScreen.y < m_posScreen.y + s_height * SpriteCodex::tileSize));
 }
 
-Vei2 Field::ConvertToPosGrid(const Vei2& pos) const
+void Field::DrawBackground(Graphics& gfx) const
 {
-	return pos / SpriteCodex::tileSize;
+	const RectI rectScreen = RectI(m_posScreen,
+								   Vei2(m_posScreen.x + (s_rectGrid.right + 1) * SpriteCodex::tileSize,
+										m_posScreen.y + (s_rectGrid.bottom + 1) * SpriteCodex::tileSize));
+
+	assert((m_posScreen.x <= rectScreen.left) &&
+		   (m_posScreen.y <= rectScreen.top) &&
+		   (m_posScreen.x <= m_posScreen.x + (s_width + 1) * SpriteCodex::tileSize) &&
+		   (m_posScreen.y <= m_posScreen.y + (s_height + 1) * SpriteCodex::tileSize));
+
+
+	gfx.DrawRect(rectScreen, SpriteCodex::baseColor);
+}
+
+Vei2 Field::ConvertToGrid(const Vei2& vecScreen) const
+{
+	const Vei2 vecGrid = (vecScreen - m_posScreen) / SpriteCodex::tileSize;
+
+	assert((0 <= vecGrid.x) &&
+		   (vecGrid.x < s_width));
+	assert((0 <= vecGrid.y) &&
+		   (vecGrid.y < s_height));
+
+	return vecGrid;
+}
+
+Vei2 Field::ConvertToScreen(const Vei2& vecGrid) const
+{
+	const Vei2 vecScreen = m_posScreen + vecGrid * SpriteCodex::tileSize;
+
+	assert((m_posScreen.x <= vecScreen.x) &&
+		   (vecScreen.x < m_posScreen.x + s_width * SpriteCodex::tileSize));
+	assert((m_posScreen.y <= vecScreen.y) &&
+		   (vecScreen.y < m_posScreen.y + s_height * SpriteCodex::tileSize));
+
+	return vecScreen;
 }
