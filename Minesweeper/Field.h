@@ -18,9 +18,9 @@ class GameStateManager;
 class Field
 {
 private:
-	static constexpr int	s_nMines = 1;
-	static constexpr int	s_width = 3;
-	static constexpr int	s_height = 3;
+	static constexpr int	s_nMines = 10;
+	static constexpr int	s_width = 13;
+	static constexpr int	s_height = 7;
 	static constexpr RectI	s_rectGrid = RectI(0, s_width - 1, 0, s_height - 1);
 	static constexpr int	s_thicknessBorder = 10;
 	static constexpr Color	s_colorBorder = Colors::Blue;
@@ -44,6 +44,7 @@ private:
 		bool				IsHidden() const;
 		void				ToggleFlag();
 		void				SetNumNeighborMines(int nNeighborMines);
+		bool				HasNoNeighborMines() const;
 
 	private:
 		State				m_state = State::Hidden;
@@ -72,6 +73,8 @@ private:
 	const					Tile& At(const Vei2& posGrid) const;
 	int						CountNeighborMines(const Vei2& posGrid);
 	bool					IsOnField(const Vei2 posScreen) const;
+	void					RevealTileAt(const Vei2& posGrid);
+	void					RevealNeighborTilesAt(const Vei2& posGrid);
 
 private:
 	ArrayTile				m_grid;

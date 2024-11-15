@@ -104,6 +104,11 @@ void Field::Tile::SetNumNeighborMines(int nNeighborMines)
 	m_nNeighborMines = nNeighborMines;
 }
 
+bool Field::Tile::HasNoNeighborMines() const
+{
+	return (m_nNeighborMines == 0);
+}
+
 void Field::Tile::OnDraw(const Vei2& posScreen, Graphics& gfx, const GameStateManager& gameStateManager) const
 {
 	switch (m_state)
@@ -203,8 +208,7 @@ void Field::OnLeftClickMouse(const Vei2& posGrid, GameStateManager& gameStateMan
 {
 	if (At(posGrid).IsHidden())
 	{
-		At(posGrid).Reveal();
-		--m_nUnrevealedTiles;
+		RevealTileAt(posGrid);
 
 		// 게임 패배
 		if (At(posGrid).HasMine())
@@ -279,6 +283,39 @@ bool Field::IsOnField(const Vei2 posScreen) const
 			(posScreen.x < m_posScreen.x + s_width * SpriteCodex::tileSize) &&
 			(m_posScreen.y <= posScreen.y) &&
 			(posScreen.y < m_posScreen.y + s_height * SpriteCodex::tileSize));
+}
+
+void Field::RevealTileAt(const Vei2& posGrid)
+{
+	At(posGrid).Reveal();
+	--m_nUnrevealedTiles;
+
+	if (!At(posGrid).HasMine() &&
+		At(posGrid).HasNoNeighborMines())
+	{
+		RevealNeighborTilesAt(posGrid);
+	}
+}
+
+void Field::RevealNeighborTilesAt(const Vei2& posGrid)
+{
+	assert(!At(posGrid).HasMine());
+
+	const int xStart = std::max(0, posGrid.x - 1);
+	const int xEnd = std::min(s_width - 1, posGrid.x + 1);
+	const int yStart = std::max(0, posGrid.y - 1);
+	const int yEnd = std::min(s_height - 1, posGrid.y + 1);
+
+	for (Vei2 posNeighbor = Vei2(xStart, yStart); posNeighbor.y <= yEnd; ++posNeighbor.y)
+	{
+		for (posNeighbor.x = xStart; posNeighbor.x <= xEnd; ++posNeighbor.x)
+		{
+			if (At(posNeighbor).IsHidden())
+			{
+				RevealTileAt(posNeighbor);
+			}
+		}
+	}
 }
 
 void Field::DrawBackground(Graphics& gfx) const
