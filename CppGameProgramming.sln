@@ -13,6 +13,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BrickBreaker", "BrickBreake
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Minesweeper", "Minesweeper\Minesweeper.vcxproj", "{FDEFDF47-0689-4332-9851-AE9B40AF2FFD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CppExercises", "CppExercises", "{F22B4853-2095-4F47-A363-98379401E7C4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cstrings", "CppExercises\Cstrings\Cstrings.vcxproj", "{CB5C20AA-016E-461F-AA9E-33620DEC3881}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,9 +65,20 @@ Global
 		{FDEFDF47-0689-4332-9851-AE9B40AF2FFD}.Release|x64.Build.0 = Release|x64
 		{FDEFDF47-0689-4332-9851-AE9B40AF2FFD}.Release|x86.ActiveCfg = Release|Win32
 		{FDEFDF47-0689-4332-9851-AE9B40AF2FFD}.Release|x86.Build.0 = Release|Win32
+		{CB5C20AA-016E-461F-AA9E-33620DEC3881}.Debug|x64.ActiveCfg = Debug|x64
+		{CB5C20AA-016E-461F-AA9E-33620DEC3881}.Debug|x64.Build.0 = Debug|x64
+		{CB5C20AA-016E-461F-AA9E-33620DEC3881}.Debug|x86.ActiveCfg = Debug|Win32
+		{CB5C20AA-016E-461F-AA9E-33620DEC3881}.Debug|x86.Build.0 = Debug|Win32
+		{CB5C20AA-016E-461F-AA9E-33620DEC3881}.Release|x64.ActiveCfg = Release|x64
+		{CB5C20AA-016E-461F-AA9E-33620DEC3881}.Release|x64.Build.0 = Release|x64
+		{CB5C20AA-016E-461F-AA9E-33620DEC3881}.Release|x86.ActiveCfg = Release|Win32
+		{CB5C20AA-016E-461F-AA9E-33620DEC3881}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CB5C20AA-016E-461F-AA9E-33620DEC3881} = {F22B4853-2095-4F47-A363-98379401E7C4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0D745689-C27C-405B-B710-B15B3F01DDB8}
