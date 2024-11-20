@@ -61,6 +61,25 @@ const char* StringUtils::getPtrBuf()
 	return s_buf;
 }
 
+void StringUtils::write(char* ptrBaseBuf, int sizeBuf)
+{
+	int idxBuf = 0;
+
+	while (true)
+	{
+		assert(idxBuf < sizeBuf);
+
+		if (s_buf[idxBuf] == '\0')
+		{
+			ptrBaseBuf[idxBuf] = '\0';
+			break;
+		}
+
+		ptrBaseBuf[idxBuf] = s_buf[idxBuf];
+		++idxBuf;
+	}
+}
+
 int StringUtils::convertInt2Str(int data)
 {
 	if (data == 0)
