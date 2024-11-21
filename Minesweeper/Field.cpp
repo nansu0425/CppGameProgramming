@@ -12,20 +12,65 @@
  *    Field    *
  *-------------*/
 
-Field::Field()
-	: m_posScreen((Graphics::ScreenWidth - s_width * SpriteCodex::tileSize) / 2,
-				  (Graphics::ScreenHeight - s_height * SpriteCodex::tileSize) / 2)
+Field::Field(Size size)
+	: m_size(size)
 {
-	assert((0 <= s_nMines) && (s_nMines <= s_width * s_height));
+	// size 값에 따라 지뢰 개수, 너비, 높이 설정
+	switch (size)
+	{
+	case Size::Small:
+		m_numMines = 5;
+		m_width = 11;
+		m_height = 7;
+
+		break;
+
+	case Size::Medium:
+		m_numMines = 20;
+		m_width = 21;
+		m_height = 15;
+
+		break;
+
+	case Size::Large:
+		m_numMines = 80;
+		m_width = 31;
+		m_height = 23;
+
+		break;
+	
+	default:
+		assert(true);
+
+		break;
+	}
+
+	assert((0 <= m_numMines) && 
+		   (m_numMines <= m_width * m_height));
+
+	// 보드를 나타내는 사각형의 크기, 위치 설정
+	m_rectGrid = RectI(0, m_width - 1, 0, m_height - 1);
+	m_posScreen = Vei2((Graphics::ScreenWidth - m_width * SpriteCodex::tileSize) / 2,
+					   (Graphics::ScreenHeight - m_height * SpriteCodex::tileSize) / 2);
+
+	// create tiles
+	m_board = new Tile*[m_height];
+	
+	for (int row = 0; row < m_height; ++row)
+	{
+		m_board[row] = new Tile[m_width];
+	}
+
+	m_numUnrevealedTiles = m_width * m_height;
 
 	// spawn mines
 	std::random_device rd;
 	std::mt19937 rng(rd());
 
-	std::uniform_int_distribution<int> distX(0, s_width - 1);
-	std::uniform_int_distribution<int> distY(0, s_height - 1);
+	std::uniform_int_distribution<int> distX(0, m_width - 1);
+	std::uniform_int_distribution<int> distY(0, m_height - 1);
 	
-	for (int count = 0; count < s_nMines; ++count)
+	for (int count = 0; count < m_numMines; ++count)
 	{
 		while (true)
 		{
@@ -40,12 +85,28 @@ Field::Field()
 	}
 
 	// Set the number of neighbor mines
-	for (Vei2 posGrid = Vei2(0, 0); posGrid.y < s_height; ++posGrid.y)
+	for (Vei2 posBoard = Vei2(0, 0); posBoard.y < m_height; ++posBoard.y)
 	{
-		for (posGrid.x = 0; posGrid.x < s_width; ++posGrid.x)
+		for (posBoard.x = 0; posBoard.x < m_width; ++posBoard.x)
 		{
-			At(posGrid).SetNumNeighborMines(CountNeighborMines(posGrid));
+			At(posBoard).SetNumNeighborMines(CountNeighborMines(posBoard));
 		}
+	}
+}
+
+Field::~Field()
+{
+	if (m_board != nullptr)
+	{
+		for (int row = 0; row < m_height; ++row)
+		{
+			if (m_board[row] != nullptr)
+			{
+				delete[] m_board[row];
+			}
+		}
+
+		delete[] m_board;
 	}
 }
 
@@ -96,17 +157,17 @@ void Field::Tile::ToggleFlag()
 	}
 }
 
-void Field::Tile::SetNumNeighborMines(int nNeighborMines)
+void Field::Tile::SetNumNeighborMines(int numNeighborMines)
 {
-	assert((-1 <= nNeighborMines) &&
-		   (nNeighborMines <= 8));
+	assert((-1 <= numNeighborMines) &&
+		   (numNeighborMines <= 8));
 
-	m_nNeighborMines = nNeighborMines;
+	m_numNeighborMines = numNeighborMines;
 }
 
 bool Field::Tile::HasNoNeighborMines() const
 {
-	return (m_nNeighborMines == 0);
+	return (m_numNeighborMines == 0);
 }
 
 void Field::Tile::OnDraw(const Vei2& posScreen, Graphics& gfx, const GameStateManager& gameStateManager) const
@@ -153,7 +214,7 @@ void Field::Tile::OnDraw(const Vei2& posScreen, Graphics& gfx, const GameStateMa
 		}
 		else
 		{
-			SpriteCodex::DrawTileNumber(m_nNeighborMines, posScreen, gfx);
+			SpriteCodex::DrawTileNumber(m_numNeighborMines, posScreen, gfx);
 		}
 		break;
 
@@ -167,11 +228,11 @@ void Field::OnDraw(Graphics& gfx, const GameStateManager& stateManager) const
 {
 	DrawBackground(gfx);
 
-	for (Vei2 posGrid = Vei2(0, 0); posGrid.y < s_height; ++posGrid.y)
+	for (Vei2 posBoard = Vei2(0, 0); posBoard.y < m_height; ++posBoard.y)
 	{
-		for (posGrid.x = 0; posGrid.x < s_width; ++posGrid.x)
+		for (posBoard.x = 0; posBoard.x < m_width; ++posBoard.x)
 		{
-			At(posGrid).OnDraw(ConvertToScreen(posGrid), gfx, stateManager);
+			At(posBoard).OnDraw(ConvertToScreen(posBoard), gfx, stateManager);
 		}
 	}
 }
@@ -204,64 +265,64 @@ void Field::OnUpdate(MainWindow& wnd, GameStateManager& gameStateManager)
 	}
 }
 
-void Field::OnLeftClickMouse(const Vei2& posGrid, GameStateManager& gameStateManager)
+void Field::OnLeftClickMouse(const Vei2& posBoard, GameStateManager& gameStateManager)
 {
-	if (At(posGrid).IsHidden())
+	if (At(posBoard).IsHidden())
 	{
-		RevealTileAt(posGrid);
+		RevealTileAt(posBoard);
 
 		// 게임 패배
-		if (At(posGrid).HasMine())
+		if (At(posBoard).HasMine())
 		{
 			gameStateManager.SetGameOver(false);
 		}
 		// 게임 승리
-		else if (m_nUnrevealedTiles == s_nMines)
+		else if (m_numUnrevealedTiles == m_numMines)
 		{
 			gameStateManager.SetGameOver(true);
 		}
 	}
 }
 
-void Field::OnRightClickMouse(const Vei2& posGrid)
+void Field::OnRightClickMouse(const Vei2& posBoard)
 {
-	if (!At(posGrid).IsRevealed())
+	if (!At(posBoard).IsRevealed())
 	{
-		At(posGrid).ToggleFlag();
+		At(posBoard).ToggleFlag();
 	}
 }
 
-Field::Tile& Field::At(const Vei2& posGrid)
+Field::Tile& Field::At(const Vei2& posBoard)
 {
-	assert((0 <= posGrid.x) && (posGrid.x < s_width));
-	assert((0 <= posGrid.y) && (posGrid.y < s_height));
+	assert((0 <= posBoard.x) && (posBoard.x < m_width));
+	assert((0 <= posBoard.y) && (posBoard.y < m_height));
 
-	return m_grid[posGrid.y][posGrid.x];
+	return m_board[posBoard.y][posBoard.x];
 }
 
-const Field::Tile& Field::At(const Vei2& posGrid) const
+const Field::Tile& Field::At(const Vei2& posBoard) const
 {
-	assert((0 <= posGrid.x) && (posGrid.x < s_width));
-	assert((0 <= posGrid.y) && (posGrid.y < s_height));
+	assert((0 <= posBoard.x) && (posBoard.x < m_width));
+	assert((0 <= posBoard.y) && (posBoard.y < m_height));
 
-	return m_grid[posGrid.y][posGrid.x];
+	return m_board[posBoard.y][posBoard.x];
 }
 
-int Field::CountNeighborMines(const Vei2& posGrid)
+int Field::CountNeighborMines(const Vei2& posBoard)
 {
 	int count = 0;
 
-	if (At(posGrid).HasMine())
+	if (At(posBoard).HasMine())
 	{
 		--count;
 
 		return count;
 	}
 
-	const int xStart = std::max(0, posGrid.x - 1);
-	const int xEnd = std::min(s_width - 1, posGrid.x + 1);
-	const int yStart = std::max(0, posGrid.y - 1);
-	const int yEnd = std::min(s_height - 1, posGrid.y + 1);
+	const int xStart = std::max(0, posBoard.x - 1);
+	const int xEnd = std::min(m_width - 1, posBoard.x + 1);
+	const int yStart = std::max(0, posBoard.y - 1);
+	const int yEnd = std::min(m_height - 1, posBoard.y + 1);
 
 	for (Vei2 posNeighbor = Vei2(xStart, yStart); posNeighbor.y <= yEnd; ++posNeighbor.y)
 	{
@@ -280,31 +341,31 @@ int Field::CountNeighborMines(const Vei2& posGrid)
 bool Field::IsOnField(const Vei2 posScreen) const
 {
 	return ((m_posScreen.x <= posScreen.x) &&
-			(posScreen.x < m_posScreen.x + s_width * SpriteCodex::tileSize) &&
+			(posScreen.x < m_posScreen.x + m_width * SpriteCodex::tileSize) &&
 			(m_posScreen.y <= posScreen.y) &&
-			(posScreen.y < m_posScreen.y + s_height * SpriteCodex::tileSize));
+			(posScreen.y < m_posScreen.y + m_height * SpriteCodex::tileSize));
 }
 
-void Field::RevealTileAt(const Vei2& posGrid)
+void Field::RevealTileAt(const Vei2& posBoard)
 {
-	At(posGrid).Reveal();
-	--m_nUnrevealedTiles;
+	At(posBoard).Reveal();
+	--m_numUnrevealedTiles;
 
-	if (!At(posGrid).HasMine() &&
-		At(posGrid).HasNoNeighborMines())
+	if (!At(posBoard).HasMine() &&
+		At(posBoard).HasNoNeighborMines())
 	{
-		RevealNeighborTilesAt(posGrid);
+		RevealNeighborTilesAt(posBoard);
 	}
 }
 
-void Field::RevealNeighborTilesAt(const Vei2& posGrid)
+void Field::RevealNeighborTilesAt(const Vei2& posBoard)
 {
-	assert(!At(posGrid).HasMine());
+	assert(!At(posBoard).HasMine());
 
-	const int xStart = std::max(0, posGrid.x - 1);
-	const int xEnd = std::min(s_width - 1, posGrid.x + 1);
-	const int yStart = std::max(0, posGrid.y - 1);
-	const int yEnd = std::min(s_height - 1, posGrid.y + 1);
+	const int xStart = std::max(0, posBoard.x - 1);
+	const int xEnd = std::min(m_width - 1, posBoard.x + 1);
+	const int yStart = std::max(0, posBoard.y - 1);
+	const int yEnd = std::min(m_height - 1, posBoard.y + 1);
 
 	for (Vei2 posNeighbor = Vei2(xStart, yStart); posNeighbor.y <= yEnd; ++posNeighbor.y)
 	{
@@ -321,13 +382,13 @@ void Field::RevealNeighborTilesAt(const Vei2& posGrid)
 void Field::DrawBackground(Graphics& gfx) const
 {
 	const RectI rectScreen = RectI(m_posScreen,
-								   Vei2(m_posScreen.x + (s_rectGrid.right + 1) * SpriteCodex::tileSize,
-										m_posScreen.y + (s_rectGrid.bottom + 1) * SpriteCodex::tileSize));
+								   Vei2(m_posScreen.x + (m_rectGrid.right + 1) * SpriteCodex::tileSize,
+										m_posScreen.y + (m_rectGrid.bottom + 1) * SpriteCodex::tileSize));
 
 	assert((m_posScreen.x <= rectScreen.left) &&
 		   (m_posScreen.y <= rectScreen.top) &&
-		   (m_posScreen.x <= m_posScreen.x + (s_width + 1) * SpriteCodex::tileSize) &&
-		   (m_posScreen.y <= m_posScreen.y + (s_height + 1) * SpriteCodex::tileSize));
+		   (m_posScreen.x <= m_posScreen.x + (m_width + 1) * SpriteCodex::tileSize) &&
+		   (m_posScreen.y <= m_posScreen.y + (m_height + 1) * SpriteCodex::tileSize));
 
 	gfx.DrawRect(rectScreen, SpriteCodex::baseColor);
 	DrawBorder(rectScreen, gfx);
@@ -361,9 +422,9 @@ Vei2 Field::ConvertToGrid(const Vei2& vecScreen) const
 	const Vei2 vecGrid = (vecScreen - m_posScreen) / SpriteCodex::tileSize;
 
 	assert((0 <= vecGrid.x) &&
-		   (vecGrid.x < s_width));
+		   (vecGrid.x < m_width));
 	assert((0 <= vecGrid.y) &&
-		   (vecGrid.y < s_height));
+		   (vecGrid.y < m_height));
 
 	return vecGrid;
 }
@@ -373,9 +434,9 @@ Vei2 Field::ConvertToScreen(const Vei2& vecGrid) const
 	const Vei2 vecScreen = m_posScreen + vecGrid * SpriteCodex::tileSize;
 
 	assert((m_posScreen.x <= vecScreen.x) &&
-		   (vecScreen.x < m_posScreen.x + s_width * SpriteCodex::tileSize));
+		   (vecScreen.x < m_posScreen.x + m_width * SpriteCodex::tileSize));
 	assert((m_posScreen.y <= vecScreen.y) &&
-		   (vecScreen.y < m_posScreen.y + s_height * SpriteCodex::tileSize));
+		   (vecScreen.y < m_posScreen.y + m_height * SpriteCodex::tileSize));
 
 	return vecScreen;
 }

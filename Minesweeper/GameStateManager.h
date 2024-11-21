@@ -12,6 +12,8 @@ private:
 		loser,
 	};
 
+
+
 public:
 	void			DrawOnGameOver(Graphics& gfx) const;
 	bool			IsGameOver() const;
