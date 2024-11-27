@@ -7,5 +7,3 @@
 # 학습 강의
 
 - [Beginner C++ Game Programming DirectX](https://www.youtube.com/playlist?list=PLqCJpWy5FohcehaXlCIt8sVBHBFFRVWsx)
-- [Intermediate C++ Game Programming](https://www.youtube.com/playlist?list=PLqCJpWy5Fohfil0gvjzgdV4h29R9kDKtZ)
-- [Advanced C++ Programming](https://www.youtube.com/playlist?list=PLqCJpWy5Fohd6Hg5BW8eAjo5SzQQYl43S)
